@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, Users, Heart, Search, UserPlus, X, Eye, EyeOff } from 'lucide-react'
-import { collection, getDocs, orderBy, query, doc, setDoc, serverTimestamp } from 'firebase/firestore'
+import { collection, getDocs, doc, setDoc, serverTimestamp } from 'firebase/firestore'
 import { getFirestore } from 'firebase/firestore'
 import { initializeApp, deleteApp } from 'firebase/app'
 import { getAuth, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
@@ -65,8 +65,10 @@ export default function AdminUsersPage() {
 
   const loadUsers = async () => {
     try {
-      const snap = await getDocs(query(collection(db, 'users'), orderBy('createdAt', 'desc')))
-      setUsers(snap.docs.map((d) => ({ uid: d.id, ...d.data() } as UserDoc)))
+      const snap = await getDocs(collection(db, 'users'))
+      const list = snap.docs.map((d) => ({ uid: d.id, ...d.data() } as UserDoc))
+      list.sort((a, b) => (b.createdAt?.seconds ?? 0) - (a.createdAt?.seconds ?? 0))
+      setUsers(list)
     } catch (e) {
       console.error(e)
     } finally {
