@@ -19,8 +19,6 @@ import {
 import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore'
 import { auth, db } from '@/config/firebase'
 
-const ADMIN_EMAIL = 'admin@yoreseltarifler.com'
-
 interface AuthContextType {
   user: User | null
   loading: boolean
@@ -41,7 +39,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       setUser(firebaseUser)
-      setIsAdmin(firebaseUser?.email === ADMIN_EMAIL)
+      if (firebaseUser) {
+        try {
+          const snap = await getDoc(doc(db, 'users', firebaseUser.uid))
+          setIsAdmin(snap.exists() && snap.data().isAdmin === true)
+        } catch {
+          setIsAdmin(false)
+        }
+      } else {
+        setIsAdmin(false)
+      }
       setLoading(false)
     })
     return () => unsubscribe()

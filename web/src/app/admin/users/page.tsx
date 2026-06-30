@@ -12,6 +12,7 @@ interface UserDoc {
   uid: string
   email: string
   displayName: string
+  isAdmin?: boolean
   favorites: string[]
   createdAt?: { seconds: number }
 }
@@ -55,6 +56,7 @@ export default function AdminUsersPage() {
   const [name, setName]         = useState('')
   const [email, setEmail]       = useState('')
   const [password, setPassword] = useState('')
+  const [role, setRole]         = useState<'member' | 'admin'>('member')
   const [showPw, setShowPw]     = useState(false)
   const [saving, setSaving]     = useState(false)
   const [error, setError]       = useState('')
@@ -74,7 +76,7 @@ export default function AdminUsersPage() {
   useEffect(() => { loadUsers() }, [])
 
   const openModal = () => {
-    setName(''); setEmail(''); setPassword('')
+    setName(''); setEmail(''); setPassword(''); setRole('member')
     setError(''); setSuccess(''); setShowPw(false)
     setShowModal(true)
   }
@@ -96,6 +98,7 @@ export default function AdminUsersPage() {
         uid: cred.user.uid,
         email: email.trim(),
         displayName: name.trim(),
+        isAdmin: role === 'admin',
         favorites: [],
         createdAt: serverTimestamp(),
       })
@@ -172,15 +175,15 @@ export default function AdminUsersPage() {
       ) : (
         <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid var(--border)', backgroundColor: 'var(--surface)' }}>
           <div
-            className="hidden sm:grid grid-cols-[1fr_1fr_80px_100px] gap-4 px-5 py-2.5 text-xs font-semibold uppercase tracking-wide"
+            className="hidden sm:grid grid-cols-[1fr_1fr_90px_80px_100px] gap-4 px-5 py-2.5 text-xs font-semibold uppercase tracking-wide"
             style={{ backgroundColor: 'var(--card)', color: 'var(--text-muted)', borderBottom: '1px solid var(--border)' }}
           >
-            <span>Kullanıcı</span><span>E-posta</span><span>Favoriler</span><span>Katılım</span>
+            <span>Kullanıcı</span><span>E-posta</span><span>Rol</span><span>Favoriler</span><span>Katılım</span>
           </div>
           {filtered.map((user, i) => (
             <div
               key={user.uid}
-              className="grid grid-cols-1 sm:grid-cols-[1fr_1fr_80px_100px] gap-1 sm:gap-4 px-5 py-3.5 items-center"
+              className="grid grid-cols-1 sm:grid-cols-[1fr_1fr_90px_80px_100px] gap-1 sm:gap-4 px-5 py-3.5 items-center"
               style={i > 0 ? { borderTop: '1px solid var(--border)' } : undefined}
             >
               <div className="flex items-center gap-3">
@@ -195,6 +198,15 @@ export default function AdminUsersPage() {
                 </span>
               </div>
               <span className="text-sm truncate" style={{ color: 'var(--text-muted)' }}>{user.email}</span>
+              <span
+                className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold w-fit"
+                style={user.isAdmin
+                  ? { backgroundColor: 'rgba(185,122,26,0.12)', color: '#B97A1A' }
+                  : { backgroundColor: 'rgba(148,163,184,0.15)', color: '#64748b' }
+                }
+              >
+                {user.isAdmin ? '🛡️ Admin' : '👤 Üye'}
+              </span>
               <div className="flex items-center gap-1" style={{ color: 'var(--text-muted)' }}>
                 <Heart size={12} />
                 <span className="text-sm">{user.favorites?.length || 0}</span>
@@ -254,6 +266,30 @@ export default function AdminUsersPage() {
                   spellCheck={false}
                   style={inputStyle}
                 />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-muted)' }}>Rol</label>
+                <div className="flex gap-2">
+                  {(['member', 'admin'] as const).map((r) => (
+                    <button
+                      key={r}
+                      type="button"
+                      onClick={() => setRole(r)}
+                      className="flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all"
+                      style={role === r
+                        ? { background: 'linear-gradient(135deg, #B97A1A 0%, #D99520 100%)', color: '#fff' }
+                        : { border: '1px solid var(--border)', color: 'var(--text-muted)', backgroundColor: 'var(--card)' }
+                      }
+                    >
+                      {r === 'admin' ? '🛡️ Admin' : '👤 Üye'}
+                    </button>
+                  ))}
+                </div>
+                <p className="text-xs mt-1.5 px-0.5" style={{ color: 'var(--text-muted)' }}>
+                  {role === 'admin'
+                    ? 'Admin paneline erişebilir, tarif düzenleyebilir.'
+                    : 'Sadece giriş yapıp profilini yönetebilir.'}
+                </p>
               </div>
               <div>
                 <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-muted)' }}>Şifre</label>
