@@ -42,7 +42,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (firebaseUser) {
         try {
           const snap = await getDoc(doc(db, 'users', firebaseUser.uid))
-          setIsAdmin(snap.exists() && snap.data().isAdmin === true)
+          const firestoreAdmin = snap.exists() && snap.data().isAdmin === true
+          // Geçici fallback: ilk kurulum için — setup-admin sayfası ziyaret edildikten sonra kaldırılacak
+          const emailFallback = firebaseUser.email === 'cagatylmz@gmail.com'
+          setIsAdmin(firestoreAdmin || emailFallback)
         } catch {
           setIsAdmin(false)
         }

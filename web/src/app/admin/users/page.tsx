@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, Users, Heart, Search, UserPlus, X, Eye, EyeOff } from 'lucide-react'
 import { collection, getDocs, orderBy, query, doc, setDoc, serverTimestamp } from 'firebase/firestore'
+import { getFirestore } from 'firebase/firestore'
 import { initializeApp, deleteApp } from 'firebase/app'
 import { getAuth, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
 import { db } from '@/config/firebase'
@@ -88,13 +89,16 @@ export default function AdminUsersPage() {
     if (password.length < 6) { setError('Şifre en az 6 karakter olmalı.'); return }
 
     setSaving(true); setError('')
-    // Admin oturumunu bozmamak için ikincil Firebase app instance kullan
+    // Admin oturumunu bozmamak için ikincil Firebase app instance kullan.
+    // Firestore yazma da ikincil instance üzerinden yapılıyor —
+    // böylece yeni kullanıcı kendi dökümanını kendisi oluşturmuş sayılır (Firestore kurallarına uygun).
     const secondaryApp = initializeApp(firebaseConfig, `add-user-${Date.now()}`)
     const secondaryAuth = getAuth(secondaryApp)
+    const secondaryDb   = getFirestore(secondaryApp)
     try {
       const cred = await createUserWithEmailAndPassword(secondaryAuth, email.trim(), password)
       await updateProfile(cred.user, { displayName: name.trim() })
-      await setDoc(doc(db, 'users', cred.user.uid), {
+      await setDoc(doc(secondaryDb, 'users', cred.user.uid), {
         uid: cred.user.uid,
         email: email.trim(),
         displayName: name.trim(),
@@ -103,7 +107,7 @@ export default function AdminUsersPage() {
         createdAt: serverTimestamp(),
       })
       setSuccess(`"${name.trim()}" başarıyla eklendi.`)
-      setName(''); setEmail(''); setPassword('')
+      setName(''); setEmail(''); setPassword(''); setRole('member')
       await loadUsers()
     } catch (err: any) {
       setError(mapError(err.code || ''))

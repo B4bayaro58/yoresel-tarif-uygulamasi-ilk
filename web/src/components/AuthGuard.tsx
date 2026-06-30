@@ -10,7 +10,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
 
   useEffect(() => {
-    if (!loading && !user && pathname !== '/login') {
+    if (!loading && !user && pathname !== '/login' && pathname !== '/setup-admin') {
       router.replace('/login')
     }
   }, [user, loading, pathname, router])
@@ -31,7 +31,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     )
   }
 
-  if (!user && pathname !== '/login') return null
+  if (!user && pathname !== '/login' && pathname !== '/setup-admin') return null
 
   return <>{children}</>
 }
