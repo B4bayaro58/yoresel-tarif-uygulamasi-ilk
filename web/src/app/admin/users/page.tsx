@@ -2,8 +2,10 @@
 
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, Users, Heart, Search } from 'lucide-react'
-import { collection, getDocs, orderBy, query } from 'firebase/firestore'
+import { ArrowLeft, Users, Heart, Search, UserPlus, X, Eye, EyeOff } from 'lucide-react'
+import { collection, getDocs, orderBy, query, doc, setDoc, serverTimestamp } from 'firebase/firestore'
+import { initializeApp, deleteApp } from 'firebase/app'
+import { getAuth, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
 import { db } from '@/config/firebase'
 
 interface UserDoc {
@@ -14,24 +16,99 @@ interface UserDoc {
   createdAt?: { seconds: number }
 }
 
-export default function AdminUsersPage() {
-  const [users, setUsers] = useState<UserDoc[]>([])
-  const [loading, setLoading] = useState(true)
-  const [search, setSearch] = useState('')
+const firebaseConfig = {
+  apiKey:            process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain:        process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId:         process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket:     process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId:             process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+}
 
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const snap = await getDocs(query(collection(db, 'users'), orderBy('createdAt', 'desc')))
-        setUsers(snap.docs.map((d) => ({ uid: d.id, ...d.data() } as UserDoc)))
-      } catch (e) {
-        console.error(e)
-      } finally {
-        setLoading(false)
-      }
+const inputStyle: React.CSSProperties = {
+  width: '100%',
+  padding: '0.625rem 0.75rem',
+  borderRadius: '0.75rem',
+  border: '1px solid var(--border)',
+  backgroundColor: 'var(--surface)',
+  color: 'var(--text)',
+  fontSize: '0.875rem',
+  outline: 'none',
+}
+
+function mapError(code: string) {
+  switch (code) {
+    case 'auth/email-already-in-use': return 'Bu e-posta zaten kullanımda.'
+    case 'auth/invalid-email':        return 'Geçersiz e-posta adresi.'
+    case 'auth/weak-password':        return 'Şifre en az 6 karakter olmalı.'
+    default:                          return 'Bir hata oluştu, tekrar deneyin.'
+  }
+}
+
+export default function AdminUsersPage() {
+  const [users, setUsers]       = useState<UserDoc[]>([])
+  const [loading, setLoading]   = useState(true)
+  const [search, setSearch]     = useState('')
+  const [showModal, setShowModal] = useState(false)
+
+  // form state
+  const [name, setName]         = useState('')
+  const [email, setEmail]       = useState('')
+  const [password, setPassword] = useState('')
+  const [showPw, setShowPw]     = useState(false)
+  const [saving, setSaving]     = useState(false)
+  const [error, setError]       = useState('')
+  const [success, setSuccess]   = useState('')
+
+  const loadUsers = async () => {
+    try {
+      const snap = await getDocs(query(collection(db, 'users'), orderBy('createdAt', 'desc')))
+      setUsers(snap.docs.map((d) => ({ uid: d.id, ...d.data() } as UserDoc)))
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setLoading(false)
     }
-    load()
-  }, [])
+  }
+
+  useEffect(() => { loadUsers() }, [])
+
+  const openModal = () => {
+    setName(''); setEmail(''); setPassword('')
+    setError(''); setSuccess(''); setShowPw(false)
+    setShowModal(true)
+  }
+
+  const handleAdd = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!name.trim())   { setError('İsim zorunludur.'); return }
+    if (!email.trim())  { setError('E-posta zorunludur.'); return }
+    if (password.length < 6) { setError('Şifre en az 6 karakter olmalı.'); return }
+
+    setSaving(true); setError('')
+    // Admin oturumunu bozmamak için ikincil Firebase app instance kullan
+    const secondaryApp = initializeApp(firebaseConfig, `add-user-${Date.now()}`)
+    const secondaryAuth = getAuth(secondaryApp)
+    try {
+      const cred = await createUserWithEmailAndPassword(secondaryAuth, email.trim(), password)
+      await updateProfile(cred.user, { displayName: name.trim() })
+      await setDoc(doc(db, 'users', cred.user.uid), {
+        uid: cred.user.uid,
+        email: email.trim(),
+        displayName: name.trim(),
+        favorites: [],
+        createdAt: serverTimestamp(),
+      })
+      setSuccess(`"${name.trim()}" başarıyla eklendi.`)
+      setName(''); setEmail(''); setPassword('')
+      await loadUsers()
+    } catch (err: any) {
+      setError(mapError(err.code || ''))
+    } finally {
+      await deleteApp(secondaryApp)
+      setSaving(false)
+    }
+  }
 
   const filtered = users.filter(
     (u) =>
@@ -46,17 +123,28 @@ export default function AdminUsersPage() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6">
+
       {/* Header */}
-      <div className="flex items-center gap-3 mb-6">
-        <Link href="/admin" className="p-2 rounded-xl hover:opacity-70 transition-opacity" style={{ color: 'var(--text-muted)' }}>
-          <ArrowLeft size={18} />
-        </Link>
-        <div>
-          <h1 className="text-xl font-bold" style={{ color: 'var(--text)' }}>Kullanıcılar</h1>
-          <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
-            {loading ? '...' : `${users.length} kayıtlı kullanıcı`}
-          </p>
+      <div className="flex items-center justify-between gap-3 mb-6">
+        <div className="flex items-center gap-3">
+          <Link href="/admin" className="p-2 rounded-xl hover:opacity-70 transition-opacity" style={{ color: 'var(--text-muted)' }}>
+            <ArrowLeft size={18} />
+          </Link>
+          <div>
+            <h1 className="text-xl font-bold" style={{ color: 'var(--text)' }}>Kullanıcılar</h1>
+            <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+              {loading ? '...' : `${users.length} kayıtlı kullanıcı`}
+            </p>
+          </div>
         </div>
+        <button
+          onClick={openModal}
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white"
+          style={{ background: 'linear-gradient(135deg, #B97A1A 0%, #D99520 100%)' }}
+        >
+          <UserPlus size={15} />
+          Kullanıcı Ekle
+        </button>
       </div>
 
       {/* Search */}
@@ -71,6 +159,7 @@ export default function AdminUsersPage() {
         />
       </div>
 
+      {/* List */}
       {loading ? (
         <div className="space-y-3">
           {Array.from({ length: 5 }).map((_, i) => <div key={i} className="skeleton h-16 rounded-2xl" />)}
@@ -82,15 +171,11 @@ export default function AdminUsersPage() {
         </div>
       ) : (
         <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid var(--border)', backgroundColor: 'var(--surface)' }}>
-          {/* Table head */}
           <div
             className="hidden sm:grid grid-cols-[1fr_1fr_80px_100px] gap-4 px-5 py-2.5 text-xs font-semibold uppercase tracking-wide"
             style={{ backgroundColor: 'var(--card)', color: 'var(--text-muted)', borderBottom: '1px solid var(--border)' }}
           >
-            <span>Kullanıcı</span>
-            <span>E-posta</span>
-            <span>Favoriler</span>
-            <span>Katılım</span>
+            <span>Kullanıcı</span><span>E-posta</span><span>Favoriler</span><span>Katılım</span>
           </div>
           {filtered.map((user, i) => (
             <div
@@ -98,7 +183,6 @@ export default function AdminUsersPage() {
               className="grid grid-cols-1 sm:grid-cols-[1fr_1fr_80px_100px] gap-1 sm:gap-4 px-5 py-3.5 items-center"
               style={i > 0 ? { borderTop: '1px solid var(--border)' } : undefined}
             >
-              {/* Avatar + name */}
               <div className="flex items-center gap-3">
                 <div
                   className="w-8 h-8 rounded-xl flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
@@ -120,6 +204,101 @@ export default function AdminUsersPage() {
           ))}
         </div>
       )}
+
+      {/* Modal */}
+      {showModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
+          onClick={(e) => { if (e.target === e.currentTarget) setShowModal(false) }}
+        >
+          <div className="w-full max-w-md rounded-3xl p-6" style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)' }}>
+            <div className="flex items-center justify-between mb-5">
+              <h2 className="text-lg font-bold" style={{ color: 'var(--text)' }}>Yeni Kullanıcı Ekle</h2>
+              <button onClick={() => setShowModal(false)} className="p-1.5 rounded-xl hover:opacity-70" style={{ color: 'var(--text-muted)' }}>
+                <X size={18} />
+              </button>
+            </div>
+
+            {error && (
+              <div className="mb-4 px-4 py-3 rounded-2xl text-sm" style={{ backgroundColor: 'rgba(196,89,58,0.1)', color: '#C4593A', border: '1px solid rgba(196,89,58,0.2)' }}>
+                {error}
+              </div>
+            )}
+            {success && (
+              <div className="mb-4 px-4 py-3 rounded-2xl text-sm" style={{ backgroundColor: 'rgba(22,163,74,0.1)', color: '#16a34a', border: '1px solid rgba(22,163,74,0.2)' }}>
+                {success}
+              </div>
+            )}
+
+            <form onSubmit={handleAdd} className="space-y-3">
+              <div>
+                <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-muted)' }}>Ad Soyad</label>
+                <input
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Ahmet Yılmaz"
+                  autoCorrect="off"
+                  spellCheck={false}
+                  style={inputStyle}
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-muted)' }}>E-posta</label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="ornek@email.com"
+                  autoCorrect="off"
+                  spellCheck={false}
+                  style={inputStyle}
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold mb-1.5" style={{ color: 'var(--text-muted)' }}>Şifre</label>
+                <div className="relative">
+                  <input
+                    type={showPw ? 'text' : 'password'}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="En az 6 karakter"
+                    style={{ ...inputStyle, paddingRight: '2.5rem' }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPw(!showPw)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 hover:opacity-70"
+                    style={{ color: 'var(--text-muted)' }}
+                  >
+                    {showPw ? <EyeOff size={15} /> : <Eye size={15} />}
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowModal(false)}
+                  className="flex-1 py-2.5 rounded-xl text-sm font-semibold"
+                  style={{ border: '1px solid var(--border)', color: 'var(--text)', backgroundColor: 'var(--card)' }}
+                >
+                  İptal
+                </button>
+                <button
+                  type="submit"
+                  disabled={saving}
+                  className="flex-1 py-2.5 rounded-xl text-sm font-semibold text-white"
+                  style={{ background: 'linear-gradient(135deg, #B97A1A 0%, #D99520 100%)', opacity: saving ? 0.7 : 1 }}
+                >
+                  {saving ? 'Ekleniyor...' : 'Kullanıcı Ekle'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
     </div>
   )
 }
