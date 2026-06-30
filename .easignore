@@ -1,0 +1,10 @@
+# EAS Build - Android/iOS için gereksiz dosyalar
+**/node_modules/
+.git/
+web/
+android/
+ios/
+scripts/
+*.log
+.env.local
+nul

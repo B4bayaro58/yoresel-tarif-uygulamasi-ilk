@@ -1,0 +1,33 @@
+// Theme system with light and dark mode support
+export const THEMES = {
+  light: {
+    primary: '#FF6B57',
+    background: '#FFFFFF',
+    card: '#FFFFFF',
+    text: '#1A1A1A',
+    textSecondary: '#666666',
+    textTertiary: '#999999',
+    border: '#E0E0E0',
+    shadow: 'rgba(0, 0, 0, 0.1)',
+    success: '#4CAF50',
+    warning: '#FF9800',
+    error: '#F44336',
+    tabBar: '#FFFFFF',
+    tabBarBorder: '#E0E0E0',
+  },
+  dark: {
+    primary: '#FF6B57',
+    background: '#121212',
+    card: '#2A2A2A',
+    text: '#FFFFFF',
+    textSecondary: '#B3B3B3',
+    textTertiary: '#808080',
+    border: '#333333',
+    shadow: 'rgba(0, 0, 0, 0.3)',
+    success: '#66BB6A',
+    warning: '#FFA726',
+    error: '#EF5350',
+    tabBar: '#1E1E1E',
+    tabBarBorder: '#333333',
+  },
+};
