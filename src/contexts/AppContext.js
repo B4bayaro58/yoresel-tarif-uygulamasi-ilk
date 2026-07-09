@@ -304,16 +304,23 @@ export const AppProvider = ({ children }) => {
     return [...filteredStatic, ...visibleFirebase];
   }, [language, firebaseRecipes]);
 
+  // Override edilmiş statik tarifler `recipes`'te artık kendi Firebase ID'siyle
+  // duruyor, statik slug (ör. "lasagna") listede yok — overridesStaticId fallback'i
+  // olmadan bu tarifler menüden "kayboluyordu" (web'deki aynı hata için bkz.
+  // maliyet denetimi 2026-07-09/10 notları, commit 9ff3cca).
+  const findByIdOrOverride = (id) =>
+    recipes.find(r => r.id === id) || recipes.find(r => r.overridesStaticId === id);
+
   // Daily menu resolved recipes
   const dailyMenu = useMemo(() => {
     if (!dailyMenuIds.length) return [];
-    return dailyMenuIds.map(id => recipes.find(r => r.id === id)).filter(Boolean);
+    return dailyMenuIds.map(findByIdOrOverride).filter(Boolean);
   }, [dailyMenuIds, recipes]);
 
   // Personal menu resolved recipes
   const personalMenuRecipes = useMemo(() => {
     if (!personalMenuIds.length) return [];
-    return personalMenuIds.map(id => recipes.find(r => r.id === id)).filter(Boolean);
+    return personalMenuIds.map(findByIdOrOverride).filter(Boolean);
   }, [personalMenuIds, recipes]);
 
   // Notification Toast

@@ -62,7 +62,13 @@ export default function DailyMenuScreen({ navigation }) {
   };
 
   const renderItem = useCallback(({ item }) => {
-    const isSelected = selected.has(item.id);
+    // Override edilmiş statik tariflerde item.id kendi Firebase ID'si — gerçek
+    // "kanonik" kimlik overridesStaticId'dir (dailyMenuIds bunu saklar). Bu
+    // olmadan override edilmiş tarifler her zaman "seçilmemiş" görünür ve
+    // kaydedince menüden düşerdi (bkz. maliyet denetimi notları, web'deki
+    // aynı hata için commit 9ff3cca).
+    const canonicalId = item.overridesStaticId ?? item.id;
+    const isSelected = selected.has(canonicalId);
     return (
       <TouchableOpacity
         style={[
@@ -70,7 +76,7 @@ export default function DailyMenuScreen({ navigation }) {
           { backgroundColor: colors.card, borderColor: isSelected ? colors.primary : colors.border },
           isSelected && { borderWidth: 2 },
         ]}
-        onPress={() => toggle(item.id)}
+        onPress={() => toggle(canonicalId)}
         activeOpacity={0.7}
       >
         <Text style={styles.emoji}>{item.emoji}</Text>

@@ -151,7 +151,10 @@ function RecipePickerModal({ visible, onClose, colors, translate, recipes, perso
           contentContainerStyle={styles.pickerList}
           keyboardShouldPersistTaps="handled"
           renderItem={({ item }) => {
-            const isIn = personalMenuIds.includes(item.id);
+            // Override edilmiş tariflerde item.id kendi Firebase ID'si — kanonik
+            // kimlik overridesStaticId'dir (personalMenuIds bunu saklar).
+            const canonicalId = item.overridesStaticId ?? item.id;
+            const isIn = personalMenuIds.includes(canonicalId);
             return (
               <TouchableOpacity
                 style={[
@@ -159,7 +162,7 @@ function RecipePickerModal({ visible, onClose, colors, translate, recipes, perso
                   { backgroundColor: colors.card, borderColor: isIn ? colors.primary : colors.border },
                   isIn && { borderWidth: 2 },
                 ]}
-                onPress={() => togglePersonalMenu(item.id)}
+                onPress={() => togglePersonalMenu(canonicalId)}
                 activeOpacity={0.75}
               >
                 <LinearGradient
@@ -279,7 +282,7 @@ export default function MenuScreen({ navigation }) {
                   item={item}
                   colors={colors}
                   onPress={() => handleRecipePress(item)}
-                  onRemove={() => togglePersonalMenu(item.id)}
+                  onRemove={() => togglePersonalMenu(item.overridesStaticId ?? item.id)}
                 />
               ))}
             </View>
