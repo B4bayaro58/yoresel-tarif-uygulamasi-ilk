@@ -5,11 +5,11 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  ImageBackground,
   Dimensions,
   Share,
   Linking,
 } from 'react-native';
+import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import {
   Heart,
@@ -156,11 +156,14 @@ export default function RecipeDetailScreen({ route, navigation }) {
             <Text style={styles.heroEmoji}>{recipe.emoji}</Text>
 
             {/* Photo Overlay */}
-            <ImageBackground
-              source={recipe.photo ? { uri: recipe.photo } : require('../../assets/icon.png')}
-              style={styles.heroImage}
-              imageStyle={styles.heroImageStyle}
-            >
+            <View style={styles.heroImage}>
+              <Image
+                source={recipe.photo ? { uri: recipe.photo } : require('../../assets/icon.png')}
+                style={styles.heroImageStyle}
+                contentFit="cover"
+                cachePolicy="disk"
+                transition={150}
+              />
               {/* Action Buttons */}
               <View style={styles.heroActions}>
                 <TouchableOpacity
@@ -191,7 +194,7 @@ export default function RecipeDetailScreen({ route, navigation }) {
                   </TouchableOpacity>
                 </View>
               </View>
-            </ImageBackground>
+            </View>
           </LinearGradient>
         </View>
 
@@ -581,10 +584,11 @@ const styles = StyleSheet.create({
   },
   heroImage: {
     flex: 1,
+    position: 'relative',
   },
   heroImageStyle: {
+    ...StyleSheet.absoluteFillObject,
     opacity: 0.85,
-    resizeMode: 'cover',
   },
   heroActions: {
     flexDirection: 'row',

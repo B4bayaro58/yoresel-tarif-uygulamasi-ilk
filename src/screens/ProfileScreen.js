@@ -8,14 +8,14 @@ import {
   ScrollView,
   TextInput,
   ActivityIndicator,
-  Image,
 } from 'react-native';
+import { Image } from 'expo-image';
 import { Globe, Palette, Settings, LogOut, User as UserIcon, ChevronRight, Trash2, Shield, Camera } from 'lucide-react-native';
 import { useApp } from '../contexts/AppContext';
 import { useAuth } from '../contexts/AuthContext';
 import { getRank, getNextRank, RANKS } from '../constants/ranks';
 import { TRAVEL_BADGES, getEarnedBadges, getNextBadge } from '../constants/badges';
-import { pickImage, uploadRecipeImage } from '../services/imageUploadService';
+import { pickAvatarImage, uploadRecipeImage } from '../services/imageUploadService';
 import { updateProfile } from 'firebase/auth';
 import { auth } from '../config/firebase';
 
@@ -135,7 +135,7 @@ export default function ProfileScreen({ navigation }) {
 
   const handlePickProfilePhoto = async () => {
     if (isGuest) return;
-    const result = await pickImage();
+    const result = await pickAvatarImage();
     if (!result.success) return;
     setPhotoLoading(true);
     const upload = await uploadRecipeImage(result.uri, `profile_${user.uid}`);
@@ -189,7 +189,12 @@ export default function ProfileScreen({ navigation }) {
           disabled={isGuest}
         >
           {user?.photoURL ? (
-            <Image source={{ uri: user.photoURL }} style={styles.avatarImage} />
+            <Image
+              source={{ uri: user.photoURL }}
+              style={styles.avatarImage}
+              contentFit="cover"
+              cachePolicy="disk"
+            />
           ) : (
             <View style={[styles.avatarContainer, { backgroundColor: colors.primary + '20' }]}>
               <UserIcon size={32} color={colors.primary} />

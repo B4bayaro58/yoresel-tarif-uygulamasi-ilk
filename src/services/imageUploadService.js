@@ -23,6 +23,12 @@ const TARGET_WIDTH = 1200;
 const TARGET_HEIGHT = 800;
 const JPEG_QUALITY = 0.88;
 
+// Profil fotoğrafı öncesinden aynı 1200x800/3:2 tarif standardını kullanıyordu —
+// küçük (dairesel) bir avatar için gereksiz büyük yükleme+indirme anlamına
+// geliyordu (bkz. mobil maliyet denetimi 2026-07-10). Kare ve çok daha küçük.
+const AVATAR_SIZE = 400;
+const AVATAR_QUALITY = 0.85;
+
 export const pickImage = async () => {
   if (!ImagePicker) {
     return { success: false, error: 'Resim seçici bu ortamda desteklenmiyor.' };
@@ -53,6 +59,48 @@ export const pickImage = async () => {
         [{ resize: { width: TARGET_WIDTH, height: TARGET_HEIGHT } }],
         {
           compress: JPEG_QUALITY,
+          format: ImageManipulator.SaveFormat.JPEG,
+        }
+      );
+      finalUri = manipulated.uri;
+    } catch (manipError) {
+      console.warn('Image resize failed, using original:', manipError.message);
+    }
+  }
+
+  return { success: true, uri: finalUri };
+};
+
+export const pickAvatarImage = async () => {
+  if (!ImagePicker) {
+    return { success: false, error: 'Resim seçici bu ortamda desteklenmiyor.' };
+  }
+
+  const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+  if (status !== 'granted') {
+    return { success: false, error: 'Galeri izni reddedildi.' };
+  }
+
+  const result = await ImagePicker.launchImageLibraryAsync({
+    mediaTypes: ['images'],
+    allowsEditing: true,
+    aspect: [1, 1],
+    quality: 1,
+  });
+
+  if (result.canceled) return { success: false, error: 'cancelled' };
+
+  const asset = result.assets[0];
+  let finalUri = asset.uri;
+
+  // Avatarı kare 400×400'e küçült ve sıkıştır
+  if (ImageManipulator) {
+    try {
+      const manipulated = await ImageManipulator.manipulateAsync(
+        asset.uri,
+        [{ resize: { width: AVATAR_SIZE, height: AVATAR_SIZE } }],
+        {
+          compress: AVATAR_QUALITY,
           format: ImageManipulator.SaveFormat.JPEG,
         }
       );

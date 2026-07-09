@@ -7,9 +7,9 @@ import {
   TouchableOpacity,
   FlatList,
   Dimensions,
-  ImageBackground,
   ActivityIndicator,
 } from 'react-native';
+import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Search, X, Check, Clock, Star } from 'lucide-react-native';
 import { useApp } from '../contexts/AppContext';
@@ -173,16 +173,19 @@ function HomeHeader({
                 end={{ x: 1, y: 1 }}
               >
                 <Text style={styles.carouselEmoji}>{item.emoji}</Text>
-                <ImageBackground
-                  source={item.photo ? { uri: item.photo } : require('../../assets/icon.png')}
-                  style={styles.carouselImage}
-                  imageStyle={styles.carouselImageStyle}
-                >
+                <View style={styles.carouselImage}>
+                  <Image
+                    source={item.photo ? { uri: item.photo } : require('../../assets/icon.png')}
+                    style={styles.carouselImageStyle}
+                    contentFit="cover"
+                    cachePolicy="disk"
+                    transition={150}
+                  />
                   <View style={styles.carouselOverlay}>
                     <Text style={styles.carouselName} numberOfLines={2}>{item.name}</Text>
                     <Text style={styles.carouselCountry}>{item.country}</Text>
                   </View>
-                </ImageBackground>
+                </View>
               </LinearGradient>
             </TouchableOpacity>
           )}
@@ -540,8 +543,8 @@ const styles = StyleSheet.create({
     transform: [{ translateX: -50 }, { translateY: -50 }],
     zIndex: 1,
   },
-  carouselImage: { flex: 1 },
-  carouselImageStyle: { opacity: 0.85, resizeMode: 'cover' },
+  carouselImage: { flex: 1, position: 'relative' },
+  carouselImageStyle: { ...StyleSheet.absoluteFillObject, opacity: 0.85 },
   carouselOverlay: {
     flex: 1,
     justifyContent: 'flex-end',
