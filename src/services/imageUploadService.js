@@ -16,9 +16,12 @@ try {
   console.warn('expo-image-manipulator not available:', e.message);
 }
 
-// Uygulamada kullanılan fotoğraf oranı: 4:3, max 1024x768
-const TARGET_WIDTH = 1024;
-const TARGET_HEIGHT = 768;
+// Web admin panelindeki standartla hizalı: 3:2, 1200x800, q0.88
+// (bkz. maliyet denetimi 2026-07-09 — önceden 4:3/1024x768/q0.8 kullanılıyordu,
+// mobil kaynaklı fotoğraflar web'de 1200px genişlikte hafif bulanık kalıyordu)
+const TARGET_WIDTH = 1200;
+const TARGET_HEIGHT = 800;
+const JPEG_QUALITY = 0.88;
 
 export const pickImage = async () => {
   if (!ImagePicker) {
@@ -33,7 +36,7 @@ export const pickImage = async () => {
   const result = await ImagePicker.launchImageLibraryAsync({
     mediaTypes: ['images'],
     allowsEditing: true,
-    aspect: [4, 3],
+    aspect: [3, 2],
     quality: 1,
   });
 
@@ -42,14 +45,14 @@ export const pickImage = async () => {
   const asset = result.assets[0];
   let finalUri = asset.uri;
 
-  // Resmi 1024×768 (4:3) ölçeğine küçült ve sıkıştır
+  // Resmi 1200×800 (3:2) ölçeğine küçült ve sıkıştır
   if (ImageManipulator) {
     try {
       const manipulated = await ImageManipulator.manipulateAsync(
         asset.uri,
         [{ resize: { width: TARGET_WIDTH, height: TARGET_HEIGHT } }],
         {
-          compress: 0.8,
+          compress: JPEG_QUALITY,
           format: ImageManipulator.SaveFormat.JPEG,
         }
       );
