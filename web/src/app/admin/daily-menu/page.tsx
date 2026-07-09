@@ -173,7 +173,11 @@ export default function AdminDailyMenuPage() {
                       <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{recipe.country}</p>
                     </div>
                     <button
-                      onClick={() => removeFromMenu(String(recipe.id))}
+                      onClick={() => removeFromMenu(
+                        (recipe as any).overridesStaticId != null
+                          ? String((recipe as any).overridesStaticId)
+                          : String(recipe.id)
+                      )}
                       className="p-1.5 rounded-lg hover:opacity-70 transition-opacity"
                       style={{ color: '#C4593A' }}
                     >
