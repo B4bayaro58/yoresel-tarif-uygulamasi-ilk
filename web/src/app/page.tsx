@@ -38,17 +38,35 @@ export default function HomePage() {
     let cancelled = false
     const fetchData = async () => {
       try {
-        const [recipesSnap, menuSnap] = await Promise.all([
+        const menuSnap = await getDoc(doc(db, 'settings', 'dailyMenu'))
+        const dailyIds: string[] = menuSnap.exists() ? menuSnap.data().recipeIds || [] : []
+
+        // Genel liste limit(200) ile sınırlı (maliyet denetimi 2026-07-09) — 1100+
+        // tariften rastgele bir 200'lük dilim döner, günün menüsündeki override'lar
+        // bu dilimin dışında kalabilir ve tarif eski statik fotoğrafla görünürdü.
+        // Günün menüsündeki override'ları ayrı, hedefli bir sorguyla garantiye alıyoruz.
+        const queries = [
           getDocs(query(
             collection(db, 'recipes'),
             where('status', 'in', ['published', 'approved']),
             limit(FIRESTORE_OVERRIDE_FETCH_LIMIT)
           )),
-          getDoc(doc(db, 'settings', 'dailyMenu')),
-        ])
+        ]
+        if (dailyIds.length > 0) {
+          queries.push(getDocs(query(
+            collection(db, 'recipes'),
+            where('overridesStaticId', 'in', dailyIds.slice(0, 30))
+          )))
+        }
+        const [recipesSnap, dailyOverridesSnap] = await Promise.all(queries)
         if (cancelled) return
-        setFirestoreRecipes(recipesSnap.docs.map((d) => ({ id: d.id, ...d.data() } as Recipe)))
-        if (menuSnap.exists()) setDailyMenuIds(menuSnap.data().recipeIds || [])
+
+        const merged = new Map<string, Recipe>()
+        recipesSnap.docs.forEach((d) => merged.set(d.id, { id: d.id, ...d.data() } as Recipe))
+        dailyOverridesSnap?.docs.forEach((d) => merged.set(d.id, { id: d.id, ...d.data() } as Recipe))
+
+        setFirestoreRecipes(Array.from(merged.values()))
+        setDailyMenuIds(dailyIds)
       } catch {
         // Firebase not configured or no connection — use local only
       } finally {
