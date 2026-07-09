@@ -97,6 +97,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
       if (snap.exists()) {
         setFavorites(snap.data().favorites || [])
       }
+    }).catch((err) => {
+      console.error('Favoriler yüklenemedi:', err)
     })
   }, [user])
 
@@ -143,9 +145,15 @@ export function AppProvider({ children }: { children: ReactNode }) {
         return
       }
 
-      // Logged-in user: sync with Firestore
+      // Logged-in user: optimistic local update + Firestore sync.
+      // onSnapshot canlı dinleyicisi kaldırıldığından (bkz. maliyet denetimi
+      // 2026-07-09) local state artık burada elle güncellenmeli — aksi halde
+      // kalp butonuna basmak Firestore'a yazar ama ekranda hiçbir şey değişmez.
       const userDocRef = doc(db, 'users', user.uid)
       const isFav = favoritesRef.current.includes(recipeId)
+      setFavorites((prev) =>
+        isFav ? prev.filter((id) => id !== recipeId) : [...prev, recipeId]
+      )
       try {
         if (isFav) {
           await updateDoc(userDocRef, { favorites: arrayRemove(recipeId) })
@@ -154,6 +162,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
         }
       } catch (err) {
         console.error('Favori güncellenemedi:', err)
+        // Yazma başarısız oldu — optimistic güncellemeyi geri al
+        setFavorites((prev) =>
+          isFav ? [...prev, recipeId] : prev.filter((id) => id !== recipeId)
+        )
       }
     },
     [user]
