@@ -1,7 +1,8 @@
 'use client'
 
 import React, { useState, useEffect, useMemo } from 'react'
-import { collection, getDocs, query, where, doc, getDoc } from 'firebase/firestore'
+import Image from 'next/image'
+import { collection, getDocs, query, where, limit, doc, getDoc } from 'firebase/firestore'
 import { db } from '@/config/firebase'
 import { useApp } from '@/contexts/AppContext'
 import RecipeCard from '@/components/RecipeCard'
@@ -9,25 +10,40 @@ import ContinentFilter from '@/components/ContinentFilter'
 import SkeletonCard from '@/components/SkeletonCard'
 import AdBanner from '@/components/AdBanner'
 import { Recipe } from '@/types'
+import { isPreOptimized } from '@/lib/image'
 // @ts-ignore
 import { RECIPES_DATA } from '@shared/recipes'
 
 const localRecipes: Recipe[] = (RECIPES_DATA as any).tr || []
 
+const PAGE_SIZE = 20
+
+// Statik tarif kataloğu (1100+) zaten Unsplash fotoğraflarıyla yerelde mevcut;
+// bu sorgu sadece admin panelinden yüklenmiş özel fotoğraf override'larını getirir.
+// Sınırsız çekmek her sayfa yüklemesinde 1000+ Firestore okuması demekti — limit
+// bunu sabit ve öngörülebilir bir maliyete indiriyor. Limitin dışında kalan
+// tarifler otomatik olarak kendi statik (Unsplash) fotoğrafına düşer.
+const FIRESTORE_OVERRIDE_FETCH_LIMIT = 200
+
 export default function HomePage() {
-  const { t } = useApp()
+  const { t, favorites, toggleFavorite } = useApp()
   const [selectedContinent, setSelectedContinent] = useState('all')
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [firestoreRecipes, setFirestoreRecipes] = useState<Recipe[]>([])
   const [loading, setLoading] = useState(true)
   const [dailyMenuIds, setDailyMenuIds] = useState<string[]>([])
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
 
   useEffect(() => {
     let cancelled = false
     const fetchData = async () => {
       try {
         const [recipesSnap, menuSnap] = await Promise.all([
-          getDocs(query(collection(db, 'recipes'), where('status', 'in', ['published', 'approved']))),
+          getDocs(query(
+            collection(db, 'recipes'),
+            where('status', 'in', ['published', 'approved']),
+            limit(FIRESTORE_OVERRIDE_FETCH_LIMIT)
+          )),
           getDoc(doc(db, 'settings', 'dailyMenu')),
         ])
         if (cancelled) return
@@ -67,13 +83,27 @@ export default function HomePage() {
     [dailyMenuIds, allRecipes]
   )
 
+  const shuffledRecipes = useMemo(() => {
+    const arr = [...allRecipes]
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1))
+      ;[arr[i], arr[j]] = [arr[j], arr[i]]
+    }
+    return arr
+  }, [allRecipes])
+
   const filtered = useMemo(() => {
-    return allRecipes.filter((r) => {
+    return shuffledRecipes.filter((r) => {
       if (selectedContinent !== 'all' && r.continent !== selectedContinent) return false
       if (selectedCategory !== 'all' && r.category !== selectedCategory) return false
       return true
     })
-  }, [allRecipes, selectedContinent, selectedCategory])
+  }, [shuffledRecipes, selectedContinent, selectedCategory])
+
+  // Reset pagination when filter changes
+  useEffect(() => { setVisibleCount(PAGE_SIZE) }, [selectedContinent, selectedCategory])
+
+  const favSet = useMemo(() => new Set(favorites), [favorites])
 
   const hasFilter = selectedContinent !== 'all' || selectedCategory !== 'all'
 
@@ -160,8 +190,15 @@ export default function HomePage() {
                         style={{ width: '200px', height: '130px', scrollSnapAlign: 'start' }}
                       >
                         {recipe.photo ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img src={recipe.photo} alt={recipe.name} className="w-full h-full object-cover" />
+                          <Image
+                            src={recipe.photo}
+                            alt={recipe.name}
+                            fill
+                            sizes="200px"
+                            loading="lazy"
+                            unoptimized={isPreOptimized(recipe.photo)}
+                            className="object-cover"
+                          />
                         ) : (
                           <div
                             className="w-full h-full flex items-center justify-center"
@@ -237,26 +274,56 @@ export default function HomePage() {
             <p className="text-lg font-display font-bold mb-1" style={{ color: 'var(--text)' }}>{t('noResults')}</p>
             <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Farklı bir filtre deneyin</p>
           </div>
-        ) : (
-          <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-              {filtered.slice(0, 8).map((recipe) => <RecipeCard key={recipe.id} recipe={recipe} />)}
-            </div>
-
-            {/* ── AD: Rectangle — 8 karttan sonra ── */}
-            {filtered.length > 8 && (
-              <div className="flex justify-center my-6">
-                <AdBanner size="rectangle" />
-              </div>
-            )}
-
-            {filtered.length > 8 && (
+        ) : (() => {
+          const visible = filtered.slice(0, visibleCount)
+          const firstChunk = visible.slice(0, 8)
+          const secondChunk = visible.slice(8)
+          const hasMore = visibleCount < filtered.length
+          return (
+            <>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                {filtered.slice(8).map((recipe) => <RecipeCard key={recipe.id} recipe={recipe} />)}
+                {firstChunk.map((recipe) => (
+                  <RecipeCard
+                    key={recipe.id}
+                    recipe={recipe}
+                    isFav={favSet.has(recipe.id)}
+                    onFavoriteToggle={toggleFavorite}
+                  />
+                ))}
               </div>
-            )}
-          </>
-        )}
+
+              {secondChunk.length > 0 && (
+                <>
+                  {/* ── AD: Rectangle — 8 karttan sonra ── */}
+                  <div className="flex justify-center my-6">
+                    <AdBanner size="rectangle" />
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    {secondChunk.map((recipe) => (
+                      <RecipeCard
+                        key={recipe.id}
+                        recipe={recipe}
+                        isFav={favSet.has(recipe.id)}
+                        onFavoriteToggle={toggleFavorite}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
+
+              {hasMore && (
+                <div className="flex justify-center mt-8 mb-4">
+                  <button
+                    onClick={() => setVisibleCount((v) => v + PAGE_SIZE)}
+                    className="btn-primary px-8 py-3 rounded-2xl font-semibold text-sm"
+                  >
+                    Daha Fazla Göster ({filtered.length - visibleCount} tarif daha)
+                  </button>
+                </div>
+              )}
+            </>
+          )
+        })()}
       </div>
     </div>
   )

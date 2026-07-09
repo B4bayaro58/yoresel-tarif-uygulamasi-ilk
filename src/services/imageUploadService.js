@@ -72,7 +72,10 @@ export const uploadRecipeImage = async (uri, recipeId) => {
     const blob = await response.blob();
 
     const storageRef = ref(storage, `recipes/${recipeId}_${Date.now()}.jpg`);
-    await uploadBytes(storageRef, blob, { contentType: 'image/jpeg' });
+    await uploadBytes(storageRef, blob, {
+      contentType: 'image/jpeg',
+      cacheControl: 'public, max-age=31536000, immutable',
+    });
     const downloadURL = await getDownloadURL(storageRef);
 
     return { success: true, url: downloadURL };

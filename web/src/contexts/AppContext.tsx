@@ -6,9 +6,10 @@ import React, {
   useState,
   useEffect,
   useCallback,
+  useRef,
   ReactNode,
 } from 'react'
-import { doc, getDoc, updateDoc, arrayUnion, arrayRemove, onSnapshot } from 'firebase/firestore'
+import { doc, getDoc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore'
 import { db } from '@/config/firebase'
 import { Language, ShoppingItem } from '@/types'
 // @ts-ignore
@@ -37,7 +38,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [isDark, setIsDark] = useState(false)
   const [favorites, setFavorites] = useState<string[]>([])
   const [shoppingList, setShoppingList] = useState<ShoppingItem[]>([])
+  const favoritesRef = useRef<string[]>(favorites)
   const { user } = useAuth()
+
+  useEffect(() => { favoritesRef.current = favorites }, [favorites])
 
   // Initialize from localStorage
   useEffect(() => {
@@ -85,15 +89,15 @@ export function AppProvider({ children }: { children: ReactNode }) {
       return
     }
 
-    const userDocRef = doc(db, 'users', user.uid)
-    const unsubscribe = onSnapshot(userDocRef, (snap) => {
+    // Tek seferlik okuma — canlı onSnapshot dinleyicisi oturum boyunca açık kalıp
+    // her okumayı faturalandırıyordu, mobil tarafta da aynı sebeple getDoc'a çevrilmişti
+    // (bkz. maliyet denetimi 2026-07-09). Favoriler başka bir sekmede değişirse bu
+    // sekmede sayfa yenilenene kadar görünmez.
+    getDoc(doc(db, 'users', user.uid)).then((snap) => {
       if (snap.exists()) {
-        const data = snap.data()
-        setFavorites(data.favorites || [])
+        setFavorites(snap.data().favorites || [])
       }
     })
-
-    return () => unsubscribe()
   }, [user])
 
   // Persist shopping list to localStorage
@@ -141,7 +145,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
       // Logged-in user: sync with Firestore
       const userDocRef = doc(db, 'users', user.uid)
-      const isFav = favorites.includes(recipeId)
+      const isFav = favoritesRef.current.includes(recipeId)
       try {
         if (isFav) {
           await updateDoc(userDocRef, { favorites: arrayRemove(recipeId) })
@@ -152,7 +156,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         console.error('Favori güncellenemedi:', err)
       }
     },
-    [user, favorites]
+    [user]
   )
 
   const addToShoppingList = useCallback((items: ShoppingItem[]) => {

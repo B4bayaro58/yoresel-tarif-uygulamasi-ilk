@@ -1,10 +1,26 @@
 import type { Metadata } from 'next'
+import { Playfair_Display, Inter } from 'next/font/google'
 import './globals.css'
 import { AuthProvider } from '@/contexts/AuthContext'
 import { AppProvider } from '@/contexts/AppContext'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import AuthGuard from '@/components/AuthGuard'
+
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  weight: ['600', '700', '800'],
+  style: ['normal', 'italic'],
+  variable: '--font-playfair',
+  display: 'swap',
+})
+
+const inter = Inter({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-inter',
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
   title: 'Yöresel Tarifler — Lezzet Atlası',
@@ -24,15 +40,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="tr" suppressHydrationWarning>
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600;1,700&family=Inter:wght@400;500;600;700&display=swap"
-          rel="stylesheet"
-        />
-      </head>
+    <html lang="tr" suppressHydrationWarning className={`${playfair.variable} ${inter.variable}`}>
       <body>
         <AuthProvider>
           <AppProvider>

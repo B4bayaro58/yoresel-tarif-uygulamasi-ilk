@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import {
   ArrowLeft,
   Heart,
@@ -22,6 +23,7 @@ import { db } from '@/config/firebase'
 import { useApp } from '@/contexts/AppContext'
 import { Recipe, ShoppingItem } from '@/types'
 import AdBanner from '@/components/AdBanner'
+import { isPreOptimized } from '@/lib/image'
 // @ts-ignore
 import { RECIPES_DATA } from '@shared/recipes'
 
@@ -154,8 +156,15 @@ export default function RecipeDetailPage() {
       {/* ── Hero image ─────────────────────────── */}
       <div className="relative rounded-3xl overflow-hidden mb-6" style={{ height: '340px' }}>
         {recipe.photo ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={recipe.photo} alt={recipe.name} className="w-full h-full object-cover" />
+          <Image
+            src={recipe.photo}
+            alt={recipe.name}
+            fill
+            sizes="(max-width: 768px) 100vw, 768px"
+            priority
+            unoptimized={isPreOptimized(recipe.photo)}
+            className="object-cover"
+          />
         ) : (
           <div
             className="w-full h-full flex items-center justify-center"

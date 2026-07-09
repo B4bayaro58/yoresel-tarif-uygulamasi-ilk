@@ -4,9 +4,9 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  ImageBackground,
   Dimensions,
 } from 'react-native';
+import { Image } from 'expo-image';
 import { Star, Clock, Users, Heart } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useApp } from '../contexts/AppContext';
@@ -38,12 +38,18 @@ function RecipeCard({ recipe, onPress }) {
           {/* Emoji Watermark */}
           <Text style={styles.emojiWatermark}>{recipe.emoji}</Text>
 
-          {/* Photo Overlay */}
-          <ImageBackground
-            source={recipe.photo ? { uri: recipe.photo } : require('../../assets/icon.png')}
-            style={styles.photoOverlay}
-            imageStyle={styles.photoImage}
-          >
+          {/* Photo Overlay — expo-image: disk cache + kart boyutuna göre otomatik
+              downsampling (bkz. maliyet denetimi 2026-07-09, önceden RN Image her
+              açılışta tam çözünürlüğü ağdan tekrar çekiyordu) */}
+          <View style={styles.photoOverlay}>
+            <Image
+              source={recipe.photo ? { uri: recipe.photo } : require('../../assets/icon.png')}
+              style={styles.photoImage}
+              contentFit="cover"
+              cachePolicy="disk"
+              transition={150}
+            />
+
             {/* Rating Badge — sol üst */}
             <View style={styles.ratingBadge}>
               <Star size={12} color="#FFD700" fill="#FFD700" />
@@ -64,7 +70,7 @@ function RecipeCard({ recipe, onPress }) {
                 fill={isFav ? '#FFFFFF' : 'transparent'}
               />
             </TouchableOpacity>
-          </ImageBackground>
+          </View>
         </LinearGradient>
       </View>
 
@@ -134,8 +140,8 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   photoImage: {
+    ...StyleSheet.absoluteFillObject,
     opacity: 0.85,
-    resizeMode: 'cover',
   },
   ratingBadge: {
     position: 'absolute',

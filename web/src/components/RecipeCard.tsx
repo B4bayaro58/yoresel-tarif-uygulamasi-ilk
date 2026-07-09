@@ -2,13 +2,16 @@
 
 import React, { useCallback } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Heart, Clock, Users, Flame, Star } from 'lucide-react'
 import clsx from 'clsx'
 import { Recipe } from '@/types'
 import { useApp } from '@/contexts/AppContext'
+import { isPreOptimized } from '@/lib/image'
 
 interface RecipeCardProps {
   recipe: Recipe
+  isFav?: boolean
   onFavoriteToggle?: (recipeId: string) => void
 }
 
@@ -33,9 +36,8 @@ function MiniStars({ rating }: { rating: number }) {
   )
 }
 
-function RecipeCard({ recipe, onFavoriteToggle }: RecipeCardProps) {
-  const { t, isDark, favorites, toggleFavorite } = useApp()
-  const isFav = favorites.includes(recipe.id)
+function RecipeCard({ recipe, isFav = false, onFavoriteToggle }: RecipeCardProps) {
+  const { t } = useApp()
 
   const diff = DIFFICULTY_STYLE[recipe.difficulty as keyof typeof DIFFICULTY_STYLE] || DIFFICULTY_STYLE.medium
   const difficultyLabel =
@@ -48,8 +50,8 @@ function RecipeCard({ recipe, onFavoriteToggle }: RecipeCardProps) {
   const handleFavClick = useCallback((e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    onFavoriteToggle ? onFavoriteToggle(recipe.id) : toggleFavorite(recipe.id)
-  }, [recipe.id, onFavoriteToggle, toggleFavorite])
+    onFavoriteToggle?.(recipe.id)
+  }, [recipe.id, onFavoriteToggle])
 
   return (
     <Link href={`/recipes/${recipe.id}`} className="block group">
@@ -64,12 +66,14 @@ function RecipeCard({ recipe, onFavoriteToggle }: RecipeCardProps) {
         {/* ── Image area (cinematic 3:2 ratio) ──────── */}
         <div className="relative overflow-hidden" style={{ height: '210px' }}>
           {recipe.photo ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
+            <Image
               src={recipe.photo}
               alt={recipe.name}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
               loading="lazy"
+              unoptimized={isPreOptimized(recipe.photo)}
+              className="object-cover transition-transform duration-500 group-hover:scale-105"
             />
           ) : (
             <div

@@ -13,7 +13,7 @@ import {
   TrendingUp,
 } from 'lucide-react'
 import clsx from 'clsx'
-import { collection, getDocs, query, where } from 'firebase/firestore'
+import { collection, getCountFromServer, getDocs, query, where } from 'firebase/firestore'
 import { db } from '@/config/firebase'
 import { useApp } from '@/contexts/AppContext'
 import { useAuth } from '@/contexts/AuthContext'
@@ -52,14 +52,17 @@ export default function AdminPage() {
     if (!isAdmin) return
     const fetchStats = async () => {
       try {
-        const [usersSnap, pendingSnap, publishedSnap] = await Promise.all([
-          getDocs(collection(db, 'users')),
+        // Sadece sayı gerekiyor — tüm dokümanları çekmek yerine sunucu tarafı
+        // aggregation count kullanılıyor (N okuma yerine 1 okuma, bkz. maliyet
+        // denetimi 2026-07-09)
+        const [usersCount, pendingSnap, publishedSnap] = await Promise.all([
+          getCountFromServer(collection(db, 'users')),
           getDocs(query(collection(db, 'recipes'), where('status', '==', 'pending'))),
           getDocs(query(collection(db, 'recipes'), where('status', '==', 'published'))),
         ])
         setStats({
           totalRecipes: localCount + publishedSnap.size,
-          totalUsers: usersSnap.size,
+          totalUsers: usersCount.data().count,
           pendingRecipes: pendingSnap.size,
           publishedRecipes: publishedSnap.size,
         })

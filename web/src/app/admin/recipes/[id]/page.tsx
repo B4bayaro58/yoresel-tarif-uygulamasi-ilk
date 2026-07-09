@@ -7,7 +7,7 @@ import {
   ArrowLeft, Save, Trash2, Plus, X, Image as ImageIcon,
 } from 'lucide-react'
 import {
-  doc, getDoc, getDocs, updateDoc, addDoc, deleteDoc, collection, serverTimestamp,
+  doc, getDoc, getDocs, updateDoc, addDoc, deleteDoc, collection, query, where, serverTimestamp,
 } from 'firebase/firestore'
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import { db, storage } from '@/config/firebase'
@@ -181,7 +181,10 @@ export default function AdminRecipeDetailPage() {
       const timeout = new Promise<never>((_, reject) =>
         setTimeout(() => reject(new Error('Zaman aşımı (30s). Firebase Storage kurallarını kontrol edin.')), 30_000)
       )
-      const upload = uploadBytes(storageRef, blob, { contentType: 'image/jpeg' })
+      const upload = uploadBytes(storageRef, blob, {
+        contentType: 'image/jpeg',
+        cacheControl: 'public, max-age=31536000, immutable',
+      })
       const snap = await Promise.race([upload, timeout])
       const url  = await getDownloadURL(snap.ref)
       setForm((f) => ({ ...f, photo: url }))
@@ -190,10 +193,11 @@ export default function AdminRecipeDetailPage() {
         await updateDoc(doc(db, 'recipes', firebaseId), { photo: url })
       } else if (staticId) {
         // Statik tarif: override kaydı oluştur veya güncelle
-        const existing = await getDocs(collection(db, 'recipes'))
-        const override = existing.docs.find(d => String(d.data().overridesStaticId) === staticId)
-        if (override) {
-          await updateDoc(doc(db, 'recipes', override.id), { photo: url })
+        const existing = await getDocs(
+          query(collection(db, 'recipes'), where('overridesStaticId', '==', staticId))
+        )
+        if (!existing.empty) {
+          await updateDoc(doc(db, 'recipes', existing.docs[0].id), { photo: url })
         } else {
           const staticRecipe = staticRecipes.find((r) => String(r.id) === staticId)
           if (staticRecipe) {
@@ -233,10 +237,11 @@ export default function AdminRecipeDetailPage() {
         // `id` alanı kasıtla çıkarılıyor — Firestore kendi döküman ID'sini atar.
         const { id: _sid, ...baseStatic } = (staticRecipes.find((r) => String(r.id) === staticId) || {}) as any
         // Mevcut override varsa güncelle (duplikasyon önleme)
-        const existingSnap = await getDocs(collection(db, 'recipes'))
-        const overrideDoc = existingSnap.docs.find(d => String(d.data().overridesStaticId) === staticId)
-        if (overrideDoc) {
-          await updateDoc(doc(db, 'recipes', overrideDoc.id), { ...baseStatic, ...data })
+        const existingSnap = await getDocs(
+          query(collection(db, 'recipes'), where('overridesStaticId', '==', staticId))
+        )
+        if (!existingSnap.empty) {
+          await updateDoc(doc(db, 'recipes', existingSnap.docs[0].id), { ...baseStatic, ...data })
         } else {
           await addDoc(collection(db, 'recipes'), {
             ...baseStatic, ...data, overridesStaticId: staticId, createdAt: serverTimestamp(),

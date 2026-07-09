@@ -17,8 +17,7 @@ import {
   Award,
 } from 'lucide-react-native';
 import { useApp } from '../contexts/AppContext';
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../config/firebase';
+import { getPlatformCounts } from '../services/statsService';
 
 export default function StatisticsScreen() {
   const { colors, translate, recipes } = useApp();
@@ -38,13 +37,7 @@ export default function StatisticsScreen() {
     try {
       setLoading(true);
 
-      // Kullanıcı sayısını çek
-      const usersSnapshot = await getDocs(collection(db, 'users'));
-      const totalUsers = usersSnapshot.size;
-
-      // Favorileri çek
-      const favoritesSnapshot = await getDocs(collection(db, 'favorites'));
-      const totalFavorites = favoritesSnapshot.size;
+      const { totalUsers, totalFavorites } = await getPlatformCounts();
 
       // Ortalama puanı hesapla
       const avgRating = recipes.length > 0

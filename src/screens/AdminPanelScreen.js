@@ -20,8 +20,7 @@ import {
 } from 'lucide-react-native';
 import { useApp } from '../contexts/AppContext';
 import { useAuth } from '../contexts/AuthContext';
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../config/firebase';
+import { getPlatformCounts } from '../services/statsService';
 
 export default function AdminPanelScreen({ navigation }) {
   const { colors, translate, recipes } = useApp();
@@ -44,13 +43,7 @@ export default function AdminPanelScreen({ navigation }) {
     try {
       setLoading(true);
 
-      // Firebase'den kullanıcı sayısını çek
-      const usersSnapshot = await getDocs(collection(db, 'users'));
-      const totalUsers = usersSnapshot.size;
-
-      // Firebase'den favori sayısını çek
-      const favoritesSnapshot = await getDocs(collection(db, 'favorites'));
-      const totalFavorites = favoritesSnapshot.size;
+      const { totalUsers, totalFavorites } = await getPlatformCounts();
 
       // Ortalama puanı hesapla
       const avgRating = recipes.length > 0

@@ -22,7 +22,6 @@ import clsx from 'clsx'
 import { useApp } from '@/contexts/AppContext'
 import { useAuth } from '@/contexts/AuthContext'
 import { Language } from '@/types'
-import SearchModal from './SearchModal'
 
 const LANGUAGES: { code: Language; label: string; flag: string }[] = [
   { code: 'tr', label: 'Türkçe', flag: '🇹🇷' },
@@ -38,7 +37,6 @@ export default function Header() {
   const { user, logout, isAdmin } = useAuth()
 
   const [mobileOpen, setMobileOpen] = useState(false)
-  const [searchOpen, setSearchOpen] = useState(false)
   const [langOpen, setLangOpen] = useState(false)
   const [userMenuOpen, setUserMenuOpen] = useState(false)
 
@@ -136,14 +134,14 @@ export default function Header() {
             <div className="flex items-center gap-1">
 
               {/* Search */}
-              <button
-                onClick={() => setSearchOpen(true)}
+              <Link
+                href="/arama"
                 className="p-2 rounded-xl transition-all hover:opacity-80"
                 style={{ color: 'var(--text-muted)' }}
                 title={t('search')}
               >
                 <Search size={19} />
-              </button>
+              </Link>
 
               {/* Language */}
               <div className="relative" ref={langRef}>
@@ -330,8 +328,6 @@ export default function Header() {
           </div>
         )}
       </header>
-
-      <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
     </>
   )
 }

@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect, useContext, useMemo, useCallback } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, getDocs, query, where, limit, addDoc, updateDoc, deleteDoc, doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import {
   requestNotificationPermissions,
@@ -20,6 +20,13 @@ import { logFavoriteToggle, logShoppingAdd, logSearch, logRecipeComplete } from 
 import { Alert, Linking, Platform } from 'react-native';
 
 const AppContext = createContext();
+
+// Statik tarif kataloğu zaten Unsplash fotoğraflarıyla yerelde mevcut; bu sorgu
+// sadece admin panelinden yüklenmiş özel fotoğraf override'larını getirir.
+// Önceden onSnapshot ile filtresiz/limitsiz canlı dinleniyordu — uygulama açık
+// olan her kullanıcı için sürekli 1000+ doküman okunuyordu. Tek seferlik ve
+// limitli hale getirildi; limit dışında kalan tarifler statik fotoğrafına düşer.
+const FIREBASE_RECIPE_FETCH_LIMIT = 200;
 
 export const useApp = () => {
   const context = useContext(AppContext);
@@ -71,10 +78,9 @@ export const AppProvider = ({ children }) => {
   // Load persisted data and Firebase recipes on mount
   useEffect(() => {
     loadPersistedData();
-    const unsubscribe = loadFirebaseRecipes();
+    loadFirebaseRecipes();
     loadDailyMenu();
     initNotifications();
-    return () => unsubscribe?.();
   }, []);
 
   const initNotifications = async () => {
@@ -116,30 +122,30 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  const loadFirebaseRecipes = () => {
+  const loadFirebaseRecipes = async () => {
     setRecipesLoading(true);
-    const unsubscribe = onSnapshot(
-      collection(db, 'recipes'),
-      async (snapshot) => {
-        const loaded = snapshot.docs.map(d => ({ id: d.id, ...d.data(), isFirebase: true }));
-        setFirebaseRecipes(loaded);
-        setRecipesLoading(false);
-        try {
-          await AsyncStorage.setItem('cachedFirebaseRecipes', JSON.stringify(loaded));
-        } catch {}
-      },
-      async (error) => {
-        console.error('Firebase recipes unavailable, loading from cache:', error);
-        try {
-          const cached = await AsyncStorage.getItem('cachedFirebaseRecipes');
-          if (cached) setFirebaseRecipes(JSON.parse(cached));
-        } catch (cacheError) {
-          console.error('Cache load error:', cacheError);
-        }
-        setRecipesLoading(false);
+    try {
+      const snapshot = await getDocs(query(
+        collection(db, 'recipes'),
+        where('status', 'in', ['published', 'approved']),
+        limit(FIREBASE_RECIPE_FETCH_LIMIT)
+      ));
+      const loaded = snapshot.docs.map(d => ({ id: d.id, ...d.data(), isFirebase: true }));
+      setFirebaseRecipes(loaded);
+      try {
+        await AsyncStorage.setItem('cachedFirebaseRecipes', JSON.stringify(loaded));
+      } catch {}
+    } catch (error) {
+      console.error('Firebase recipes unavailable, loading from cache:', error);
+      try {
+        const cached = await AsyncStorage.getItem('cachedFirebaseRecipes');
+        if (cached) setFirebaseRecipes(JSON.parse(cached));
+      } catch (cacheError) {
+        console.error('Cache load error:', cacheError);
       }
-    );
-    return unsubscribe;
+    } finally {
+      setRecipesLoading(false);
+    }
   };
 
   const loadDailyMenu = async () => {
@@ -533,11 +539,18 @@ export const AppProvider = ({ children }) => {
         );
         return nameMatch || ingredientMatch;
       });
-      logSearch(searchQuery);
     }
 
     return filtered;
   }, [recipes, selectedContinent, selectedCategory, selectedCountry, searchQuery]);
+
+  // Arama logunu yalnızca kullanıcı yazmayı bıraktıktan 600ms sonra tek sefer yaz
+  // (önceden her tuş vuruşunda Firestore'a yazıyordu — bkz. maliyet denetimi 2026-07-09)
+  useEffect(() => {
+    if (!searchQuery) return;
+    const timeout = setTimeout(() => logSearch(searchQuery), 600);
+    return () => clearTimeout(timeout);
+  }, [searchQuery]);
 
   // Clear Filters
   const clearFilters = useCallback(() => {

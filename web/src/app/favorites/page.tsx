@@ -13,7 +13,7 @@ import { RECIPES_DATA } from '@shared/recipes'
 const localRecipes: Recipe[] = (RECIPES_DATA as any).tr || []
 
 export default function FavoritesPage() {
-  const { favorites, t } = useApp()
+  const { favorites, toggleFavorite, t } = useApp()
   const { user } = useAuth()
 
   const favoriteRecipes = useMemo(
@@ -91,7 +91,7 @@ export default function FavoritesPage() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {favoriteRecipes.map((recipe) => (
-            <RecipeCard key={recipe.id} recipe={recipe} />
+            <RecipeCard key={recipe.id} recipe={recipe} isFav={true} onFavoriteToggle={toggleFavorite} />
           ))}
         </div>
       )}
