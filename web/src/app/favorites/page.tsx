@@ -6,19 +6,20 @@ import { Heart, LogIn } from 'lucide-react'
 import { useApp } from '@/contexts/AppContext'
 import { useAuth } from '@/contexts/AuthContext'
 import RecipeCard from '@/components/RecipeCard'
-import { Recipe } from '@/types'
-// @ts-ignore
-import { RECIPES_DATA } from '@shared/recipes'
-
-const localRecipes: Recipe[] = (RECIPES_DATA as any).tr || []
+import { useAllRecipes } from '@/hooks/useAllRecipes'
 
 export default function FavoritesPage() {
   const { favorites, toggleFavorite, t } = useApp()
   const { user } = useAuth()
+  // Sadece statik katalogda değil, Firebase-native/override edilmiş tarifler
+  // arasında da arıyor — önceden yalnızca statik kataloğa bakıldığı için
+  // Firebase'de yaşayan tarifleri favorileyenler favoriler sayfasında hiçbir
+  // şey göremiyordu (bkz. 2026-07-10 canlı hata raporu).
+  const { allRecipes, loading: recipesLoading } = useAllRecipes()
 
   const favoriteRecipes = useMemo(
-    () => localRecipes.filter((r) => favorites.includes(r.id)),
-    [favorites]
+    () => allRecipes.filter((r) => favorites.includes(String(r.id))),
+    [allRecipes, favorites]
   )
 
   if (!user) {
@@ -67,7 +68,17 @@ export default function FavoritesPage() {
         </div>
       </div>
 
-      {favoriteRecipes.length === 0 ? (
+      {recipesLoading ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          {Array.from({ length: favorites.length || 4 }).map((_, i) => (
+            <div
+              key={i}
+              className="rounded-2xl animate-pulse"
+              style={{ height: '280px', backgroundColor: 'var(--border)' }}
+            />
+          ))}
+        </div>
+      ) : favoriteRecipes.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-24">
           <div
             className="w-20 h-20 rounded-3xl flex items-center justify-center text-4xl mb-4"
