@@ -56,8 +56,15 @@ export default function AdminDailyMenuPage() {
     return Array.from(map.values())
   }, [firestoreRecipes])
 
+  // Override edilmiş statik tarifler allRecipes'te kendi Firestore ID'siyle
+  // duruyor, statik slug (ör. "lasagna") artık haritada yok — overridesStaticId
+  // fallback'i olmadan bu tarifler "kayıp" görünüyordu (bkz. 2026-07-10 canlı
+  // hata raporu, aynı kök neden anasayfadaki Günün Menüsü hatasıyla ortak).
   const menuRecipes = useMemo(
-    () => menuIds.map((id) => allRecipes.find((r) => String(r.id) === id)).filter(Boolean) as Recipe[],
+    () => menuIds.map((id) =>
+      allRecipes.find((r) => String(r.id) === id) ||
+      allRecipes.find((r) => String((r as any).overridesStaticId) === id)
+    ).filter(Boolean) as Recipe[],
     [menuIds, allRecipes]
   )
 
@@ -65,6 +72,7 @@ export default function AdminDailyMenuPage() {
     return allRecipes.filter(
       (r) =>
         !menuIds.includes(String(r.id)) &&
+        !menuIds.includes(String((r as any).overridesStaticId)) &&
         r.name.toLowerCase().includes(search.toLowerCase())
     )
   }, [allRecipes, menuIds, search])
