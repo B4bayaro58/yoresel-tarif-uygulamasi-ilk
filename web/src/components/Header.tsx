@@ -21,33 +21,22 @@ import {
 import clsx from 'clsx'
 import { useApp } from '@/contexts/AppContext'
 import { useAuth } from '@/contexts/AuthContext'
-import { Language } from '@/types'
-
-const LANGUAGES: { code: Language; label: string; flag: string }[] = [
-  { code: 'tr', label: 'Türkçe', flag: '🇹🇷' },
-  { code: 'en', label: 'English', flag: '🇬🇧' },
-  { code: 'fr', label: 'Français', flag: '🇫🇷' },
-  { code: 'it', label: 'Italiano', flag: '🇮🇹' },
-]
 
 export default function Header() {
   const pathname = usePathname()
   const router = useRouter()
-  const { t, isDark, toggleTheme, language, setLanguage, shoppingList, favorites } = useApp()
+  const { t, isDark, toggleTheme, shoppingList, favorites } = useApp()
   const { user, logout, isAdmin } = useAuth()
 
   const [mobileOpen, setMobileOpen] = useState(false)
-  const [langOpen, setLangOpen] = useState(false)
   const [userMenuOpen, setUserMenuOpen] = useState(false)
 
-  const langRef = useRef<HTMLDivElement>(null)
   const userMenuRef = useRef<HTMLDivElement>(null)
 
   const uncheckedItems = shoppingList.filter((i) => !i.checked).length
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
-      if (langRef.current && !langRef.current.contains(e.target as Node)) setLangOpen(false)
       if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) setUserMenuOpen(false)
     }
     document.addEventListener('mousedown', handleClick)
@@ -70,8 +59,6 @@ export default function Header() {
     setUserMenuOpen(false)
     router.push('/')
   }
-
-  const currentLang = LANGUAGES.find((l) => l.code === language)
 
   return (
     <>
@@ -142,51 +129,6 @@ export default function Header() {
               >
                 <Search size={19} />
               </Link>
-
-              {/* Language */}
-              <div className="relative" ref={langRef}>
-                <button
-                  onClick={() => setLangOpen(!langOpen)}
-                  className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-sm font-medium transition-all hover:opacity-80"
-                  style={{ color: 'var(--text-muted)' }}
-                >
-                  <span className="text-base leading-none">{currentLang?.flag}</span>
-                  <span className="hidden sm:block text-xs font-semibold uppercase tracking-wide">
-                    {language}
-                  </span>
-                  <ChevronDown size={12} />
-                </button>
-
-                {langOpen && (
-                  <div
-                    className="absolute right-0 top-full mt-2 w-40 rounded-2xl overflow-hidden animate-slide-down"
-                    style={{
-                      backgroundColor: 'var(--card)',
-                      border: '1px solid var(--border)',
-                      boxShadow: '0 12px 40px rgba(28,18,10,0.14)',
-                    }}
-                  >
-                    {LANGUAGES.map((lang) => (
-                      <button
-                        key={lang.code}
-                        onClick={() => { setLanguage(lang.code); setLangOpen(false) }}
-                        className={clsx(
-                          'w-full flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors',
-                          language === lang.code ? 'font-semibold' : 'hover:opacity-80'
-                        )}
-                        style={
-                          language === lang.code
-                            ? { color: 'var(--primary)', backgroundColor: 'var(--primary-dim)' }
-                            : { color: 'var(--text)' }
-                        }
-                      >
-                        <span>{lang.flag}</span>
-                        {lang.label}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
 
               {/* Theme toggle */}
               <button

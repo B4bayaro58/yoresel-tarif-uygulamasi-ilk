@@ -11,14 +11,12 @@ import React, {
 } from 'react'
 import { doc, getDoc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore'
 import { db } from '@/config/firebase'
-import { Language, ShoppingItem } from '@/types'
+import { ShoppingItem } from '@/types'
 // @ts-ignore
 import { TRANSLATIONS } from '@shared/translations'
 import { useAuth } from './AuthContext'
 
 interface AppContextType {
-  language: Language
-  setLanguage: (lang: Language) => void
   isDark: boolean
   toggleTheme: () => void
   favorites: string[]
@@ -34,7 +32,6 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | null>(null)
 
 export function AppProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguageState] = useState<Language>('tr')
   const [isDark, setIsDark] = useState(false)
   const [favorites, setFavorites] = useState<string[]>([])
   const [shoppingList, setShoppingList] = useState<ShoppingItem[]>([])
@@ -46,11 +43,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
   // Initialize from localStorage
   useEffect(() => {
     if (typeof window === 'undefined') return
-
-    const storedLang = localStorage.getItem('language') as Language | null
-    if (storedLang && ['tr', 'en', 'fr', 'it'].includes(storedLang)) {
-      setLanguageState(storedLang)
-    }
 
     const storedTheme = localStorage.getItem('theme')
     const prefersDark =
@@ -108,13 +100,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
       localStorage.setItem('shoppingList', JSON.stringify(shoppingList))
     }
   }, [shoppingList])
-
-  const setLanguage = useCallback((lang: Language) => {
-    setLanguageState(lang)
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('language', lang)
-    }
-  }, [])
 
   const toggleTheme = useCallback(() => {
     setIsDark((prev) => {
@@ -195,21 +180,16 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setShoppingList([])
   }, [])
 
-  const t = useCallback(
-    (key: string): string => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const entry = (TRANSLATIONS as any)[key]
-      if (!entry) return key
-      return entry[language] || entry['tr'] || key
-    },
-    [language]
-  )
+  const t = useCallback((key: string): string => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const entry = (TRANSLATIONS as any)[key]
+    if (!entry) return key
+    return entry['tr'] || key
+  }, [])
 
   return (
     <AppContext.Provider
       value={{
-        language,
-        setLanguage,
         isDark,
         toggleTheme,
         favorites,

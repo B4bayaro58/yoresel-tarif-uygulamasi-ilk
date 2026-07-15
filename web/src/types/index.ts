@@ -49,7 +49,6 @@ export interface UserProfile {
   createdAt: string
 }
 
-export type Language = 'tr' | 'en' | 'fr' | 'it'
 export type Theme = 'light' | 'dark'
 export type Continent =
   | 'europe'

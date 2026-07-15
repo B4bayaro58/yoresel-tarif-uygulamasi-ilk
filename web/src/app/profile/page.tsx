@@ -3,19 +3,11 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { User, Sun, Moon, Globe, LogOut, LogIn, Edit2, Check, X } from 'lucide-react'
+import { User, Sun, Moon, LogOut, LogIn, Edit2, Check, X } from 'lucide-react'
 import { updateProfile } from 'firebase/auth'
 import { auth } from '@/config/firebase'
 import { useApp } from '@/contexts/AppContext'
 import { useAuth } from '@/contexts/AuthContext'
-import { Language } from '@/types'
-
-const LANGUAGES: { code: Language; label: string; flag: string }[] = [
-  { code: 'tr', label: 'Türkçe', flag: '🇹🇷' },
-  { code: 'en', label: 'English', flag: '🇬🇧' },
-  { code: 'fr', label: 'Français', flag: '🇫🇷' },
-  { code: 'it', label: 'Italiano', flag: '🇮🇹' },
-]
 
 function Section({ children }: { children: React.ReactNode }) {
   return (
@@ -42,7 +34,7 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 
 export default function ProfilePage() {
   const router = useRouter()
-  const { toggleTheme, isDark, language, setLanguage, favorites, shoppingList } = useApp()
+  const { toggleTheme, isDark, favorites, shoppingList } = useApp()
   const { user, logout } = useAuth()
 
   const [editingName, setEditingName] = useState(false)
@@ -211,31 +203,6 @@ export default function ProfilePage() {
               style={{ transform: isDark ? 'translateX(24px)' : 'translateX(0)' }}
             />
           </button>
-        </div>
-      </Section>
-
-      {/* ── Language ──────────────────────────────── */}
-      <Section>
-        <SectionLabel>
-          <Globe size={12} />
-          Dil
-        </SectionLabel>
-        <div className="grid grid-cols-2 gap-2">
-          {LANGUAGES.map((lang) => (
-            <button
-              key={lang.code}
-              onClick={() => setLanguage(lang.code)}
-              className="flex items-center gap-2.5 px-3 py-3 rounded-xl text-sm font-medium transition-all hover:opacity-80"
-              style={
-                language === lang.code
-                  ? { border: '1.5px solid var(--primary)', backgroundColor: 'var(--primary-dim)', color: 'var(--primary)', fontWeight: 600 }
-                  : { border: '1px solid var(--border)', backgroundColor: 'var(--card)', color: 'var(--text)' }
-              }
-            >
-              <span className="text-lg">{lang.flag}</span>
-              {lang.label}
-            </button>
-          ))}
         </div>
       </Section>
 
