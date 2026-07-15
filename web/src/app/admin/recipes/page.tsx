@@ -1,15 +1,24 @@
 'use client'
 
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useRef, useState, useMemo } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, Search, ChevronRight, ChevronDown } from 'lucide-react'
-import { collection, getDocs } from 'firebase/firestore'
+import { collection, getDocs, query, orderBy, limit, startAfter, documentId, QueryDocumentSnapshot, DocumentData } from 'firebase/firestore'
 import { db } from '@/config/firebase'
 import { Recipe } from '@/types'
 // @ts-ignore
 import { RECIPES_DATA } from '@shared/recipes'
 
 const staticRecipes: Recipe[] = (RECIPES_DATA as any).tr || []
+
+// `recipes` koleksiyonu yalnızca admin override'larıyla değil, giriş yapmış
+// herhangi bir kullanıcının /tarif-oner formundan `status: 'pending'` ile
+// yazabildiği kayıtlarla da büyüyor — limitsiz `getDocs(collection(...))`
+// hem bugün ~1100+ okuma maliyeti demek hem de spam/kötüye kullanımda
+// sınırsız büyüyebilir. `documentId()` ile sayfalanıyor (bir veri alanı değil,
+// her dokümanda garanti var) — böylece hiçbir kayıt sessizce atlanmaz, sadece
+// "Daha Fazla Yükle" ile kademeli çekilir.
+const PAGE_SIZE = 300
 
 const STATUS_INFO: Record<string, { label: string; bg: string; color: string }> = {
   published: { label: 'Yayında',       bg: 'rgba(34,197,94,0.12)',  color: '#16a34a' },
@@ -25,15 +34,42 @@ interface Row extends Recipe { _source: 'static' | 'firebase' }
 export default function AdminRecipesPage() {
   const [firestoreRecipes, setFirestoreRecipes] = useState<Recipe[]>([])
   const [loading, setLoading] = useState(true)
+  const [loadingMore, setLoadingMore] = useState(false)
+  const [hasMore, setHasMore] = useState(true)
+  const lastDocRef = useRef<QueryDocumentSnapshot<DocumentData> | null>(null)
   const [search, setSearch] = useState('')
   const [sourceFilter, setSourceFilter] = useState<'all' | 'static' | 'firebase'>('all')
 
   useEffect(() => {
-    getDocs(collection(db, 'recipes'))
-      .then((snap) => setFirestoreRecipes(snap.docs.map((d) => ({ ...d.data(), id: d.id } as Recipe))))
+    getDocs(query(collection(db, 'recipes'), orderBy(documentId()), limit(PAGE_SIZE)))
+      .then((snap) => {
+        setFirestoreRecipes(snap.docs.map((d) => ({ ...d.data(), id: d.id } as Recipe)))
+        lastDocRef.current = snap.docs[snap.docs.length - 1] ?? null
+        setHasMore(snap.docs.length === PAGE_SIZE)
+      })
       .catch(console.error)
       .finally(() => setLoading(false))
   }, [])
+
+  const loadMoreFirestoreRecipes = async () => {
+    if (!lastDocRef.current) return
+    setLoadingMore(true)
+    try {
+      const snap = await getDocs(query(
+        collection(db, 'recipes'),
+        orderBy(documentId()),
+        startAfter(lastDocRef.current),
+        limit(PAGE_SIZE)
+      ))
+      setFirestoreRecipes((prev) => [...prev, ...snap.docs.map((d) => ({ ...d.data(), id: d.id } as Recipe))])
+      lastDocRef.current = snap.docs[snap.docs.length - 1] ?? null
+      setHasMore(snap.docs.length === PAGE_SIZE)
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setLoadingMore(false)
+    }
+  }
 
   const allRows = useMemo<Row[]>(() => {
     const overriddenIds = new Set(
@@ -65,7 +101,9 @@ export default function AdminRecipesPage() {
         <div>
           <h1 className="text-xl font-bold" style={{ color: 'var(--text)' }}>Tarif Yönetimi</h1>
           <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
-            {loading ? 'Yükleniyor...' : `${allRows.length} tarif · ${staticRecipes.length} statik + ${firestoreRecipes.length} Firebase`}
+            {loading
+              ? 'Yükleniyor...'
+              : `${allRows.length}${hasMore ? '+' : ''} tarif · ${staticRecipes.length} statik + ${firestoreRecipes.length}${hasMore ? '+' : ''} Firebase`}
           </p>
         </div>
       </div>
@@ -134,6 +172,19 @@ export default function AdminRecipesPage() {
               </Link>
             )
           })}
+        </div>
+      )}
+
+      {hasMore && !loading && (
+        <div className="flex justify-center mt-5">
+          <button
+            onClick={loadMoreFirestoreRecipes}
+            disabled={loadingMore}
+            className="px-5 py-2.5 rounded-xl text-sm font-semibold"
+            style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text)', opacity: loadingMore ? 0.6 : 1 }}
+          >
+            {loadingMore ? 'Yükleniyor...' : 'Daha Fazla Yükle (Firebase tarifleri)'}
+          </button>
         </div>
       )}
     </div>

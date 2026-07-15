@@ -203,7 +203,7 @@ export default function SearchModal({ navigation }) {
                 columnWrapperStyle={styles.columnWrapper}
                 showsVerticalScrollIndicator={false}
                 renderItem={({ item }) => (
-                  <RecipeCard recipe={item} onPress={() => handleRecipePress(item)} />
+                  <RecipeCard recipe={item} onPress={handleRecipePress} />
                 )}
               />
             </>

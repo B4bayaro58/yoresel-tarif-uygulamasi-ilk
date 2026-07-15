@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -10,13 +10,23 @@ import {
 } from 'react-native';
 import { Users, Shield, UserX, Search } from 'lucide-react-native';
 import { useApp } from '../contexts/AppContext';
-import { collection, getDocs, updateDoc, deleteDoc, doc } from 'firebase/firestore';
+import { collection, getDocs, query, orderBy, limit, startAfter, documentId, updateDoc, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../config/firebase';
+
+// Kullanıcı sayısı büyüdükçe her ekran açılışında TÜM `users` koleksiyonunu
+// limitsiz okumak maliyeti sınırsız büyütür. `documentId()` üzerinden
+// sayfalanıyor (createdAt gibi bir alan üzerinden değil) çünkü her dokümanın
+// ID'si garanti var — eski bir kullanıcı dokümanında createdAt eksikse
+// orderBy(createdAt) o kullanıcıyı listeden sessizce düşürürdü.
+const PAGE_SIZE = 100;
 
 export default function ManageUsersScreen() {
   const { colors, translate } = useApp();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const lastDocRef = useRef(null);
 
   useEffect(() => {
     loadUsers();
@@ -25,17 +35,42 @@ export default function ManageUsersScreen() {
   const loadUsers = async () => {
     try {
       setLoading(true);
-      const usersSnapshot = await getDocs(collection(db, 'users'));
+      const usersSnapshot = await getDocs(
+        query(collection(db, 'users'), orderBy(documentId()), limit(PAGE_SIZE))
+      );
       const usersData = usersSnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data(),
       }));
       setUsers(usersData);
+      lastDocRef.current = usersSnapshot.docs[usersSnapshot.docs.length - 1] ?? null;
+      setHasMore(usersSnapshot.docs.length === PAGE_SIZE);
     } catch (error) {
       console.error('Kullanıcılar yüklenemedi:', error);
       Alert.alert(translate('error'), error.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadMoreUsers = async () => {
+    if (!lastDocRef.current) return;
+    try {
+      setLoadingMore(true);
+      const usersSnapshot = await getDocs(
+        query(collection(db, 'users'), orderBy(documentId()), startAfter(lastDocRef.current), limit(PAGE_SIZE))
+      );
+      const usersData = usersSnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setUsers(prev => [...prev, ...usersData]);
+      lastDocRef.current = usersSnapshot.docs[usersSnapshot.docs.length - 1] ?? null;
+      setHasMore(usersSnapshot.docs.length === PAGE_SIZE);
+    } catch (error) {
+      Alert.alert(translate('error'), error.message);
+    } finally {
+      setLoadingMore(false);
     }
   };
 
@@ -103,7 +138,7 @@ export default function ManageUsersScreen() {
       <View style={styles.header}>
         <Text style={[styles.title, { color: colors.text }]}>{translate('manageUsers')}</Text>
         <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-          {translate('usersRegistered', { count: users.length })}
+          {translate('usersRegistered', { count: hasMore ? `${users.length}+` : users.length })}
         </Text>
       </View>
 
@@ -173,6 +208,21 @@ export default function ManageUsersScreen() {
               {translate('noUsers')}
             </Text>
           </View>
+        )}
+
+        {hasMore && !loading && (
+          <TouchableOpacity
+            style={[styles.loadMoreButton, { backgroundColor: colors.card, borderColor: colors.border }]}
+            onPress={loadMoreUsers}
+            disabled={loadingMore}
+            activeOpacity={0.7}
+          >
+            {loadingMore ? (
+              <ActivityIndicator size="small" color={colors.primary} />
+            ) : (
+              <Text style={[styles.loadMoreText, { color: colors.text }]}>Daha Fazla Yükle</Text>
+            )}
+          </TouchableOpacity>
         )}
 
         <View style={{ height: 20 }} />
@@ -272,5 +322,17 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 16,
+  },
+  loadMoreButton: {
+    alignSelf: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 12,
+    borderWidth: 1,
+    marginTop: 8,
+  },
+  loadMoreText: {
+    fontSize: 14,
+    fontWeight: '700',
   },
 });

@@ -18,12 +18,13 @@ import {
   Circle,
 } from 'lucide-react'
 import clsx from 'clsx'
-import { doc, getDoc, collection, query, where, getDocs } from 'firebase/firestore'
+import { doc, getDoc } from 'firebase/firestore'
 import { db } from '@/config/firebase'
 import { useApp } from '@/contexts/AppContext'
 import { Recipe, ShoppingItem } from '@/types'
 import AdBanner from '@/components/AdBanner'
 import { isPreOptimized } from '@/lib/image'
+import { getOverrideRecipe } from '@/lib/overridePhoto'
 // @ts-ignore
 import { RECIPES_DATA } from '@shared/recipes'
 
@@ -51,30 +52,31 @@ export default function RecipeDetailPage() {
 
   useEffect(() => {
     const load = async () => {
+      const local = localRecipes.find((r) => r.id === id)
       try {
-        // 1. Önce Firestore'da doğrudan ID ile ara (Firebase tarifi)
+        if (local) {
+          // Statik bir tarif id'si (ör. "lasagna") hiçbir zaman gerçek bir
+          // Firestore doküman id'si olamaz (onlar rastgele string) — bu yüzden
+          // garanti-boş dönecek bir getDoc denemek yerine doğrudan paylaşılan
+          // override önbelleğine bakılıyor. Kart listesinde (RecipeCard) bu
+          // tarif zaten kaydırılarak görülmüşse burada ikinci bir Firestore
+          // okuması bile yapılmaz (bkz. @/lib/overridePhoto).
+          const override = await getOverrideRecipe(id)
+          setRecipe(override ?? local)
+          setLoading(false)
+          return
+        }
+
+        // Statik katalogda yoksa gerçek bir Firestore doküman id'si olmalı
+        // (native tarif ya da override'ın kendi id'si üzerinden erişim)
         const snap = await getDoc(doc(db, 'recipes', id))
         if (snap.exists()) {
           setRecipe({ id: snap.id, ...snap.data() } as Recipe)
           setLoading(false)
           return
         }
-
-        // 2. Statik tarif override'ı var mı kontrol et
-        const overrideSnap = await getDocs(
-          query(collection(db, 'recipes'), where('overridesStaticId', '==', id))
-        )
-        if (!overrideSnap.empty) {
-          const d = overrideSnap.docs[0]
-          setRecipe({ id: d.id, ...d.data() } as Recipe)
-          setLoading(false)
-          return
-        }
       } catch { /* ignore */ }
 
-      // 3. Firestore'da yoksa statik veriye düş
-      const local = localRecipes.find((r) => r.id === id)
-      if (local) setRecipe(local)
       setLoading(false)
     }
     if (id) load()

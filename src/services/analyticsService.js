@@ -2,20 +2,62 @@
  * Analytics Service
  * Firebase Analytics web SDK React Native'de tam desteklenmez (özellikle Expo Go'da).
  * Bu servis Firestore tabanlı event logging kullanır — her ortamda çalışır.
+ *
+ * Firestore ücretlendirmesi doküman başına yazma sayısına göre yapılır — art
+ * arda gelen olaylar (ör. bir tarifteki malzemeleri tek tek market listesine
+ * ekleme) kısa bir bekleme penceresinde biriktirilip TEK bir dokümana
+ * yazılıyor. Bu şekilde 10 ayrı kullanıcı aksiyonu 10 yazma yerine 1 yazma
+ * oluşturuyor (writeBatch()'in aksine — o sadece ağ round-trip'ini azaltır,
+ * yazma sayısını değil, çünkü Firestore batch içindeki her .set()'i de ayrı
+ * ayrı faturalandırır).
  */
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { AppState } from 'react-native';
 import { db } from '../config/firebase';
 
-// Expo Go'da Firestore yazma hataları sessizce yutulur
-const safeLog = async (eventName, params = {}) => {
+const FLUSH_DELAY_MS = 3000;
+const MAX_QUEUE_SIZE = 25;
+
+let queue = [];
+let flushTimer = null;
+
+const flush = async () => {
+  if (flushTimer) {
+    clearTimeout(flushTimer);
+    flushTimer = null;
+  }
+  if (queue.length === 0) return;
+  const batch = queue;
+  queue = [];
   try {
     await addDoc(collection(db, 'analytics_events'), {
-      event: eventName,
-      ...params,
+      events: batch,
+      count: batch.length,
       timestamp: serverTimestamp(),
     });
   } catch {
     // Analytics hatası uygulamayı durdurmamalı
+  }
+};
+
+const scheduleFlush = () => {
+  if (flushTimer) return;
+  flushTimer = setTimeout(flush, FLUSH_DELAY_MS);
+};
+
+// Uygulama arka plana alındığında bekleyen olayları hemen yaz -- yoksa
+// kullanıcı bir aksiyon yapıp hemen uygulamayı kapatırsa kuyruktaki olaylar
+// hiç yazılmadan kaybolabilir.
+AppState.addEventListener('change', (state) => {
+  if (state === 'background' || state === 'inactive') flush();
+});
+
+const safeLog = (eventName, params = {}) => {
+  queue.push({ event: eventName, ...params, at: Date.now() });
+  if (queue.length >= MAX_QUEUE_SIZE) {
+    flush();
+  } else {
+    scheduleFlush();
   }
 };
 

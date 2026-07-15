@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
+import NextImage from 'next/image'
 import {
   ArrowLeft, Save, Trash2, Plus, X, Image as ImageIcon,
 } from 'lucide-react'
@@ -12,6 +13,7 @@ import {
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import { db, storage } from '@/config/firebase'
 import { Recipe } from '@/types'
+import { isPreOptimized } from '@/lib/image'
 // @ts-ignore
 import { RECIPES_DATA } from '@shared/recipes'
 
@@ -338,11 +340,17 @@ export default function AdminRecipeDetailPage() {
           <p className={sectionTitle} style={sectionTitleStyle}>Fotoğraf</p>
           <div className="flex flex-col sm:flex-row gap-4">
             {/* Preview */}
-            <div className="w-full sm:w-48 h-36 rounded-2xl overflow-hidden flex-shrink-0 flex items-center justify-center"
+            <div className="relative w-full sm:w-48 h-36 rounded-2xl overflow-hidden flex-shrink-0 flex items-center justify-center"
               style={{ backgroundColor: 'var(--card)', border: '1px solid var(--border)' }}>
               {form.photo ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={form.photo} alt="Önizleme" className="w-full h-full object-cover" />
+                <NextImage
+                  src={form.photo}
+                  alt="Önizleme"
+                  fill
+                  sizes="192px"
+                  unoptimized={isPreOptimized(form.photo)}
+                  className="object-cover"
+                />
               ) : (
                 <div className="text-center">
                   <span style={{ fontSize: '48px' }}>{form.emoji}</span>

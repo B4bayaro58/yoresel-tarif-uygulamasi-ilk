@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Heart, Clock, Users, Flame, Star } from 'lucide-react'
@@ -8,6 +8,7 @@ import clsx from 'clsx'
 import { Recipe } from '@/types'
 import { useApp } from '@/contexts/AppContext'
 import { isPreOptimized } from '@/lib/image'
+import { getOverrideRecipe } from '@/lib/overridePhoto'
 
 interface RecipeCardProps {
   recipe: Recipe
@@ -38,12 +39,38 @@ function MiniStars({ rating }: { rating: number }) {
 
 function RecipeCard({ recipe, isFav = false, onFavoriteToggle }: RecipeCardProps) {
   const { t } = useApp()
+  const cardRef = useRef<HTMLElement>(null)
+  const [override, setOverride] = useState<Recipe | null>(null)
 
-  const diff = DIFFICULTY_STYLE[recipe.difficulty as keyof typeof DIFFICULTY_STYLE] || DIFFICULTY_STYLE.medium
+  // Kart ekrana yaklaştığında (henüz Firestore'dan çözülmüş bir kayıt değilse)
+  // o tarife özel yüklenmiş bir fotoğraf var mı diye tek seferlik, hedefli bir
+  // sorgu çalıştırır. Toplu/limitli bir sorguyla önceden hepsini çekmek yerine
+  // yalnızca kullanıcının kaydırarak gördüğü kartlar Firestore okuması tetikler.
+  useEffect(() => {
+    if ((recipe as any).overridesStaticId != null) return
+    const el = cardRef.current
+    if (!el) return
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries[0].isIntersecting) return
+        observer.disconnect()
+        getOverrideRecipe(String(recipe.id)).then((found) => {
+          if (found) setOverride(found)
+        })
+      },
+      { rootMargin: '400px' }
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [recipe])
+
+  const displayRecipe = override ?? recipe
+
+  const diff = DIFFICULTY_STYLE[displayRecipe.difficulty as keyof typeof DIFFICULTY_STYLE] || DIFFICULTY_STYLE.medium
   const difficultyLabel =
-    recipe.difficulty === 'easy'
+    displayRecipe.difficulty === 'easy'
       ? t('difficulty-easy')
-      : recipe.difficulty === 'medium'
+      : displayRecipe.difficulty === 'medium'
       ? t('difficulty-medium')
       : t('difficulty-hard')
 
@@ -56,6 +83,7 @@ function RecipeCard({ recipe, isFav = false, onFavoriteToggle }: RecipeCardProps
   return (
     <Link href={`/recipes/${recipe.id}`} className="block group">
       <article
+        ref={cardRef}
         className="rounded-2xl overflow-hidden card-hover"
         style={{
           backgroundColor: 'var(--card)',
@@ -65,24 +93,24 @@ function RecipeCard({ recipe, isFav = false, onFavoriteToggle }: RecipeCardProps
       >
         {/* ── Image area (cinematic 3:2 ratio) ──────── */}
         <div className="relative overflow-hidden" style={{ height: '210px' }}>
-          {recipe.photo ? (
+          {displayRecipe.photo ? (
             <Image
-              src={recipe.photo}
-              alt={recipe.name}
+              src={displayRecipe.photo}
+              alt={displayRecipe.name}
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
               loading="lazy"
-              unoptimized={isPreOptimized(recipe.photo)}
+              unoptimized={isPreOptimized(displayRecipe.photo)}
               className="object-cover transition-transform duration-500 group-hover:scale-105"
             />
           ) : (
             <div
               className="w-full h-full flex items-center justify-center transition-transform duration-500 group-hover:scale-105"
               style={{
-                background: `linear-gradient(145deg, ${recipe.gradient?.[0] ?? '#B97A1A'}, ${recipe.gradient?.[1] ?? '#D99520'})`,
+                background: `linear-gradient(145deg, ${displayRecipe.gradient?.[0] ?? '#B97A1A'}, ${displayRecipe.gradient?.[1] ?? '#D99520'})`,
               }}
             >
-              <span style={{ fontSize: '64px', lineHeight: 1 }}>{recipe.emoji}</span>
+              <span style={{ fontSize: '64px', lineHeight: 1 }}>{displayRecipe.emoji}</span>
             </div>
           )}
 
@@ -99,7 +127,7 @@ function RecipeCard({ recipe, isFav = false, onFavoriteToggle }: RecipeCardProps
             className="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[11px] font-semibold text-white backdrop-blur-sm"
             style={{ backgroundColor: 'rgba(0,0,0,0.35)' }}
           >
-            {recipe.country}{recipe.city ? ` · ${recipe.city}` : ''}
+            {displayRecipe.country}{displayRecipe.city ? ` · ${displayRecipe.city}` : ''}
           </div>
 
           {/* Favorite button — top right */}
@@ -123,12 +151,12 @@ function RecipeCard({ recipe, isFav = false, onFavoriteToggle }: RecipeCardProps
 
           {/* Bottom overlay — recipe info */}
           <div className="absolute bottom-0 left-0 right-0 px-3 pb-3 pt-6">
-            <MiniStars rating={recipe.rating} />
+            <MiniStars rating={displayRecipe.rating} />
             <h3
               className="font-display font-bold text-white leading-tight line-clamp-1 mt-1"
               style={{ fontSize: '15px' }}
             >
-              {recipe.name}
+              {displayRecipe.name}
             </h3>
           </div>
         </div>
@@ -139,15 +167,15 @@ function RecipeCard({ recipe, isFav = false, onFavoriteToggle }: RecipeCardProps
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-1 text-[11px]" style={{ color: 'var(--text-muted)' }}>
               <Clock size={11} />
-              <span>{recipe.prepTime}{t('minutes')[0]}</span>
+              <span>{displayRecipe.prepTime}{t('minutes')[0]}</span>
             </div>
             <div className="flex items-center gap-1 text-[11px]" style={{ color: 'var(--text-muted)' }}>
               <Users size={11} />
-              <span>{recipe.servings}</span>
+              <span>{displayRecipe.servings}</span>
             </div>
             <div className="flex items-center gap-1 text-[11px]" style={{ color: 'var(--text-muted)' }}>
               <Flame size={11} />
-              <span>{recipe.calories}</span>
+              <span>{displayRecipe.calories}</span>
             </div>
           </div>
 

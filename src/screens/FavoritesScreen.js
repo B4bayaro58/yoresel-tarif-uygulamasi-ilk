@@ -47,7 +47,7 @@ export default function FavoritesScreen({ navigation }) {
         renderItem={({ item }) => (
           <RecipeCard
             recipe={item}
-            onPress={() => navigation.navigate('RecipeDetail', { recipe: item })}
+            onPress={(displayRecipe) => navigation.navigate('RecipeDetail', { recipe: displayRecipe })}
           />
         )}
       />

@@ -1,9 +1,13 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, Users, Heart, Search, UserPlus, X, Eye, EyeOff } from 'lucide-react'
-import { collection, getDocs, doc, setDoc, serverTimestamp } from 'firebase/firestore'
+import {
+  collection, getDocs, query, orderBy, limit, startAfter, documentId,
+  doc, setDoc, serverTimestamp,
+  QueryDocumentSnapshot, DocumentData,
+} from 'firebase/firestore'
 import { getFirestore } from 'firebase/firestore'
 import { initializeApp, deleteApp } from 'firebase/app'
 import { getAuth, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
@@ -38,6 +42,14 @@ const inputStyle: React.CSSProperties = {
   outline: 'none',
 }
 
+// Kullanıcı sayısı büyüdükçe her admin panel açılışında TÜM `users`
+// koleksiyonunu limitsiz okumak maliyeti sınırsız büyütür. `documentId()`
+// üzerinden sayfalanıyor (createdAt gibi bir alan üzerinden değil) çünkü her
+// dokümanın ID'si garanti var — eski bir kullanıcı dokümanında createdAt
+// eksikse orderBy(createdAt) o kullanıcıyı listeden sessizce düşürürdü
+// (tıpka recipes limit(200)'ün override'ları kaybettiği hataya benzer).
+const PAGE_SIZE = 100
+
 function mapError(code: string) {
   switch (code) {
     case 'auth/email-already-in-use': return 'Bu e-posta zaten kullanımda.'
@@ -50,6 +62,9 @@ function mapError(code: string) {
 export default function AdminUsersPage() {
   const [users, setUsers]       = useState<UserDoc[]>([])
   const [loading, setLoading]   = useState(true)
+  const [loadingMore, setLoadingMore] = useState(false)
+  const [hasMore, setHasMore]   = useState(true)
+  const lastDocRef = useRef<QueryDocumentSnapshot<DocumentData> | null>(null)
   const [search, setSearch]     = useState('')
   const [showModal, setShowModal] = useState(false)
 
@@ -64,15 +79,39 @@ export default function AdminUsersPage() {
   const [success, setSuccess]   = useState('')
 
   const loadUsers = async () => {
+    setLoading(true)
     try {
-      const snap = await getDocs(collection(db, 'users'))
+      const snap = await getDocs(query(collection(db, 'users'), orderBy(documentId()), limit(PAGE_SIZE)))
       const list = snap.docs.map((d) => ({ uid: d.id, ...d.data() } as UserDoc))
       list.sort((a, b) => (b.createdAt?.seconds ?? 0) - (a.createdAt?.seconds ?? 0))
       setUsers(list)
+      lastDocRef.current = snap.docs[snap.docs.length - 1] ?? null
+      setHasMore(snap.docs.length === PAGE_SIZE)
     } catch (e) {
       console.error(e)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const loadMoreUsers = async () => {
+    if (!lastDocRef.current) return
+    setLoadingMore(true)
+    try {
+      const snap = await getDocs(query(
+        collection(db, 'users'),
+        orderBy(documentId()),
+        startAfter(lastDocRef.current),
+        limit(PAGE_SIZE)
+      ))
+      const list = snap.docs.map((d) => ({ uid: d.id, ...d.data() } as UserDoc))
+      setUsers((prev) => [...prev, ...list].sort((a, b) => (b.createdAt?.seconds ?? 0) - (a.createdAt?.seconds ?? 0)))
+      lastDocRef.current = snap.docs[snap.docs.length - 1] ?? null
+      setHasMore(snap.docs.length === PAGE_SIZE)
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setLoadingMore(false)
     }
   }
 
@@ -142,7 +181,7 @@ export default function AdminUsersPage() {
           <div>
             <h1 className="text-xl font-bold" style={{ color: 'var(--text)' }}>Kullanıcılar</h1>
             <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
-              {loading ? '...' : `${users.length} kayıtlı kullanıcı`}
+              {loading ? '...' : `${users.length}${hasMore ? '+' : ''} kayıtlı kullanıcı`}
             </p>
           </div>
         </div>
@@ -167,6 +206,11 @@ export default function AdminUsersPage() {
           style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text)' }}
         />
       </div>
+      {hasMore && (
+        <p className="text-xs mb-4 -mt-2" style={{ color: 'var(--text-muted)' }}>
+          Arama yalnızca yüklenmiş kullanıcılar içinde çalışır — aradığınızı bulamazsanız &ldquo;Daha Fazla Yükle&rdquo;ye basın.
+        </p>
+      )}
 
       {/* List */}
       {loading ? (
@@ -220,6 +264,19 @@ export default function AdminUsersPage() {
               <span className="text-xs" style={{ color: 'var(--text-muted)' }}>{formatDate(user)}</span>
             </div>
           ))}
+        </div>
+      )}
+
+      {hasMore && !loading && (
+        <div className="flex justify-center mt-5">
+          <button
+            onClick={loadMoreUsers}
+            disabled={loadingMore}
+            className="px-5 py-2.5 rounded-xl text-sm font-semibold"
+            style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text)', opacity: loadingMore ? 0.6 : 1 }}
+          >
+            {loadingMore ? 'Yükleniyor...' : 'Daha Fazla Yükle'}
+          </button>
         </div>
       )}
 

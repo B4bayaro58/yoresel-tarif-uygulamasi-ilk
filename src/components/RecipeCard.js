@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -10,40 +10,59 @@ import { Image } from 'expo-image';
 import { Star, Clock, Users, Heart } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useApp } from '../contexts/AppContext';
+import { getOverrideRecipe } from '../services/overridePhoto';
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = (width - 48) / 2; // 2 columns with padding
 
 function RecipeCard({ recipe, onPress }) {
   const { colors, translate, isFavorite, toggleFavorite } = useApp();
+  const [override, setOverride] = useState(null);
+
+  // Kart FlatList tarafından render edildiğinde (virtualization sayesinde bu
+  // zaten sadece görünüm penceresine yakın kartlar için olur) o tarife özel
+  // yüklenmiş bir fotoğraf var mı diye tek seferlik, hedefli bir sorgu
+  // çalıştırır. Toplu/limitli bir sorguyla önceden hepsini çekmek yerine
+  // yalnızca kullanıcının fiilen kaydırıp gördüğü kartlar Firestore okuması
+  // tetikler (bkz. src/services/overridePhoto.js).
+  useEffect(() => {
+    if (recipe.isFirebase) return; // zaten çözülmüş bir Firestore kaydı
+    let cancelled = false;
+    getOverrideRecipe(String(recipe.id)).then(found => {
+      if (!cancelled && found) setOverride(found);
+    });
+    return () => { cancelled = true; };
+  }, [recipe]);
+
+  const displayRecipe = override || recipe;
   const isFav = isFavorite(recipe.id);
 
   return (
     <TouchableOpacity
       style={[styles.card, { backgroundColor: colors.card }]}
-      onPress={onPress}
+      onPress={() => onPress(displayRecipe)}
       activeOpacity={0.8}
       accessibilityRole="button"
-      accessibilityLabel={`${recipe.name}, ${recipe.city ? `${recipe.country}, ${recipe.city}` : recipe.country}, ${recipe.prepTime} ${translate('minutes')}`}
+      accessibilityLabel={`${displayRecipe.name}, ${displayRecipe.city ? `${displayRecipe.country}, ${displayRecipe.city}` : displayRecipe.country}, ${displayRecipe.prepTime} ${translate('minutes')}`}
       accessibilityHint={translate('tapToViewRecipe')}
     >
       {/* Hybrid Visual System: Gradient + Emoji + Photo */}
       <View style={styles.imageContainer}>
         <LinearGradient
-          colors={recipe.gradient || ['#667EEA', '#764BA2']}
+          colors={displayRecipe.gradient || ['#667EEA', '#764BA2']}
           style={styles.gradient}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
         >
           {/* Emoji Watermark */}
-          <Text style={styles.emojiWatermark}>{recipe.emoji}</Text>
+          <Text style={styles.emojiWatermark}>{displayRecipe.emoji}</Text>
 
           {/* Photo Overlay — expo-image: disk cache + kart boyutuna göre otomatik
               downsampling (bkz. maliyet denetimi 2026-07-09, önceden RN Image her
               açılışta tam çözünürlüğü ağdan tekrar çekiyordu) */}
           <View style={styles.photoOverlay}>
             <Image
-              source={recipe.photo ? { uri: recipe.photo } : require('../../assets/icon.png')}
+              source={displayRecipe.photo ? { uri: displayRecipe.photo } : require('../../assets/icon.png')}
               style={styles.photoImage}
               contentFit="cover"
               cachePolicy="disk"
@@ -53,7 +72,7 @@ function RecipeCard({ recipe, onPress }) {
             {/* Rating Badge — sol üst */}
             <View style={styles.ratingBadge}>
               <Star size={12} color="#FFD700" fill="#FFD700" />
-              <Text style={styles.ratingText}>{recipe.rating}</Text>
+              <Text style={styles.ratingText}>{displayRecipe.rating}</Text>
             </View>
 
             {/* Favori butonu — sağ üst */}
@@ -77,10 +96,10 @@ function RecipeCard({ recipe, onPress }) {
       {/* Recipe Info */}
       <View style={styles.infoContainer}>
         <Text style={[styles.recipeName, { color: colors.text }]} numberOfLines={2}>
-          {recipe.name}
+          {displayRecipe.name}
         </Text>
         <Text style={[styles.recipeCountry, { color: colors.textSecondary }]} numberOfLines={1}>
-          {recipe.city ? `${recipe.country}, ${recipe.city}` : recipe.country}
+          {displayRecipe.city ? `${displayRecipe.country}, ${displayRecipe.city}` : displayRecipe.country}
         </Text>
 
         {/* Meta Info */}
@@ -88,13 +107,13 @@ function RecipeCard({ recipe, onPress }) {
           <View style={styles.metaItem}>
             <Clock size={13} color={colors.textTertiary} />
             <Text style={[styles.metaText, { color: colors.textTertiary }]}>
-              {recipe.prepTime}dk
+              {displayRecipe.prepTime}dk
             </Text>
           </View>
           <View style={styles.metaItem}>
             <Users size={13} color={colors.textTertiary} />
             <Text style={[styles.metaText, { color: colors.textTertiary }]}>
-              {recipe.servings}
+              {displayRecipe.servings}
             </Text>
           </View>
         </View>

@@ -1,10 +1,11 @@
 'use client'
 
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useRef, useState, useMemo } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, X, Search, Save, CalendarDays } from 'lucide-react'
 import {
-  doc, getDoc, setDoc, getDocs, collection, query, where, serverTimestamp,
+  doc, getDoc, setDoc, getDocs, collection, query, where, orderBy, limit, startAfter, documentId,
+  QueryDocumentSnapshot, DocumentData, serverTimestamp,
 } from 'firebase/firestore'
 import { db } from '@/config/firebase'
 import { Recipe } from '@/types'
@@ -13,10 +14,22 @@ import { RECIPES_DATA } from '@shared/recipes'
 
 const staticRecipes: Recipe[] = (RECIPES_DATA as any).tr || []
 
+// `where('status','==','published')` filtresine rağmen bu koleksiyon ~1100+
+// dokümana kadar çıkabiliyor (çoğu statik tarif override edilmiş durumda) —
+// limitsiz okumak her admin panel açılışında maliyeti büyütür. `documentId()`
+// ile sayfalanıyor ("Daha Fazla Yükle"), ayrıca daha önce günlük menüye
+// eklenmiş tariflerin (menuIds) sayfalamanın dışında kalıp "kayıp" görünmemesi
+// için ayrı, hedefli bir sorguyla her zaman garantiye alınıyor — anasayfadaki
+// Günün Menüsü'nün kullandığı aynı desen (web/src/app/page.tsx).
+const PAGE_SIZE = 300
+
 export default function AdminDailyMenuPage() {
   const [menuIds, setMenuIds] = useState<string[]>([])
   const [firestoreRecipes, setFirestoreRecipes] = useState<Recipe[]>([])
   const [loading, setLoading] = useState(true)
+  const [loadingMore, setLoadingMore] = useState(false)
+  const [hasMore, setHasMore] = useState(true)
+  const lastDocRef = useRef<QueryDocumentSnapshot<DocumentData> | null>(null)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [saveError, setSaveError] = useState(false)
@@ -25,14 +38,30 @@ export default function AdminDailyMenuPage() {
   useEffect(() => {
     const init = async () => {
       try {
-        const [menuSnap, recipeSnap] = await Promise.all([
-          getDoc(doc(db, 'settings', 'dailyMenu')),
-          getDocs(query(collection(db, 'recipes'), where('status', '==', 'published'))),
-        ])
-        if (menuSnap.exists()) {
-          setMenuIds(menuSnap.data().recipeIds || [])
+        const menuSnap = await getDoc(doc(db, 'settings', 'dailyMenu'))
+        const ids: string[] = menuSnap.exists() ? menuSnap.data().recipeIds || [] : []
+        setMenuIds(ids)
+
+        const queries = [
+          getDocs(query(
+            collection(db, 'recipes'),
+            where('status', '==', 'published'),
+            orderBy(documentId()),
+            limit(PAGE_SIZE)
+          )),
+        ]
+        if (ids.length > 0) {
+          queries.push(getDocs(query(collection(db, 'recipes'), where('overridesStaticId', 'in', ids.slice(0, 30)))))
         }
-        setFirestoreRecipes(recipeSnap.docs.map((d) => ({ id: d.id, ...d.data() } as Recipe)))
+        const [recipeSnap, menuOverridesSnap] = await Promise.all(queries)
+
+        const merged = new Map<string, Recipe>()
+        recipeSnap.docs.forEach((d) => merged.set(d.id, { id: d.id, ...d.data() } as Recipe))
+        menuOverridesSnap?.docs.forEach((d) => merged.set(d.id, { id: d.id, ...d.data() } as Recipe))
+        setFirestoreRecipes(Array.from(merged.values()))
+
+        lastDocRef.current = recipeSnap.docs[recipeSnap.docs.length - 1] ?? null
+        setHasMore(recipeSnap.docs.length === PAGE_SIZE)
       } catch (e) {
         console.error(e)
       } finally {
@@ -41,6 +70,31 @@ export default function AdminDailyMenuPage() {
     }
     init()
   }, [])
+
+  const loadMoreRecipes = async () => {
+    if (!lastDocRef.current) return
+    setLoadingMore(true)
+    try {
+      const snap = await getDocs(query(
+        collection(db, 'recipes'),
+        where('status', '==', 'published'),
+        orderBy(documentId()),
+        startAfter(lastDocRef.current),
+        limit(PAGE_SIZE)
+      ))
+      setFirestoreRecipes((prev) => {
+        const merged = new Map<string, Recipe>(prev.map((r) => [r.id, r]))
+        snap.docs.forEach((d) => merged.set(d.id, { id: d.id, ...d.data() } as Recipe))
+        return Array.from(merged.values())
+      })
+      lastDocRef.current = snap.docs[snap.docs.length - 1] ?? null
+      setHasMore(snap.docs.length === PAGE_SIZE)
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setLoadingMore(false)
+    }
+  }
 
   const allRecipes = useMemo(() => {
     const overriddenIds = new Set(
@@ -229,6 +283,18 @@ export default function AdminDailyMenuPage() {
                 </button>
               ))}
             </div>
+            {hasMore && (
+              <div className="flex justify-center mt-3">
+                <button
+                  onClick={loadMoreRecipes}
+                  disabled={loadingMore}
+                  className="px-4 py-2 rounded-xl text-xs font-semibold"
+                  style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text)', opacity: loadingMore ? 0.6 : 1 }}
+                >
+                  {loadingMore ? 'Yükleniyor...' : 'Daha Fazla Firebase Tarifi Yükle'}
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}

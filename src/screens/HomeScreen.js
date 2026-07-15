@@ -444,7 +444,7 @@ export default function HomeScreen({ navigation }) {
     ({ item }) => (
       <RecipeCard
         recipe={item}
-        onPress={() => navigation.navigate('RecipeDetail', { recipe: item })}
+        onPress={(displayRecipe) => navigation.navigate('RecipeDetail', { recipe: displayRecipe })}
       />
     ),
     [navigation]

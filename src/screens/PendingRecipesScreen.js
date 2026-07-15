@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -9,14 +9,23 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { CheckCircle2, XCircle, Eye } from 'lucide-react-native';
-import { collection, getDocs, query, where, deleteDoc, doc } from 'firebase/firestore';
+import { collection, getDocs, query, where, orderBy, limit, startAfter, documentId, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { useApp } from '../contexts/AppContext';
+
+// Onay bekleyen kuyruk kötüye kullanımla (spam gönderim) sınırsız büyüyebilir
+// -- limitsiz okumak hem maliyeti hem de ekranın yüklenme süresini büyütür.
+// `documentId()` ile sayfalanıyor, "Daha Fazla Yükle" ile kalanı çekiliyor;
+// hiçbir kayıt sessizce atlanmıyor, sadece kademeli yükleniyor.
+const PAGE_SIZE = 100;
 
 export default function PendingRecipesScreen({ navigation }) {
   const { colors, translate, approveRecipe, showNotification } = useApp();
   const [pendingRecipes, setPendingRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const lastDocRef = useRef(null);
 
   useEffect(() => {
     loadPendingRecipes();
@@ -25,14 +34,44 @@ export default function PendingRecipesScreen({ navigation }) {
   const loadPendingRecipes = async () => {
     try {
       setLoading(true);
-      const q = query(collection(db, 'recipes'), where('status', '==', 'pending'));
+      const q = query(
+        collection(db, 'recipes'),
+        where('status', '==', 'pending'),
+        orderBy(documentId()),
+        limit(PAGE_SIZE)
+      );
       const snapshot = await getDocs(q);
       const loaded = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
       setPendingRecipes(loaded);
+      lastDocRef.current = snapshot.docs[snapshot.docs.length - 1] ?? null;
+      setHasMore(snapshot.docs.length === PAGE_SIZE);
     } catch (error) {
       Alert.alert(translate('error'), error.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadMorePendingRecipes = async () => {
+    if (!lastDocRef.current) return;
+    try {
+      setLoadingMore(true);
+      const q = query(
+        collection(db, 'recipes'),
+        where('status', '==', 'pending'),
+        orderBy(documentId()),
+        startAfter(lastDocRef.current),
+        limit(PAGE_SIZE)
+      );
+      const snapshot = await getDocs(q);
+      const loaded = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+      setPendingRecipes(prev => [...prev, ...loaded]);
+      lastDocRef.current = snapshot.docs[snapshot.docs.length - 1] ?? null;
+      setHasMore(snapshot.docs.length === PAGE_SIZE);
+    } catch (error) {
+      Alert.alert(translate('error'), error.message);
+    } finally {
+      setLoadingMore(false);
     }
   };
 
@@ -94,7 +133,7 @@ export default function PendingRecipesScreen({ navigation }) {
       <View style={styles.header}>
         <Text style={[styles.title, { color: colors.text }]}>{translate('pendingRecipesTitle')}</Text>
         <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-          {translate('recipesAwaitingReview', { count: pendingRecipes.length })}
+          {translate('recipesAwaitingReview', { count: hasMore ? `${pendingRecipes.length}+` : pendingRecipes.length })}
         </Text>
       </View>
 
@@ -150,6 +189,22 @@ export default function PendingRecipesScreen({ navigation }) {
             </View>
           ))
         )}
+
+        {hasMore && !loading && (
+          <TouchableOpacity
+            style={[styles.loadMoreButton, { backgroundColor: colors.card, borderColor: colors.border }]}
+            onPress={loadMorePendingRecipes}
+            disabled={loadingMore}
+            activeOpacity={0.7}
+          >
+            {loadingMore ? (
+              <ActivityIndicator size="small" color={colors.primary} />
+            ) : (
+              <Text style={[styles.loadMoreText, { color: colors.text }]}>Daha Fazla Yükle</Text>
+            )}
+          </TouchableOpacity>
+        )}
+
         <View style={{ height: 20 }} />
       </ScrollView>
     </View>
@@ -189,5 +244,17 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  loadMoreButton: {
+    alignSelf: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 12,
+    borderWidth: 1,
+    marginTop: 8,
+  },
+  loadMoreText: {
+    fontSize: 14,
+    fontWeight: '700',
   },
 });
