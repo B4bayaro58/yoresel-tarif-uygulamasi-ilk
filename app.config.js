@@ -28,8 +28,6 @@ export default ({ config }) => ({
     infoPlist: {
       NSPhotoLibraryUsageDescription:
         'Tarif fotoğrafı eklemek için fotoğraf galerinize erişim gerekiyor.',
-      NSCameraUsageDescription:
-        'Tarif fotoğrafı çekmek için kameraya erişim gerekiyor.',
       NSUserNotificationsUsageDescription:
         'Pişirme sayacı ve tarif önerileri için bildirim göndermek istiyoruz.',
     },

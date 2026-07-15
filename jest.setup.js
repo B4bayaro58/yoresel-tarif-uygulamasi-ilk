@@ -25,15 +25,6 @@ jest.mock('expo-device', () => ({
   isDevice: true,
 }));
 
-// Mock expo-av
-jest.mock('expo-av', () => ({
-  Audio: {
-    Sound: {
-      createAsync: jest.fn(() => Promise.resolve({ sound: { playAsync: jest.fn(), unloadAsync: jest.fn() } })),
-    },
-  },
-}));
-
 // Mock firebase
 jest.mock('./src/config/firebase', () => ({
   auth: {},

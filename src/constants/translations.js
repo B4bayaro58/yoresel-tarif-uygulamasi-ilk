@@ -175,6 +175,12 @@ export const TRANSLATIONS = {
     fr: 'Préparation',
     it: 'Preparazione',
   },
+  noStepsAvailable: {
+    tr: 'Bu tarif için hazırlanış adımları henüz eklenmedi.',
+    en: 'Preparation steps for this recipe haven\'t been added yet.',
+    fr: 'Les étapes de préparation de cette recette n\'ont pas encore été ajoutées.',
+    it: 'I passaggi di preparazione per questa ricetta non sono ancora stati aggiunti.',
+  },
   step: {
     tr: 'Adım',
     en: 'Step',

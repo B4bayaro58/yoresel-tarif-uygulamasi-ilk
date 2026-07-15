@@ -37,6 +37,7 @@ const { width } = Dimensions.get('window');
 
 export default function RecipeDetailScreen({ route, navigation }) {
   const { recipe } = route.params;
+  const steps = recipe.steps || [];
   const {
     colors,
     translate,
@@ -72,7 +73,7 @@ export default function RecipeDetailScreen({ route, navigation }) {
     const ingredientList = recipe.ingredients
       .map(i => `• ${i.amount ? i.amount + ' ' : ''}${i.name}`)
       .join('\n');
-    const stepList = recipe.steps.map((s, i) => `${i + 1}. ${s}`).join('\n');
+    const stepList = steps.map((s, i) => `${i + 1}. ${s}`).join('\n');
 
     logShare(recipe.id, recipe.name);
     try {
@@ -93,7 +94,7 @@ export default function RecipeDetailScreen({ route, navigation }) {
   const [scaledServings, setScaledServings] = useState(recipe.servings || 4);
   const [timerMinutes, setTimerMinutes] = useState(recipe.prepTime || 10);
   const isFav = isFavorite(recipe.id);
-  const progress = getRecipeProgress(recipe.id, recipe.steps.length);
+  const progress = getRecipeProgress(recipe.id, steps.length);
 
   const scaleRatio = scaledServings / (recipe.servings || 4);
 
@@ -496,7 +497,10 @@ export default function RecipeDetailScreen({ route, navigation }) {
             <Text style={[styles.sectionTitle, { color: colors.text }]}>
               {translate('steps')}
             </Text>
-            {recipe.steps.map((step, index) => {
+            {steps.length === 0 && (
+              <Text style={{ color: colors.textSecondary }}>{translate('noStepsAvailable')}</Text>
+            )}
+            {steps.map((step, index) => {
               const completed = isStepCompleted(recipe.id, index);
               return (
                 <TouchableOpacity
@@ -506,7 +510,7 @@ export default function RecipeDetailScreen({ route, navigation }) {
                     { backgroundColor: colors.card, borderColor: colors.border },
                     completed && { borderColor: colors.success, borderWidth: 2 },
                   ]}
-                  onPress={() => toggleStep(recipe.id, index, recipe.steps.length, recipe.name)}
+                  onPress={() => toggleStep(recipe.id, index, steps.length, recipe.name)}
                   activeOpacity={0.7}
                 >
                   <View style={styles.stepHeader}>
