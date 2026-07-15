@@ -335,7 +335,7 @@ export default function HomePage() {
                     onClick={() => setVisibleCount((v) => v + PAGE_SIZE)}
                     className="btn-primary px-8 py-3 rounded-2xl font-semibold text-sm"
                   >
-                    Daha Fazla Göster ({filtered.length - visibleCount} tarif daha)
+                    Daha Fazla Göster
                   </button>
                 </div>
               )}
