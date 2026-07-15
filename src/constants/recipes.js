@@ -2581,7 +2581,7 @@ export const RECIPES_DATA = {
       isFavorite: false,
     },
     {
-      id: 'arepas',
+      id: 'arepas-kolombiya',
       name: 'Arepas',
       country: 'Kolombiya',
       continent: 'south-america',
@@ -3595,7 +3595,7 @@ export const RECIPES_DATA = {
     },
 
     {
-      id: 'gallo-pinto',
+      id: 'gallo-pinto-2',
       name: 'Gallo Pinto',
       country: 'Kosta Rika',
       continent: 'central-america',
@@ -3634,7 +3634,7 @@ export const RECIPES_DATA = {
       isFavorite: false,
     },
     {
-      id: 'pupusas',
+      id: 'pupusas-2',
       name: 'Pupusas',
       country: 'El Salvador',
       continent: 'central-america',
@@ -3797,7 +3797,7 @@ export const RECIPES_DATA = {
       isFavorite: false,
     },
     {
-      id: 'tres-leches',
+      id: 'tres-leches-nikaragua',
       name: 'Tres Leches Pasta',
       country: 'Nikaragua',
       continent: 'central-america',
@@ -4103,7 +4103,7 @@ export const RECIPES_DATA = {
       isFavorite: false,
     },
     {
-      id: 'hangi',
+      id: 'hangi-maori-firini',
       name: 'Hangi (Maori Toprak Fırını)',
       country: 'Yeni Zelanda',
       continent: 'oceania',
@@ -4267,7 +4267,7 @@ export const RECIPES_DATA = {
       isFavorite: false,
     },
     {
-      id: 'pavlova',
+      id: 'pavlova-yeni-zelanda',
       name: 'Pavlova',
       country: 'Yeni Zelanda',
       continent: 'oceania',
@@ -4502,7 +4502,7 @@ export const RECIPES_DATA = {
       isFavorite: false,
     },
     {
-      id: 'kokoda',
+      id: 'kokoda-ceviche',
       name: 'Kokoda (Fiji Ceviche)',
       country: 'Fiji',
       continent: 'oceania',
@@ -8377,7 +8377,7 @@ export const RECIPES_DATA = {
       isFavorite: false,
     },
     {
-      id: 'mansaf',
+      id: 'mansaf-2',
       name: 'Mansaf',
       country: 'Ürdün',
       continent: 'asia',
@@ -11059,7 +11059,7 @@ export const RECIPES_DATA = {
       isFavorite: false,
     },
     {
-      id: 'shakshuka',
+      id: 'shakshuka-kuzey-afrika',
       name: 'Shakshuka (Kuzey Afrika Yumurtası)',
       country: 'Tunus / İsrail',
       continent: 'africa',
@@ -11100,7 +11100,7 @@ export const RECIPES_DATA = {
       isFavorite: false,
     },
     {
-      id: 'bobotie',
+      id: 'bobotie-koftesi',
       name: 'Bobotie (Güney Afrika Köftesi)',
       country: 'Güney Afrika',
       continent: 'africa',
@@ -11183,7 +11183,7 @@ export const RECIPES_DATA = {
       isFavorite: false,
     },
     {
-      id: 'egusi-soup',
+      id: 'egusi-corbasi-2',
       name: 'Egusi Çorbası (Kavun Çekirdeği Çorbası)',
       country: 'Nijerya',
       continent: 'africa',
@@ -11553,7 +11553,7 @@ export const RECIPES_DATA = {
       isFavorite: false,
     },
     {
-      id: 'injera',
+      id: 'injera-eksi-hamur',
       name: 'İnjera (Etiyopya Ekşi Hamur Ekmeği)',
       country: 'Etiyopya',
       continent: 'africa',
@@ -11752,7 +11752,7 @@ export const RECIPES_DATA = {
       isFavorite: false,
     },
     {
-      id: 'lomo-saltado',
+      id: 'lomo-saltado-wok',
       name: 'Lomo Saltado (Peru Wok Bifteği)',
       country: 'Peru',
       continent: 'south-america',
@@ -11792,7 +11792,7 @@ export const RECIPES_DATA = {
       isFavorite: false,
     },
     {
-      id: 'feijoada',
+      id: 'feijoada-guveci',
       name: 'Feijoada (Brezilya Fasulye Güveci)',
       country: 'Brezilya',
       continent: 'south-america',
@@ -11877,7 +11877,7 @@ export const RECIPES_DATA = {
       isFavorite: false,
     },
     {
-      id: 'asado-argentino',
+      id: 'asado-mangali',
       name: 'Asado (Arjantin Mangalı)',
       country: 'Arjantin',
       continent: 'south-america',
@@ -36537,7 +36537,7 @@ export const RECIPES_DATA = {
     // NEVŞEHİR TARİFLERİ (7 Yöresel Tarif)
     // ═══════════════════════════════════════
     {
-      id: 'nevsehir-testi-kebabi',
+      id: 'testi-kebabi',
       name: 'Testi Kebabı',
       country: 'Türkiye',
       city: 'Nevşehir',
@@ -38408,7 +38408,7 @@ export const RECIPES_DATA = {
     // SİİRT TARİFLERİ (7 Yöresel Tarif)
     // ═══════════════════════════════════════
     {
-      id: 'siirt-büryan-kebabi',
+      id: 'buryan-kebabi-siirt',
       name: 'Siirt Büryan Kebabı',
       country: 'Türkiye',
       city: 'Siirt',
