@@ -18,18 +18,42 @@ service cloud.firestore {
       return isAuth() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true;
     }
 
+    // Helper: check if the current user has been blocked by an admin (ReportedReviewsScreen.js).
+    // ReviewsSection.js already checks this client-side before allowing submission, but that
+    // alone doesn't stop a client from writing to Firestore directly — the block must also be
+    // enforced here to actually mean anything.
+    function isBlocked() {
+      return isAuth() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('isBlocked', false) == true;
+    }
+
     // Users collection
     match /users/{userId} {
       allow read: if isAuth();
-      allow create: if isOwner(userId);
-      allow update: if isOwner(userId) || isAdmin();
+      // A user creating/editing their OWN doc must not be able to grant themselves
+      // admin or clear their own block — those fields may only change via isAdmin()
+      // (ManageUsersScreen.js / admin/users web page), otherwise `isOwner(userId)`
+      // alone would let any authenticated client self-promote to admin.
+      allow create: if isOwner(userId)
+        && request.resource.data.get('isAdmin', false) == false
+        && request.resource.data.get('isBlocked', false) == false;
+      allow update: if isAdmin() || (
+        isOwner(userId)
+        && request.resource.data.get('isAdmin', false) == resource.data.get('isAdmin', false)
+        && request.resource.data.get('isBlocked', false) == resource.data.get('isBlocked', false)
+      );
       allow delete: if isAdmin();
     }
 
     // Recipes collection
     match /recipes/{recipeId} {
       allow read: if true;
-      allow create: if isAuth();
+      // Only admins may create a recipe that's immediately live (published/approved/
+      // draft/inactive) — everyone else's submission is forced into the pending-review
+      // queue (web tarif-oner, mobile AddRecipeScreen) so a client can't self-publish
+      // by writing straight to Firestore and skipping admin approval.
+      allow create: if isAuth() && (
+        isAdmin() || request.resource.data.status == 'pending'
+      );
       allow update: if isAuth() && (
         resource.data.submittedBy == request.auth.uid || isAdmin()
       );
@@ -39,8 +63,27 @@ service cloud.firestore {
     // Reviews collection
     match /reviews/{reviewId} {
       allow read: if true;
-      allow create: if isAuth();
-      allow update: if isAuth() && resource.data.userId == request.auth.uid;
+      // A review must be authored under the writer's own uid with a valid 1-5 rating —
+      // without this, any client could post a review impersonating another user's uid.
+      allow create: if isAuth() && !isBlocked()
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.rating is number
+        && request.resource.data.rating >= 1 && request.resource.data.rating <= 5;
+      allow update: if isAuth() && (
+        // Owner editing their own rating/comment
+        (resource.data.userId == request.auth.uid
+          && request.resource.data.userId == resource.data.userId
+          && request.resource.data.rating is number
+          && request.resource.data.rating >= 1 && request.resource.data.rating <= 5)
+        ||
+        // Any authenticated user reporting someone else's review — only
+        // reportedBy/reportCount may change, by exactly +1, nothing else in the
+        // review (rating/comment/ownership) can be touched this way.
+        (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['reportedBy', 'reportCount'])
+          && request.resource.data.reportCount == resource.data.get('reportCount', 0) + 1)
+        ||
+        isAdmin()
+      );
       allow delete: if isAuth() && (
         resource.data.userId == request.auth.uid || isAdmin()
       );
