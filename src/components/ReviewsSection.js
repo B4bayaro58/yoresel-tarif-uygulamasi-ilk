@@ -8,11 +8,12 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native';
-import { Star, Send } from 'lucide-react-native';
+import { Star, Send, Flag } from 'lucide-react-native';
 import {
   collection,
   addDoc,
   getDocs,
+  getDoc,
   query,
   where,
   orderBy,
@@ -20,6 +21,7 @@ import {
   updateDoc,
   doc,
   increment,
+  arrayUnion,
 } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { useApp } from '../contexts/AppContext';
@@ -49,7 +51,7 @@ function StarRating({ value, onChange, size = 28, readonly = false }) {
 }
 
 export default function ReviewsSection({ recipe }) {
-  const { colors } = useApp();
+  const { colors, translate } = useApp();
   const { user } = useAuth();
 
   const [reviews, setReviews] = useState([]);
@@ -58,6 +60,7 @@ export default function ReviewsSection({ recipe }) {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
   const [userReview, setUserReview] = useState(null);
+  const [isBlocked, setIsBlocked] = useState(false);
   const isMountedRef = React.useRef(true);
 
   useEffect(() => {
@@ -65,6 +68,13 @@ export default function ReviewsSection({ recipe }) {
     loadReviews();
     return () => { isMountedRef.current = false; };
   }, [recipe.id]);
+
+  useEffect(() => {
+    if (!user) { setIsBlocked(false); return; }
+    getDoc(doc(db, 'users', user.uid))
+      .then(snap => setIsBlocked(snap.exists() && snap.data().isBlocked === true))
+      .catch(() => setIsBlocked(false));
+  }, [user]);
 
   const loadReviews = async () => {
     try {
@@ -97,6 +107,10 @@ export default function ReviewsSection({ recipe }) {
   const handleSubmit = async () => {
     if (!user) {
       Alert.alert('Giriş Gerekli', 'Yorum yapmak için giriş yapmalısınız.');
+      return;
+    }
+    if (isBlocked) {
+      Alert.alert(translate('error'), translate('youAreBlockedFromReviews'));
       return;
     }
     if (rating === 0) {
@@ -144,6 +158,38 @@ export default function ReviewsSection({ recipe }) {
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const handleReport = (review) => {
+    if (!user) {
+      Alert.alert('Giriş Gerekli', 'Şikayet etmek için giriş yapmalısınız.');
+      return;
+    }
+    Alert.alert(
+      translate('reportReview'),
+      translate('reportReviewConfirm'),
+      [
+        { text: translate('cancel'), style: 'cancel' },
+        {
+          text: translate('reportReview'),
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await updateDoc(doc(db, 'reviews', review.id), {
+                reportedBy: arrayUnion(user.uid),
+                reportCount: increment(1),
+              });
+              setReviews(prev => prev.map(r => r.id === review.id
+                ? { ...r, reportedBy: [...(r.reportedBy || []), user.uid] }
+                : r));
+              Alert.alert(translate('reportReview'), translate('reportSubmitted'));
+            } catch (error) {
+              Alert.alert(translate('error'), error.message);
+            }
+          },
+        },
+      ]
+    );
   };
 
   const avgRating =
@@ -207,29 +253,47 @@ export default function ReviewsSection({ recipe }) {
           Henüz yorum yok. İlk yorumu siz yapın!
         </Text>
       ) : (
-        reviews.map(review => (
-          <View
-            key={review.id}
-            style={[styles.reviewCard, { backgroundColor: colors.card, borderColor: colors.border }]}
-          >
-            <View style={styles.reviewHeader}>
-              <View style={[styles.avatar, { backgroundColor: colors.primary + '20' }]}>
-                <Text style={[styles.avatarText, { color: colors.primary }]}>
-                  {review.userName?.[0]?.toUpperCase() || 'U'}
+        reviews.map(review => {
+          const alreadyReported = user && review.reportedBy?.includes(user.uid);
+          const isOwnReview = user && review.userId === user.uid;
+          return (
+            <View
+              key={review.id}
+              style={[styles.reviewCard, { backgroundColor: colors.card, borderColor: colors.border }]}
+            >
+              <View style={styles.reviewHeader}>
+                <View style={[styles.avatar, { backgroundColor: colors.primary + '20' }]}>
+                  <Text style={[styles.avatarText, { color: colors.primary }]}>
+                    {review.userName?.[0]?.toUpperCase() || 'U'}
+                  </Text>
+                </View>
+                <View style={styles.reviewMeta}>
+                  <Text style={[styles.reviewUser, { color: colors.text }]}>{review.userName}</Text>
+                  <StarRating value={review.rating} size={14} readonly />
+                </View>
+                {!isOwnReview && (
+                  <TouchableOpacity
+                    onPress={() => !alreadyReported && handleReport(review)}
+                    disabled={alreadyReported}
+                    hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                    style={styles.reportButton}
+                  >
+                    <Flag
+                      size={16}
+                      color={alreadyReported ? colors.textTertiary : colors.textSecondary}
+                      fill={alreadyReported ? colors.textTertiary : 'transparent'}
+                    />
+                  </TouchableOpacity>
+                )}
+              </View>
+              {review.comment ? (
+                <Text style={[styles.reviewComment, { color: colors.textSecondary }]}>
+                  {review.comment}
                 </Text>
-              </View>
-              <View style={styles.reviewMeta}>
-                <Text style={[styles.reviewUser, { color: colors.text }]}>{review.userName}</Text>
-                <StarRating value={review.rating} size={14} readonly />
-              </View>
+              ) : null}
             </View>
-            {review.comment ? (
-              <Text style={[styles.reviewComment, { color: colors.textSecondary }]}>
-                {review.comment}
-              </Text>
-            ) : null}
-          </View>
-        ))
+          );
+        })
       )}
     </View>
   );
@@ -310,6 +374,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
+  },
+  reportButton: {
+    marginLeft: 'auto',
+    padding: 4,
   },
   avatar: {
     width: 36,

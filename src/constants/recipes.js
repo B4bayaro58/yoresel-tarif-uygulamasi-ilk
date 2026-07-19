@@ -44304,7 +44304,7 @@ export const RECIPES_DATA = {
         { name: 'Nişasta (tezgâh için)', amount: '3 yemek kaşığı' },
         { name: 'Kavrulmuş susam (isteğe bağlı)', amount: '4 yemek kaşığı' },
       ],
-      instructions: [
+      steps: [
         'Şeker, su ve limon suyunu geniş bir tencerede karıştırın',
         'Orta ateşte sürekli karıştırarak şeker tamamen eriyene kadar pişirin',
         'Şerbet kaynamaya başlayınca karıştırmayı bırakın; yüzeydeki köpüğü alın',
@@ -44346,7 +44346,7 @@ export const RECIPES_DATA = {
         { name: 'Tuz', amount: 'gerektiği kadar' },
         { name: 'Et suyu veya su', amount: '400ml' },
       ],
-      instructions: [
+      steps: [
         'Tereyağını büyük tencerede eritin; soğanları pembeleşene kadar kavurun',
         'Kıymayı ekleyin; rengi dönene kadar yüksek ateşte kavurun',
         'Salçayı ilave edin; 2 dk daha kavurarak çiğliğini giderin',
@@ -44389,7 +44389,7 @@ export const RECIPES_DATA = {
         { name: 'Sivri biber', amount: '4 adet' },
         { name: 'Tereyağı', amount: '2 yemek kaşığı' },
       ],
-      instructions: [
+      steps: [
         'Kıyma, rendelenmiş soğan, sarımsak, ıslatılmış ekmek ve yumurtayı derin kâsede yoğurun',
         'Kimyon, pul biber, tuz ve karabiberi ekleyin; 5 dk daha yoğurun',
         'Kütleyi streç filme sarın; buzdolabında 30 dk dinlendirin',
@@ -44426,7 +44426,7 @@ export const RECIPES_DATA = {
         { name: 'Tuz', amount: '1 tutam' },
         { name: 'Ceviz (kaba dövülmüş, isteğe bağlı)', amount: '4 yemek kaşığı' },
       ],
-      instructions: [
+      steps: [
         'Kalın tabanlı tavayı kuru olarak orta ateşte ısıtın',
         'Unu tavaya dökün; sürekli tahta kaşıkla karıştırarak kavurun',
         'Un önce beyaz kalır, sonra altın sarısına, ardından fındık kahverengi rengine döner — bu yaklaşık 20-25 dk sürer',
@@ -44466,7 +44466,7 @@ export const RECIPES_DATA = {
         { name: 'Tuz', amount: 'gerektiği kadar' },
         { name: 'Sarımsak (dövülmüş, isteğe bağlı)', amount: '2 diş' },
       ],
-      instructions: [
+      steps: [
         'Tarhana tozunu geniş kâsede yarım su bardağı ılık suyla ıslatın; 10 dk bekletin',
         'Tencerede et suyunu orta ateşte ısıtın',
         'Islanan tarhanayı çatalla ezerek pürüzsüz hale getirin; kütleler kalmamalı',
@@ -44513,7 +44513,7 @@ export const RECIPES_DATA = {
         { name: 'Tuz ve karabiber', amount: 'gerektiği kadar' },
         { name: 'Maydanoz (iri kıyılmış)', amount: '½ demet' },
       ],
-      instructions: [
+      steps: [
         'Fırını 200°C\'a ısıtın',
         'Kuzu etini zeytinyağıyla yüksek ateşte her yüzü kızarana kadar mühürleyin',
         'Geniş toprak veya bakır tavaya kızarmış etleri dizin',
@@ -44557,7 +44557,7 @@ export const RECIPES_DATA = {
         { name: 'Tuz', amount: 'gerektiği kadar' },
         { name: 'Kuru nane', amount: '1 çay kaşığı' },
       ],
-      instructions: [
+      steps: [
         'Zeytinyağında soğan ve sarımsağı pembeleşene kadar kavurun',
         'Salçayı ekleyin; 2 dk kavurun',
         'Yıkanmış mercimeği ve havucu ekleyin; karıştırın',
@@ -44597,7 +44597,7 @@ export const RECIPES_DATA = {
         { name: 'Kaymak veya clotted cream', amount: '150g' },
         { name: 'Tereyağı (yağlamak için)', amount: '3 yemek kaşığı' },
       ],
-      instructions: [
+      steps: [
         'Un, tuz ve zeytinyağını karıştırın; ılık suyu yavaşça ekleyerek yumuşak hamur yoğurun',
         '20 dk üstü kapalı dinlendirin',
         'Dövülmüş fıstık ve şekeri karıştırarak iç harcı hazırlayın',
@@ -44640,7 +44640,7 @@ export const RECIPES_DATA = {
         { name: 'Tuz', amount: 'gerektiği kadar' },
         { name: 'Et suyu veya su', amount: '3.5 su bardağı' },
       ],
-      instructions: [
+      steps: [
         'Tereyağında soğanı pembeleşene kadar kavurun',
         'Kıymayı ekleyin; rengi dönene kadar kavurun',
         'Fıstıkları ekleyin; 2-3 dk altın rengi olana kadar kavurun',
@@ -44682,7 +44682,7 @@ export const RECIPES_DATA = {
         { name: 'Ceviz içi (iri dövülmüş, isteğe bağlı)', amount: '3 yemek kaşığı' },
         { name: 'Tuz', amount: 'gerektiği kadar' },
       ],
-      instructions: [
+      steps: [
         'Zeytinleri süzün; kâğıt havluyla kurulayın',
         'Sarımsakları ince kıyın veya ezin',
         'Zeytinleri, sarımsak, zeytinyağı, limon suyu, kimyon ve pul biberi blendere koyun',
@@ -44725,7 +44725,7 @@ export const RECIPES_DATA = {
         { name: 'Kuru nane', amount: '1 çay kaşığı' },
         { name: 'Tuz ve karabiber', amount: 'gerektiği kadar' },
       ],
-      instructions: [
+      steps: [
         'Kemiği ve eti bol suyla haşlayın; köpükleri alın',
         'Soğanı ekleyin; orta ateşte 45 dk pişirin',
         'Eti kemikten ayırın; küçük parçalara bölün; suyu süzün',
@@ -44768,7 +44768,7 @@ export const RECIPES_DATA = {
         { name: 'Lavaş veya yufka', amount: 'servis için' },
         { name: 'Soğan (ince halkalar, sumak)', amount: 'servis için' },
       ],
-      instructions: [
+      steps: [
         'Kıyma, rendelenmiş soğan, sarımsak ve tüm baharatları derin kasede yoğurun',
         'Plastik sargıya sarın; buzdolabında 1 saat dinlendirin',
         'Geniş, yassı köfteler şekillendirin; şiş veya demir ızgara üzerine yerleştirin',
@@ -44809,7 +44809,7 @@ export const RECIPES_DATA = {
         { name: 'Kavrulmuş nohut (leblebi)', amount: '4 yemek kaşığı' },
         { name: 'Tahin', amount: '2 yemek kaşığı' },
       ],
-      instructions: [
+      steps: [
         'Pirinç ununu suyla pürüzsüz olana kadar karıştırın; tuz ekleyin',
         'Sürekli karıştırarak orta ateşte koyulaşana ve topaklanmayan bir kıvama gelene kadar pişirin (yaklaşık 10-12 dk)',
         'Geniş tepsiye yayın; ince tabaka oluşturun',
@@ -44848,7 +44848,7 @@ export const RECIPES_DATA = {
         { name: 'Toz şeker (şerbet için)', amount: '2 su bardağı' },
         { name: 'Limon suyu', amount: '1 yemek kaşığı' },
       ],
-      instructions: [
+      steps: [
         'Şerbeti hazırlayın: şeker ve suyu kaynatın; limon suyunu ekleyin; 10 dk pişirin; soğutun',
         'Yerfıstığı ve 3 yemek kaşığı şekeri karıştırın',
         'Fırını 175°C\'a ısıtın',
@@ -44892,7 +44892,7 @@ export const RECIPES_DATA = {
         { name: 'Tuz ve karabiber', amount: 'gerektiği kadar' },
         { name: 'Sıcak su veya et suyu', amount: '3 su bardağı' },
       ],
-      instructions: [
+      steps: [
         'Tereyağı ve zeytinyağını tencerede eritin',
         'Soğanı şeffaflaşana kadar kavurun',
         'Sivri biberleri ekleyin; 2 dk kavurun',
@@ -44934,7 +44934,7 @@ export const RECIPES_DATA = {
         { name: 'Kavrulmuş fındık (kabukları soyulmuş, iri kıyılmış)', amount: '½ su bardağı' },
         { name: 'Tuz', amount: '1 tutam' },
       ],
-      instructions: [
+      steps: [
         'Suyu tencerede kaynama noktasına getirin; hafifçe tuzlayın',
         'Mısır ununu yavaşça ekleyin; sürekli tahta kaşıkla karıştırın',
         'Topak kalmayacak şekilde orta ateşte 10-12 dk pişirin; hamur koyulaşıp tavadan ayrılmaya başlamalı',
@@ -44972,7 +44972,7 @@ export const RECIPES_DATA = {
         { name: 'Tuz ve karabiber', amount: 'gerektiği kadar' },
         { name: 'Kuru nane', amount: '½ çay kaşığı' },
       ],
-      instructions: [
+      steps: [
         'Tereyağını tencerede eritin; fındıkları altın rengi olana kadar kavurun; kenara alın',
         'Aynı tencerede süzdürülmüş pirinci 2-3 dk kavurun',
         'Dişlenmiş tavuğu ekleyin; karıştırın',
@@ -45013,7 +45013,7 @@ export const RECIPES_DATA = {
         { name: 'Tuz ve karabiber', amount: 'gerektiği kadar' },
         { name: 'Et suyu veya su', amount: '1 su bardağı' },
       ],
-      instructions: [
+      steps: [
         'Karalahana yapraklarını kaynar suda 2-3 dk haşlayın; soğuk suya alın; kurulayın',
         'Kıyma, rendelenmiş soğan, pirinç, salça, pul biber, nane, tuz ve karabiberi yoğurun',
         'Her yaprağın sert damarını ince keserek çıkarın',
@@ -45053,7 +45053,7 @@ export const RECIPES_DATA = {
         { name: 'Kaymak veya ceviz', amount: 'servis için' },
         { name: 'Dövülmüş fındık', amount: '½ su bardağı' },
       ],
-      instructions: [
+      steps: [
         'Kabağı 3-4 cm kalınlığında dilimleyin; tohumlarını çıkarın',
         'Geniş tencereye kabak dilimlerini tek sıra olarak dizin',
         'Şekeri üzerine eşit şekilde serpin; su ekleyin',
@@ -45094,7 +45094,7 @@ export const RECIPES_DATA = {
         { name: 'Tuz ve karabiber', amount: 'gerektiği kadar' },
         { name: 'Su', amount: '3.5 su bardağı' },
       ],
-      instructions: [
+      steps: [
         'Tereyağında soğanı pembeleşene kadar kavurun',
         'Fındıkları ekleyin; altın rengi olana kadar kavurun',
         'Kuş üzümünü ekleyin; 1 dk kavurun',

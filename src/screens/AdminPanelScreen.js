@@ -17,6 +17,7 @@ import {
   TrendingUp,
   ChevronRight,
   UtensilsCrossed,
+  Flag,
 } from 'lucide-react-native';
 import { useApp } from '../contexts/AppContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -139,6 +140,13 @@ export default function AdminPanelScreen({ navigation }) {
       subtitle: translate('pendingRecipesDesc'),
       color: '#EF4444',
       onPress: () => navigation.navigate('PendingRecipes'),
+    },
+    {
+      icon: Flag,
+      title: translate('reportedReviews'),
+      subtitle: translate('reportedReviewsDesc'),
+      color: '#DC2626',
+      onPress: () => navigation.navigate('ReportedReviews'),
     },
     {
       icon: UtensilsCrossed,

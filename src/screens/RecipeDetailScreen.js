@@ -38,6 +38,7 @@ const { width } = Dimensions.get('window');
 export default function RecipeDetailScreen({ route, navigation }) {
   const { recipe } = route.params;
   const steps = recipe.steps || [];
+  const ingredients = recipe.ingredients || [];
   const {
     colors,
     translate,
@@ -70,7 +71,7 @@ export default function RecipeDetailScreen({ route, navigation }) {
   }, [recipe.id, recipes]);
 
   const handleShare = async () => {
-    const ingredientList = recipe.ingredients
+    const ingredientList = ingredients
       .map(i => `• ${i.amount ? i.amount + ' ' : ''}${i.name}`)
       .join('\n');
     const stepList = steps.map((s, i) => `${i + 1}. ${s}`).join('\n');
@@ -321,7 +322,7 @@ export default function RecipeDetailScreen({ route, navigation }) {
             <Text style={[styles.sectionTitle, { color: colors.text }]}>
               {translate('ingredients')}
             </Text>
-            {recipe.ingredients.map((ingredient, index) => (
+            {ingredients.map((ingredient, index) => (
               <View
                 key={index}
                 style={[

@@ -155,6 +155,24 @@ export const TRANSLATIONS = {
     fr: 'Apéritif',
     it: 'Antipasto',
   },
+  'category-snack': {
+    tr: 'Atıştırmalık',
+    en: 'Snack',
+    fr: 'Collation',
+    it: 'Spuntino',
+  },
+  'category-beverage': {
+    tr: 'İçecek',
+    en: 'Beverage',
+    fr: 'Boisson',
+    it: 'Bevanda',
+  },
+  'category-side-dish': {
+    tr: 'Ara Sıcak',
+    en: 'Side Dish',
+    fr: 'Accompagnement',
+    it: 'Contorno',
+  },
 
   // Recipe Details
   ingredients: {
@@ -582,6 +600,90 @@ export const TRANSLATIONS = {
     en: 'Review and approve user recipes',
     fr: 'Examiner et approuver les recettes',
     it: 'Esamina e approva le ricette degli utenti',
+  },
+  reportedReviews: {
+    tr: 'Şikayet Edilen Yorumlar',
+    en: 'Reported Reviews',
+    fr: 'Avis Signalés',
+    it: 'Recensioni Segnalate',
+  },
+  reportedReviewsDesc: {
+    tr: 'Şikayet edilen yorumları incele, sil veya kullanıcıyı engelle',
+    en: 'Review reported comments, delete them or block the user',
+    fr: 'Examiner les avis signalés, les supprimer ou bloquer l\'utilisateur',
+    it: 'Esamina le recensioni segnalate, eliminale o blocca l\'utente',
+  },
+  reportReview: {
+    tr: 'Şikayet Et',
+    en: 'Report',
+    fr: 'Signaler',
+    it: 'Segnala',
+  },
+  reportReviewConfirm: {
+    tr: 'Bu yorumu uygunsuz içerik nedeniyle şikayet etmek istediğinize emin misiniz?',
+    en: 'Are you sure you want to report this comment for inappropriate content?',
+    fr: 'Voulez-vous vraiment signaler ce commentaire pour contenu inapproprié ?',
+    it: 'Sei sicuro di voler segnalare questo commento per contenuti inappropriati?',
+  },
+  reported: {
+    tr: 'Şikayet Edildi',
+    en: 'Reported',
+    fr: 'Signalé',
+    it: 'Segnalato',
+  },
+  reportSubmitted: {
+    tr: 'Şikayetiniz alındı, incelenecek.',
+    en: 'Your report has been submitted for review.',
+    fr: 'Votre signalement a été soumis pour examen.',
+    it: 'La tua segnalazione è stata inviata per la revisione.',
+  },
+  blockUser: {
+    tr: 'Kullanıcıyı Engelle',
+    en: 'Block User',
+    fr: 'Bloquer l\'Utilisateur',
+    it: 'Blocca Utente',
+  },
+  blockUserConfirm: {
+    tr: 'Bu kullanıcıyı engellemek istediğinize emin misiniz? Engellenen kullanıcılar artık yorum yapamaz.',
+    en: 'Are you sure you want to block this user? Blocked users can no longer post reviews.',
+    fr: 'Voulez-vous vraiment bloquer cet utilisateur ? Les utilisateurs bloqués ne peuvent plus publier d\'avis.',
+    it: 'Sei sicuro di voler bloccare questo utente? Gli utenti bloccati non possono più pubblicare recensioni.',
+  },
+  userBlocked: {
+    tr: 'Kullanıcı engellendi.',
+    en: 'User has been blocked.',
+    fr: 'L\'utilisateur a été bloqué.',
+    it: 'L\'utente è stato bloccato.',
+  },
+  noReportedReviews: {
+    tr: 'Şikayet edilen yorum yok 🎉',
+    en: 'No reported reviews 🎉',
+    fr: 'Aucun avis signalé 🎉',
+    it: 'Nessuna recensione segnalata 🎉',
+  },
+  deleteReview: {
+    tr: 'Yorumu Sil',
+    en: 'Delete Review',
+    fr: 'Supprimer l\'Avis',
+    it: 'Elimina Recensione',
+  },
+  deleteReviewConfirm: {
+    tr: 'Bu yorumu kalıcı olarak silmek istediğinize emin misiniz?',
+    en: 'Are you sure you want to permanently delete this review?',
+    fr: 'Voulez-vous vraiment supprimer définitivement cet avis ?',
+    it: 'Sei sicuro di voler eliminare definitivamente questa recensione?',
+  },
+  youAreBlockedFromReviews: {
+    tr: 'Hesabınız yorum yapma yetkisinden men edildi.',
+    en: 'Your account has been restricted from posting reviews.',
+    fr: 'Votre compte a été restreint pour la publication d\'avis.',
+    it: 'Il tuo account è stato limitato nella pubblicazione di recensioni.',
+  },
+  reportsCount: {
+    tr: 'şikayet',
+    en: 'reports',
+    fr: 'signalements',
+    it: 'segnalazioni',
   },
   adminTip: {
     tr: 'İpucu',

@@ -24,6 +24,7 @@ import ManageRecipesScreen from '../screens/ManageRecipesScreen';
 import ManageUsersScreen from '../screens/ManageUsersScreen';
 import StatisticsScreen from '../screens/StatisticsScreen';
 import PendingRecipesScreen from '../screens/PendingRecipesScreen';
+import ReportedReviewsScreen from '../screens/ReportedReviewsScreen';
 import DailyMenuScreen from '../screens/DailyMenuScreen';
 import OnboardingScreen from '../screens/OnboardingScreen';
 
@@ -282,6 +283,14 @@ function MainStack() {
         component={PendingRecipesScreen}
         options={{
           headerTitle: translate('pendingRecipes'),
+          headerBackTitle: translate('back'),
+        }}
+      />
+      <Stack.Screen
+        name="ReportedReviews"
+        component={ReportedReviewsScreen}
+        options={{
+          headerTitle: translate('reportedReviews'),
           headerBackTitle: translate('back'),
         }}
       />

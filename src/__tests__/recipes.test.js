@@ -47,7 +47,7 @@ describe('Recipes data', () => {
   });
 
   test('category is valid enum value', () => {
-    const validCategories = ['main-course', 'dessert', 'soup', 'salad', 'breakfast', 'appetizer', 'beverage'];
+    const validCategories = ['main-course', 'dessert', 'soup', 'salad', 'breakfast', 'appetizer', 'beverage', 'snack', 'side-dish'];
 
     RECIPES.forEach((recipe) => {
       expect(validCategories).toContain(recipe.category);
