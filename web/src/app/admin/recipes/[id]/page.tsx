@@ -39,11 +39,12 @@ const CATEGORIES = [
   { value: 'appetizer',   label: 'Meze' },
   { value: 'snack',       label: 'Atıştırmalık' },
   { value: 'beverage',    label: 'İçecek' },
+  { value: 'side-dish',   label: 'Ara Sıcak' },
 ]
 
 interface FormState {
   name: string; country: string; continent: string; category: string
-  emoji: string; photo: string; difficulty: string; status: string
+  emoji: string; photo: string; photoThumb: string; difficulty: string; status: string
   prepTime: string; servings: string; calories: string; rating: string
   ingredients: { name: string; amount: string; alternatives: string }[]
   equipment: string[]
@@ -52,7 +53,7 @@ interface FormState {
 
 const emptyForm = (): FormState => ({
   name: '', country: '', continent: 'europe', category: 'main-course',
-  emoji: '🍽️', photo: '', difficulty: 'medium', status: 'published',
+  emoji: '🍽️', photo: '', photoThumb: '', difficulty: 'medium', status: 'published',
   prepTime: '', servings: '', calories: '', rating: '0',
   ingredients: [{ name: '', amount: '', alternatives: '' }],
   equipment: [''],
@@ -66,6 +67,7 @@ const recipeToForm = (r: Recipe): FormState => ({
   category: r.category || 'main-course',
   emoji: r.emoji || '🍽️',
   photo: r.photo || '',
+  photoThumb: r.photoThumb || '',
   difficulty: r.difficulty || 'medium',
   status: r.status || 'published',
   prepTime: String(r.prepTime ?? ''),
@@ -85,7 +87,7 @@ const recipeToForm = (r: Recipe): FormState => ({
 
 const formToRecipe = (f: FormState) => ({
   name: f.name, country: f.country, continent: f.continent, category: f.category,
-  emoji: f.emoji, photo: f.photo, difficulty: f.difficulty, status: f.status,
+  emoji: f.emoji, photo: f.photo, photoThumb: f.photoThumb, difficulty: f.difficulty, status: f.status,
   prepTime: Number(f.prepTime), servings: Number(f.servings),
   calories: Number(f.calories), rating: Number(f.rating),
   ingredients: f.ingredients
@@ -102,9 +104,10 @@ export default function AdminRecipeDetailPage() {
   const params  = useParams()
   const router  = useRouter()
   const rawId   = params?.id ? decodeURIComponent(params.id as string) : ''
-  const isStatic = rawId.startsWith('static-')
+  const isNew    = rawId === 'new'
+  const isStatic = !isNew && rawId.startsWith('static-')
   const staticId = isStatic ? rawId.replace('static-', '') : null
-  const firebaseId = isStatic ? null : rawId
+  const firebaseId = isNew || isStatic ? null : rawId
 
   const [form, setForm]       = useState<FormState>(emptyForm())
   const [loading, setLoading]   = useState(true)
@@ -115,46 +118,60 @@ export default function AdminRecipeDetailPage() {
   const [uploadError, setUploadError] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  // Görseli 1200×800 (3:2) olarak kırp ve JPEG'e dönüştür
-  const resizeImage = (file: File): Promise<Blob> =>
+  const loadImageEl = (file: File): Promise<HTMLImageElement> =>
     new Promise((resolve, reject) => {
-      const TARGET_W = 1200
-      const TARGET_H = 800
       const img = new Image()
       const objectUrl = URL.createObjectURL(file)
-      img.onload = () => {
-        URL.revokeObjectURL(objectUrl)
-        const srcRatio = img.width / img.height
-        const tgtRatio = TARGET_W / TARGET_H
-        let sx = 0, sy = 0, sw = img.width, sh = img.height
-        if (srcRatio > tgtRatio) {
-          // Görsel daha geniş → yanlarda kırp
-          sw = Math.round(img.height * tgtRatio)
-          sx = Math.round((img.width - sw) / 2)
-        } else {
-          // Görsel daha uzun → üst/alt kırp
-          sh = Math.round(img.width / tgtRatio)
-          sy = Math.round((img.height - sh) / 2)
-        }
-        const canvas = document.createElement('canvas')
-        canvas.width  = TARGET_W
-        canvas.height = TARGET_H
-        const ctx = canvas.getContext('2d')!
-        ctx.drawImage(img, sx, sy, sw, sh, 0, 0, TARGET_W, TARGET_H)
-        canvas.toBlob(
-          (blob) => blob ? resolve(blob) : reject(new Error('Canvas boş')),
-          'image/jpeg', 0.88
-        )
-      }
+      img.onload = () => { URL.revokeObjectURL(objectUrl); resolve(img) }
       img.onerror = reject
       img.src = objectUrl
     })
+
+  // Görseli hedef en-boy oranına (3:2) kırpıp verilen boyuta küçültür ve JPEG'e dönüştürür
+  const cropToBlob = (img: HTMLImageElement, targetW: number, targetH: number, quality: number): Promise<Blob> =>
+    new Promise((resolve, reject) => {
+      const srcRatio = img.width / img.height
+      const tgtRatio = targetW / targetH
+      let sx = 0, sy = 0, sw = img.width, sh = img.height
+      if (srcRatio > tgtRatio) {
+        // Görsel daha geniş → yanlarda kırp
+        sw = Math.round(img.height * tgtRatio)
+        sx = Math.round((img.width - sw) / 2)
+      } else {
+        // Görsel daha uzun → üst/alt kırp
+        sh = Math.round(img.width / tgtRatio)
+        sy = Math.round((img.height - sh) / 2)
+      }
+      const canvas = document.createElement('canvas')
+      canvas.width  = targetW
+      canvas.height = targetH
+      const ctx = canvas.getContext('2d')!
+      ctx.drawImage(img, sx, sy, sw, sh, 0, 0, targetW, targetH)
+      canvas.toBlob(
+        (blob) => blob ? resolve(blob) : reject(new Error('Canvas boş')),
+        'image/jpeg', quality
+      )
+    })
+
+  // Detay sayfası için tam boyut (1200×800) ve tarif kartları için küçük bir
+  // "kart" versiyonu (480×320) üretir — kartlar artık ~180KB'lık tam görseli
+  // değil, ~20-30KB'lık küçük versiyonu indirir.
+  const resizeImage = async (file: File): Promise<{ full: Blob; thumb: Blob }> => {
+    const img = await loadImageEl(file)
+    const [full, thumb] = await Promise.all([
+      cropToBlob(img, 1200, 800, 0.88),
+      cropToBlob(img, 480, 320, 0.8),
+    ])
+    return { full, thumb }
+  }
 
   // ── Load recipe ──────────────────────────────────────────
   useEffect(() => {
     const load = async () => {
       try {
-        if (firebaseId) {
+        if (isNew) {
+          setForm(emptyForm())
+        } else if (firebaseId) {
           const snap = await getDoc(doc(db, 'recipes', firebaseId))
           if (snap.exists()) setForm(recipeToForm({ ...snap.data(), id: snap.id } as Recipe))
         } else if (staticId) {
@@ -177,29 +194,35 @@ export default function AdminRecipeDetailPage() {
     setUploading(true)
     setUploadError(null)
     try {
-      const blob = await resizeImage(file)
-      const storageRef = ref(storage, `recipes/${Date.now()}.jpg`)
+      const { full, thumb } = await resizeImage(file)
+      const stamp = Date.now()
+      const fullRef  = ref(storage, `recipes/${stamp}.jpg`)
+      const thumbRef = ref(storage, `recipes-thumb/${stamp}.jpg`)
 
       const timeout = new Promise<never>((_, reject) =>
         setTimeout(() => reject(new Error('Zaman aşımı (30s). Firebase Storage kurallarını kontrol edin.')), 30_000)
       )
-      const upload = uploadBytes(storageRef, blob, {
-        contentType: 'image/jpeg',
-        cacheControl: 'public, max-age=31536000, immutable',
-      })
-      const snap = await Promise.race([upload, timeout])
-      const url  = await getDownloadURL(snap.ref)
-      setForm((f) => ({ ...f, photo: url }))
+      const uploadBoth = Promise.all([
+        uploadBytes(fullRef, full, { contentType: 'image/jpeg', cacheControl: 'public, max-age=31536000, immutable' }),
+        uploadBytes(thumbRef, thumb, { contentType: 'image/jpeg', cacheControl: 'public, max-age=31536000, immutable' }),
+      ])
+      const [fullSnap, thumbSnap] = await Promise.race([uploadBoth, timeout])
+      const [url, thumbUrl] = await Promise.all([
+        getDownloadURL(fullSnap.ref),
+        getDownloadURL(thumbSnap.ref),
+      ])
+      setForm((f) => ({ ...f, photo: url, photoThumb: thumbUrl }))
       // Fotoğrafı hemen Firestore'a kaydet (manuel Kaydet'e gerek kalmasın)
+      // Yeni tarifte henüz doküman yok — form içinde tutulup Kaydet ile birlikte yazılır
       if (firebaseId) {
-        await updateDoc(doc(db, 'recipes', firebaseId), { photo: url })
+        await updateDoc(doc(db, 'recipes', firebaseId), { photo: url, photoThumb: thumbUrl })
       } else if (staticId) {
         // Statik tarif: override kaydı oluştur veya güncelle
         const existing = await getDocs(
           query(collection(db, 'recipes'), where('overridesStaticId', '==', staticId))
         )
         if (!existing.empty) {
-          await updateDoc(doc(db, 'recipes', existing.docs[0].id), { photo: url })
+          await updateDoc(doc(db, 'recipes', existing.docs[0].id), { photo: url, photoThumb: thumbUrl })
         } else {
           const staticRecipe = staticRecipes.find((r) => String(r.id) === staticId)
           if (staticRecipe) {
@@ -207,6 +230,7 @@ export default function AdminRecipeDetailPage() {
             await addDoc(collection(db, 'recipes'), {
               ...staticBase,
               photo: url,
+              photoThumb: thumbUrl,
               overridesStaticId: staticId,
               status: 'published',
               createdAt: serverTimestamp(),
@@ -231,7 +255,9 @@ export default function AdminRecipeDetailPage() {
     setSaving(true)
     try {
       const data = formToRecipe(form)
-      if (firebaseId) {
+      if (isNew) {
+        await addDoc(collection(db, 'recipes'), { ...data, createdAt: serverTimestamp() })
+      } else if (firebaseId) {
         await updateDoc(doc(db, 'recipes', firebaseId), data)
       } else {
         // Static tarifi Firebase'e override olarak kaydet.
@@ -309,9 +335,9 @@ export default function AdminRecipeDetailPage() {
             <ArrowLeft size={18} />
           </Link>
           <div>
-            <h1 className="text-xl font-bold truncate max-w-xs" style={{ color: 'var(--text)' }}>{form.name || 'Tarif Düzenle'}</h1>
+            <h1 className="text-xl font-bold truncate max-w-xs" style={{ color: 'var(--text)' }}>{form.name || (isNew ? 'Yeni Tarif' : 'Tarif Düzenle')}</h1>
             <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
-              {isStatic ? '📌 Statik tarif — kaydedince Firebase\'e override olarak eklenir' : `Firebase ID: ${firebaseId}`}
+              {isNew ? '✨ Yeni tarif oluşturuluyor' : isStatic ? '📌 Statik tarif — kaydedince Firebase\'e override olarak eklenir' : `Firebase ID: ${firebaseId}`}
             </p>
           </div>
         </div>
@@ -389,7 +415,7 @@ export default function AdminRecipeDetailPage() {
                 <label className={labelCls} style={labelStyle}>veya URL girin</label>
                 <input
                   value={form.photo}
-                  onChange={(e) => setForm((f) => ({ ...f, photo: e.target.value }))}
+                  onChange={(e) => setForm((f) => ({ ...f, photo: e.target.value, photoThumb: '' }))}
                   placeholder="https://..."
                   className={inputCls}
                   style={inputStyle}

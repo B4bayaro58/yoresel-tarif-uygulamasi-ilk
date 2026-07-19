@@ -9,7 +9,8 @@
     "web": "expo start --web",
     "test": "jest",
     "translate": "node scripts/translateRecipes.js",
-    "update-storage-cache": "node scripts/update-storage-cache-control.js"
+    "update-storage-cache": "node scripts/update-storage-cache-control.js",
+    "generate-recipe-thumbnails": "node scripts/generate-recipe-thumbnails.js"
   },
   "dependencies": {
     "@expo/metro-runtime": "~6.1.2",

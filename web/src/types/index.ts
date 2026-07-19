@@ -14,6 +14,7 @@ export interface Recipe {
   emoji: string
   gradient: string[]
   photo: string
+  photoThumb?: string
   ingredients: Ingredient[]
   equipment: string[]
   steps: string[]
@@ -69,6 +70,7 @@ export type Category =
   | 'appetizer'
   | 'snack'
   | 'beverage'
+  | 'side-dish'
 
 export interface ContinentItem {
   id: string

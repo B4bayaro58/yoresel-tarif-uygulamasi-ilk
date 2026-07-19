@@ -14,6 +14,7 @@ interface RecipeCardProps {
   recipe: Recipe
   isFav?: boolean
   onFavoriteToggle?: (recipeId: string) => void
+  priority?: boolean
 }
 
 const DIFFICULTY_STYLE = {
@@ -37,7 +38,7 @@ function MiniStars({ rating }: { rating: number }) {
   )
 }
 
-function RecipeCard({ recipe, isFav = false, onFavoriteToggle }: RecipeCardProps) {
+function RecipeCard({ recipe, isFav = false, onFavoriteToggle, priority = false }: RecipeCardProps) {
   const { t } = useApp()
   const cardRef = useRef<HTMLElement>(null)
   const [override, setOverride] = useState<Recipe | null>(null)
@@ -95,12 +96,13 @@ function RecipeCard({ recipe, isFav = false, onFavoriteToggle }: RecipeCardProps
         <div className="relative overflow-hidden" style={{ height: '210px' }}>
           {displayRecipe.photo ? (
             <Image
-              src={displayRecipe.photo}
+              src={displayRecipe.photoThumb || displayRecipe.photo}
               alt={displayRecipe.name}
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
-              loading="lazy"
-              unoptimized={isPreOptimized(displayRecipe.photo)}
+              loading={priority ? undefined : 'lazy'}
+              priority={priority}
+              unoptimized={isPreOptimized(displayRecipe.photoThumb || displayRecipe.photo)}
               className="object-cover transition-transform duration-500 group-hover:scale-105"
             />
           ) : (

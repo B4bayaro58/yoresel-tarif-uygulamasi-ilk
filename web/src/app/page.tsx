@@ -209,12 +209,12 @@ export default function HomePage() {
                       >
                         {recipe.photo ? (
                           <Image
-                            src={recipe.photo}
+                            src={recipe.photoThumb || recipe.photo}
                             alt={recipe.name}
                             fill
                             sizes="200px"
                             loading="lazy"
-                            unoptimized={isPreOptimized(recipe.photo)}
+                            unoptimized={isPreOptimized(recipe.photoThumb || recipe.photo)}
                             className="object-cover"
                           />
                         ) : (
@@ -300,12 +300,13 @@ export default function HomePage() {
           return (
             <>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                {firstChunk.map((recipe) => (
+                {firstChunk.map((recipe, i) => (
                   <RecipeCard
                     key={recipe.id}
                     recipe={recipe}
                     isFav={favSet.has(recipe.id)}
                     onFavoriteToggle={toggleFavorite}
+                    priority={i < 4}
                   />
                 ))}
               </div>

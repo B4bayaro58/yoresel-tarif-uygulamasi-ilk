@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, useMemo } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, Search, ChevronRight, ChevronDown } from 'lucide-react'
+import { ArrowLeft, Plus, Search, ChevronRight, ChevronDown } from 'lucide-react'
 import { collection, getDocs, query, orderBy, limit, startAfter, documentId, QueryDocumentSnapshot, DocumentData } from 'firebase/firestore'
 import { db } from '@/config/firebase'
 import { Recipe } from '@/types'
@@ -98,7 +98,7 @@ export default function AdminRecipesPage() {
         <Link href="/admin" className="p-2 rounded-xl hover:opacity-70 transition-opacity" style={{ color: 'var(--text-muted)' }}>
           <ArrowLeft size={18} />
         </Link>
-        <div>
+        <div className="flex-1">
           <h1 className="text-xl font-bold" style={{ color: 'var(--text)' }}>Tarif Yönetimi</h1>
           <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
             {loading
@@ -106,6 +106,13 @@ export default function AdminRecipesPage() {
               : `${allRows.length}${hasMore ? '+' : ''} tarif · ${staticRecipes.length} statik + ${firestoreRecipes.length}${hasMore ? '+' : ''} Firebase`}
           </p>
         </div>
+        <Link
+          href="/admin/recipes/new"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white flex-shrink-0"
+          style={{ background: 'linear-gradient(135deg, #B97A1A 0%, #D99520 100%)' }}
+        >
+          <Plus size={15} /> Yeni Tarif
+        </Link>
       </div>
 
       <div className="flex flex-col sm:flex-row gap-3 mb-5">

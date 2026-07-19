@@ -22,14 +22,17 @@ const inter = Inter({
   display: 'swap',
 })
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://yoreseltarif.com'
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: 'Yöresel Tarifler — Lezzet Atlası',
   description:
-    '107 yöresel tarif, 8 kıtadan özenle seçilmiş dünya lezzetleri. Favori tariflerinizi kaydedin, alışveriş listesi oluşturun.',
+    '1000\'den fazla yöresel tarif, 8 kıtadan özenle seçilmiş dünya lezzetleri. Favori tariflerinizi kaydedin, alışveriş listesi oluşturun.',
   keywords: 'tarif, yemek, dünya mutfağı, yöresel, recipe, lezzet atlası',
   openGraph: {
     title: 'Yöresel Tarifler — Lezzet Atlası',
-    description: '8 kıtadan 107 özgün yöresel tarif',
+    description: '8 kıtadan 1000\'den fazla özgün yöresel tarif',
     type: 'website',
   },
 }
@@ -41,6 +44,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="tr" suppressHydrationWarning className={`${playfair.variable} ${inter.variable}`}>
+      <head>
+        <link rel="preconnect" href="https://firebasestorage.googleapis.com" />
+        <link rel="dns-prefetch" href="https://firebasestorage.googleapis.com" />
+      </head>
       <body>
         <AuthProvider>
           <AppProvider>

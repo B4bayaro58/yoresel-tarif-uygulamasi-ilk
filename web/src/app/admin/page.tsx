@@ -6,6 +6,7 @@ import Link from 'next/link'
 import {
   Shield,
   BookOpen,
+  Plus,
   Users,
   CalendarDays,
   Clock,
@@ -120,6 +121,13 @@ export default function AdminPage() {
   ]
 
   const quickLinks = [
+    {
+      href: '/admin/recipes/new',
+      label: 'Yeni Tarif Ekle',
+      description: 'Sıfırdan yeni bir tarif oluştur',
+      icon: <Plus size={20} />,
+      color: 'text-green-500',
+    },
     {
       href: '/admin/recipes',
       label: 'Tarifleri Yönet',
