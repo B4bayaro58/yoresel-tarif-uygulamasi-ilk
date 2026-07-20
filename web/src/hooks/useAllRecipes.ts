@@ -19,10 +19,14 @@ const localRecipes: Recipe[] = (RECIPES_DATA as any).tr || []
 const FIRESTORE_OVERRIDE_FETCH_LIMIT = 3000
 
 // Statik katalogla Firestore'dan gelen tarifleri (override'lar + Firebase-native
-// tarifler) birleştiren tek doğru kaynak. Sayfa.tsx (anasayfa) ve favorites/page.tsx
-// aynı birleştirme mantığını ayrı ayrı uyguluyordu — favorites/page.tsx yalnızca
-// statik kataloğu kullandığı için Firebase-native/override edilmiş tarifleri
-// favorilerken gösteremiyordu (bkz. 2026-07-10 canlı hata raporu).
+// tarifler) birleştiren ortak birleştirme mantığı. Şu an yalnızca favorites/page.tsx
+// bu hook'u kullanıyor — favorites/page.tsx eskiden yalnızca statik kataloğu
+// kullandığı için Firebase-native/override edilmiş tarifleri favorilerken
+// gösteremiyordu (bkz. 2026-07-10 canlı hata raporu), o yüzden buraya taşındı.
+// NOT: anasayfa (page.tsx) ve arama (arama/page.tsx) bu hook'u KULLANMIYOR,
+// kendi ayrı sorgu/veri mantıklarını tutuyorlar — buradaki bir değişiklik
+// onlara otomatik yansımaz (bkz. 2026-07-20 "Divriği Pilavı görünmüyor" hatası,
+// page.tsx'in kendi limit(200)'ü ayrı bir yerde unutulmuştu).
 export function useAllRecipes() {
   const [firestoreRecipes, setFirestoreRecipes] = useState<Recipe[]>([])
   const [loading, setLoading] = useState(true)

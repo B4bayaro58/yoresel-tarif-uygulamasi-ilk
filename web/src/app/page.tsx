@@ -19,11 +19,15 @@ const localRecipes: Recipe[] = (RECIPES_DATA as any).tr || []
 const PAGE_SIZE = 20
 
 // Statik tarif kataloğu (1100+) zaten Unsplash fotoğraflarıyla yerelde mevcut;
-// bu sorgu sadece admin panelinden yüklenmiş özel fotoğraf override'larını getirir.
-// Sınırsız çekmek her sayfa yüklemesinde 1000+ Firestore okuması demekti — limit
-// bunu sabit ve öngörülebilir bir maliyete indiriyor. Limitin dışında kalan
-// tarifler otomatik olarak kendi statik (Unsplash) fotoğrafına düşer.
-const FIRESTORE_OVERRIDE_FETCH_LIMIT = 200
+// bu sorgu sadece admin panelinden yüklenmiş özel fotoğraf override'larını ve
+// Firebase-native tarifleri getirir. NOT: bu sayfa useAllRecipes hook'unu
+// kullanmıyor, kendi ayrı sorgusunu tutuyor (bkz. useAllRecipes.ts'teki "tek
+// doğru kaynak" yorumu — orası yalnız favorites/page.tsx için doğru).
+// override+native doküman sayısı 2026-07-20 itibarıyla 1105 — eski limit(200)
+// yeni eklenen tarifleri (rastgele doküman ID'si limitin dışında kalınca) ana
+// sayfaya hiç düşürmüyordu. Limit tek seferlik bir sorgu olduğu için (canlı
+// dinleyici değil) büyütmek maliyet insidentini geri getirmiyor.
+const FIRESTORE_OVERRIDE_FETCH_LIMIT = 3000
 
 export default function HomePage() {
   const { t, favorites, toggleFavorite } = useApp()
