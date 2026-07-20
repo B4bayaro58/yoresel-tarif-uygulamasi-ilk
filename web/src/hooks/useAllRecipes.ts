@@ -12,7 +12,11 @@ const localRecipes: Recipe[] = (RECIPES_DATA as any).tr || []
 // Statik tarif kataloğu (1100+) zaten Unsplash fotoğraflarıyla yerelde mevcut;
 // bu sorgu sadece admin panelinden yüklenmiş özel fotoğraf override'larını ve
 // Firebase-native (yalnızca Firestore'da var olan) tarifleri getirir.
-const FIRESTORE_OVERRIDE_FETCH_LIMIT = 200
+// NOT: override+native doküman sayısı 2026-07-20 itibarıyla zaten 1105 — eski
+// limit(200) yeni eklenen tarifleri (rastgele doküman ID'si limitin dışında
+// kalınca) ana listeye hiç düşürmüyordu. Limit tek seferlik bir sorgu olduğu
+// için (canlı dinleyici değil) büyütmek maliyet insidentini geri getirmiyor.
+const FIRESTORE_OVERRIDE_FETCH_LIMIT = 3000
 
 // Statik katalogla Firestore'dan gelen tarifleri (override'lar + Firebase-native
 // tarifler) birleştiren tek doğru kaynak. Sayfa.tsx (anasayfa) ve favorites/page.tsx

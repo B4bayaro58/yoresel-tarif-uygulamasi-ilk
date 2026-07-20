@@ -26,7 +26,11 @@ const AppContext = createContext();
 // Önceden onSnapshot ile filtresiz/limitsiz canlı dinleniyordu — uygulama açık
 // olan her kullanıcı için sürekli 1000+ doküman okunuyordu. Tek seferlik ve
 // limitli hale getirildi; limit dışında kalan tarifler statik fotoğrafına düşer.
-const FIREBASE_RECIPE_FETCH_LIMIT = 200;
+// NOT: override+native doküman sayısı 2026-07-20 itibarıyla zaten 1105 —
+// limit(200) yeni eklenen tarifleri (rastgele doküman ID'si limitin dışında
+// kalınca) ana listeye hiç düşürmüyordu. Limit tek seferlik bir sorgu olduğu
+// için (canlı dinleyici değil) büyütmek maliyet insidentini geri getirmiyor.
+const FIREBASE_RECIPE_FETCH_LIMIT = 3000;
 
 export const useApp = () => {
   const context = useContext(AppContext);

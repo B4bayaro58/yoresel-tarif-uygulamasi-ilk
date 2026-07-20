@@ -10,6 +10,17 @@ service firebase.storage {
                    && request.resource.contentType.matches('image/.*');
     }
 
+    // Tarif kartı küçük görselleri (480x320) — web admin panelindeki foto
+    // yükleme akışı hem tam boy hem de bu thumb'ı yazıyor; bu kural eksikti
+    // ve thumb yüklemesi deny-all'a düşüp tüm yüklemeyi (Promise.all) başarısız
+    // kılıyordu.
+    match /recipes-thumb/{fileName} {
+      allow read: if true;
+      allow write: if request.auth != null
+                   && request.resource.size < 5 * 1024 * 1024
+                   && request.resource.contentType.matches('image/.*');
+    }
+
     // Diğer her şey yasak
     match /{allPaths=**} {
       allow read, write: if false;
