@@ -35,6 +35,9 @@ export const metadata: Metadata = {
     description: '8 kıtadan 1000\'den fazla özgün yöresel tarif',
     type: 'website',
   },
+  verification: {
+    google: 'bGfnIuyP7Ny7f2u_gAhdN0BIDqZubrma-OxRh3E0KIc',
+  },
 }
 
 export default function RootLayout({
