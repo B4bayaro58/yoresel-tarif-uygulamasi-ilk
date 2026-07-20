@@ -5,15 +5,12 @@ import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Search, X, ArrowLeft } from 'lucide-react'
 import { useApp } from '@/contexts/AppContext'
+import { useAllRecipes } from '@/hooks/useAllRecipes'
 import RecipeCard from '@/components/RecipeCard'
-import { Recipe } from '@/types'
-// @ts-ignore
-import { RECIPES_DATA } from '@shared/recipes'
-
-const localRecipes: Recipe[] = (RECIPES_DATA as any).tr || []
 
 function AramaContent() {
   const { t, favorites, toggleFavorite } = useApp()
+  const { allRecipes } = useAllRecipes()
   const router = useRouter()
   const searchParams = useSearchParams()
   const initialQuery = searchParams.get('q') || ''
@@ -41,13 +38,13 @@ function AramaContent() {
   const results = useMemo(() => {
     const q = debouncedQuery.trim().toLowerCase()
     if (q.length < 2) return []
-    return localRecipes.filter((r) => {
+    return allRecipes.filter((r) => {
       if (r.name.toLowerCase().includes(q)) return true
-      if (r.country.toLowerCase().includes(q)) return true
+      if (r.country?.toLowerCase().includes(q)) return true
       if (r.ingredients?.some((ing: { name: string }) => ing.name.toLowerCase().includes(q))) return true
       return false
     })
-  }, [debouncedQuery])
+  }, [debouncedQuery, allRecipes])
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
