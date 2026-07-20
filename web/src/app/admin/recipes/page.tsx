@@ -2,8 +2,8 @@
 
 import { useEffect, useRef, useState, useMemo } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, Plus, Search, ChevronRight, ChevronDown } from 'lucide-react'
-import { collection, getDocs, query, orderBy, limit, startAfter, documentId, QueryDocumentSnapshot, DocumentData } from 'firebase/firestore'
+import { ArrowLeft, Plus, Search, ChevronRight, ChevronDown, Trash2 } from 'lucide-react'
+import { collection, getDocs, query, orderBy, limit, startAfter, documentId, deleteDoc, doc, QueryDocumentSnapshot, DocumentData } from 'firebase/firestore'
 import { db } from '@/config/firebase'
 import { Recipe } from '@/types'
 // @ts-ignore
@@ -39,6 +39,7 @@ export default function AdminRecipesPage() {
   const lastDocRef = useRef<QueryDocumentSnapshot<DocumentData> | null>(null)
   const [search, setSearch] = useState('')
   const [sourceFilter, setSourceFilter] = useState<'all' | 'static' | 'firebase'>('all')
+  const [deletingId, setDeletingId] = useState<string | null>(null)
 
   useEffect(() => {
     getDocs(query(collection(db, 'recipes'), orderBy(documentId()), limit(PAGE_SIZE)))
@@ -83,6 +84,26 @@ export default function AdminRecipesPage() {
     const fbRows: Row[] = firestoreRecipes.map((r) => ({ ...r, _source: 'firebase' }))
     return [...staticRows, ...fbRows]
   }, [firestoreRecipes])
+
+  const handleDelete = async (e: React.MouseEvent, recipe: Row) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (recipe._source === 'static') {
+      alert('Statik tarifler koddan geliyor, doğrudan silinemez. Silmek yerine bir override oluşturup pasif duruma alabilirsiniz.')
+      return
+    }
+    if (!confirm(`"${recipe.name}" tarifini kalıcı olarak silmek istediğinize emin misiniz?`)) return
+    setDeletingId(recipe.id)
+    try {
+      await deleteDoc(doc(db, 'recipes', recipe.id))
+      setFirestoreRecipes((prev) => prev.filter((r) => r.id !== recipe.id))
+    } catch (err) {
+      console.error(err)
+      alert('Silme işlemi başarısız oldu.')
+    } finally {
+      setDeletingId(null)
+    }
+  }
 
   const filtered = useMemo(() => allRows.filter((r) => {
     const q = search.toLocaleLowerCase('tr')
@@ -175,6 +196,15 @@ export default function AdminRecipesPage() {
                   style={{ backgroundColor: si.bg, color: si.color }}>
                   {si.label}
                 </span>
+                <button
+                  onClick={(e) => handleDelete(e, recipe)}
+                  disabled={deletingId === recipe.id}
+                  title={recipe._source === 'static' ? 'Statik tarif — silinemez' : 'Tarifi sil'}
+                  className="p-1.5 rounded-lg hover:opacity-70 transition-opacity flex-shrink-0"
+                  style={{ color: recipe._source === 'firebase' ? '#C4593A' : 'var(--text-muted)', opacity: deletingId === recipe.id ? 0.5 : 1 }}
+                >
+                  <Trash2 size={15} />
+                </button>
                 <ChevronRight size={16} style={{ color: 'var(--text-muted)', flexShrink: 0 }} />
               </Link>
             )
