@@ -109,6 +109,9 @@ export default function Footer() {
               </div>
 
               {/* Sosyal Medya */}
+              <p className="text-xs font-semibold" style={{ color: 'var(--text-muted)' }}>
+                Bizi sosyal medyadan takip edin
+              </p>
               <div className="flex items-center gap-2">
                 {SOCIAL.map((s) => (
                   <a
