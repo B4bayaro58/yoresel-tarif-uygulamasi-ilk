@@ -91,5 +91,9 @@ export interface Review {
   userName: string
   rating: number
   comment: string
+  photoUrl?: string
   createdAt: string
+  updatedAt?: string
+  reportedBy?: string[]
+  reportCount?: number
 }

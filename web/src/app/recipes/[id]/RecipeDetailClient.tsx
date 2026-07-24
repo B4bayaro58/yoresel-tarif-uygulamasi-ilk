@@ -23,6 +23,7 @@ import { db } from '@/config/firebase'
 import { useApp } from '@/contexts/AppContext'
 import { Recipe, ShoppingItem } from '@/types'
 import AdBanner from '@/components/AdBanner'
+import ReviewsSection from '@/components/ReviewsSection'
 import { isPreOptimized } from '@/lib/image'
 import { getOverrideRecipe } from '@/lib/overridePhoto'
 // @ts-ignore
@@ -433,6 +434,8 @@ export default function RecipeDetailClient({ initialRecipe }: RecipeDetailClient
           </div>
         )}
       </section>
+
+      <ReviewsSection recipe={recipe} />
     </div>
   )
 }

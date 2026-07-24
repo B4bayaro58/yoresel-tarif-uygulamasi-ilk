@@ -21,6 +21,19 @@ service firebase.storage {
                    && request.resource.contentType.matches('image/.*');
     }
 
+    // Yorum fotoğrafları — giriş yapmış kullanıcılar kendi yorumlarına
+    // fotoğraf ekleyebilir, herkes okuyabilir. Dosya adı `{uid}_{timestamp}.jpg`
+    // formatında (bkz. web/src/components/ReviewsSection.tsx) ama burada isim
+    // zorunlu kılınmıyor -- asıl güvenlik sınırı `reviews` koleksiyonundaki
+    // Firestore kuralları (bkz. firestore.rules: yorum sahibi request.auth.uid
+    // ile eşleşmeli).
+    match /review-photos/{fileName} {
+      allow read: if true;
+      allow write: if request.auth != null
+                   && request.resource.size < 5 * 1024 * 1024
+                   && request.resource.contentType.matches('image/.*');
+    }
+
     // Diğer her şey yasak
     match /{allPaths=**} {
       allow read, write: if false;
