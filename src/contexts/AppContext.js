@@ -128,6 +128,24 @@ export const AppProvider = ({ children }) => {
 
   const loadFirebaseRecipes = async () => {
     setRecipesLoading(true);
+    // Cache-first (stale-while-revalidate): son bilinen override listesini
+    // AsyncStorage'dan hemen gösteriyoruz ki soğuk açılışta kullanıcı boş
+    // liste/skeleton yerine anında içerik görsün. Ağ isteği yine aşağıda
+    // devam ediyor ve sonucu arka planda günceliyor -- önceden cache sadece
+    // ağ hatasında bir fallback olarak kullanılıyordu, her açılışta boşuna
+    // network round-trip'i bekleniyordu.
+    let hadCache = false;
+    try {
+      const cached = await AsyncStorage.getItem('cachedFirebaseRecipes');
+      if (cached) {
+        setFirebaseRecipes(JSON.parse(cached));
+        setRecipesLoading(false);
+        hadCache = true;
+      }
+    } catch (cacheError) {
+      console.error('Cache load error:', cacheError);
+    }
+
     try {
       const snapshot = await getDocs(query(
         collection(db, 'recipes'),
@@ -140,13 +158,7 @@ export const AppProvider = ({ children }) => {
         await AsyncStorage.setItem('cachedFirebaseRecipes', JSON.stringify(loaded));
       } catch {}
     } catch (error) {
-      console.error('Firebase recipes unavailable, loading from cache:', error);
-      try {
-        const cached = await AsyncStorage.getItem('cachedFirebaseRecipes');
-        if (cached) setFirebaseRecipes(JSON.parse(cached));
-      } catch (cacheError) {
-        console.error('Cache load error:', cacheError);
-      }
+      console.error('Firebase recipes unavailable' + (hadCache ? ' (cache already shown)' : ', no cache') + ':', error);
     } finally {
       setRecipesLoading(false);
     }
