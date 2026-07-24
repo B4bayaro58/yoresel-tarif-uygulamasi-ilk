@@ -24,12 +24,21 @@ const inter = Inter({
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://yoreseltarif.com'
 
+// Site şu an AuthGuard ile giriş zorunluluğu arkasında (tarif kalitesi henüz
+// istenen seviyeye gelmedi, bilinçli bir karar). Bu süre boyunca Google'ın
+// hiçbir zaman gerçek içerik göstermeyen bir yükleniyor ekranını indexleyip
+// crawl bütçesi harcamasını (ve marka aramalarında boş bir sonuç görünmesini)
+// önlemek için noindex. AuthGuard kaldırılıp site herkese açık hale gelince
+// bunu true yap -- tek değişiklik bu olacak, başka bir yerde dokunmaya gerek yok.
+const SITE_IS_PUBLIC = false
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: 'Yöresel Tarifler — Lezzet Atlası',
   description:
     '1000\'den fazla yöresel tarif, dünyanın dört bir yanından özenle seçilmiş lezzetler. Favori tariflerinizi kaydedin, alışveriş listesi oluşturun.',
   keywords: 'tarif, yemek, dünya mutfağı, yöresel, recipe, lezzet atlası',
+  robots: SITE_IS_PUBLIC ? undefined : { index: false, follow: false },
   openGraph: {
     title: 'Yöresel Tarifler — Lezzet Atlası',
     description: 'Dünyanın dört bir yanından 1000\'den fazla özgün yöresel tarif',

@@ -36,14 +36,23 @@ const DIFFICULTY_STYLE = {
   hard:   { bg: 'rgba(239,68,68,0.12)',  color: '#dc2626' },
 }
 
-export default function RecipeDetailClient() {
+interface RecipeDetailClientProps {
+  // Sunucuda (page.tsx) zaten çözülmüş tarif -- override farkındalıklı aynı
+  // mantık artık orada da çalışıyor (bkz. fetchRecipe/getOverrideRecipe).
+  // Verilmişse burada ikinci bir Firestore okuması yapılmaz. `undefined`
+  // (prop hiç verilmemiş) eski client-fetch davranışına düşer; `null` ise
+  // sunucu da tarifi bulamadı demektir.
+  initialRecipe?: Recipe | null
+}
+
+export default function RecipeDetailClient({ initialRecipe }: RecipeDetailClientProps) {
   const params = useParams()
   const router = useRouter()
   const id = params?.id as string
   const { t, favorites, toggleFavorite, addToShoppingList } = useApp()
 
-  const [recipe, setRecipe] = useState<Recipe | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [recipe, setRecipe] = useState<Recipe | null>(initialRecipe ?? null)
+  const [loading, setLoading] = useState(initialRecipe === undefined)
   const [expandedIngredient, setExpandedIngredient] = useState<number | null>(null)
   const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set())
   const [addedToList, setAddedToList] = useState(false)
@@ -53,6 +62,8 @@ export default function RecipeDetailClient() {
   const steps = recipe?.steps || []
 
   useEffect(() => {
+    if (initialRecipe !== undefined) return // sunucu zaten çözdü, tekrar sorgulamaya gerek yok
+
     const load = async () => {
       const local = localRecipes.find((r) => r.id === id)
       try {
@@ -82,7 +93,7 @@ export default function RecipeDetailClient() {
       setLoading(false)
     }
     if (id) load()
-  }, [id])
+  }, [id, initialRecipe])
 
   const handleAddAllToShoppingList = () => {
     if (!recipe) return
