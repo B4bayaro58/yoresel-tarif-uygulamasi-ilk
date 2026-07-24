@@ -14,14 +14,26 @@ import { RECIPES_DATA } from '@shared/recipes'
 
 const staticRecipes: Recipe[] = (RECIPES_DATA as any).tr || []
 
-// `where('status','==','published')` filtresine rağmen bu koleksiyon ~1100+
-// dokümana kadar çıkabiliyor (çoğu statik tarif override edilmiş durumda) —
-// limitsiz okumak her admin panel açılışında maliyeti büyütür. `documentId()`
-// ile sayfalanıyor ("Daha Fazla Yükle"), ayrıca daha önce günlük menüye
+// Bu koleksiyon ~1100+ dokümana kadar çıkabiliyor (çoğu statik tarif override
+// edilmiş durumda) — limitsiz okumak her admin panel açılışında maliyeti
+// büyütür. `documentId()` ile sayfalanıyor, ayrıca daha önce günlük menüye
 // eklenmiş tariflerin (menuIds) sayfalamanın dışında kalıp "kayıp" görünmemesi
 // için ayrı, hedefli bir sorguyla her zaman garantiye alınıyor — anasayfadaki
 // Günün Menüsü'nün kullandığı aynı desen (web/src/app/page.tsx).
-const PAGE_SIZE = 300
+// 3000: eskiden 300'dü — arama kutusu yalnızca YÜKLENMİŞ sayfadaki kayıtlarda
+// arıyordu, ilk 300'ün dışında kalan bir tarif bulunamıyor gibi görünüyordu.
+// Tek seferlik bir admin sorgusu olduğu için büyütmek maliyet insidentini
+// geri getirmiyor.
+const PAGE_SIZE = 3000
+
+// NOT: ana sorgu artık `status` filtresi TAŞIMIYOR (eskiden yalnızca
+// 'published' çekiyordu). Neden: overriddenIds bu sorgunun sonucundan
+// hesaplanıyor — 'approved' ya da 'inactive' (gizlenmiş) bir override
+// filtre dışında kalırsa, karşılık gelen statik tarif hâlâ "override
+// edilmemiş" sanılıp mevcut/seçilebilir listede yanlışlıkla görünürdü.
+// Görüntülenecek/seçilebilecek tarifler ayrıca `PUBLIC_STATUSES` ile
+// filtreleniyor — bkz. `allRecipes` ve `available`.
+const PUBLIC_STATUSES = ['published', 'approved']
 
 export default function AdminDailyMenuPage() {
   const [menuIds, setMenuIds] = useState<string[]>([])
@@ -45,7 +57,6 @@ export default function AdminDailyMenuPage() {
         const queries = [
           getDocs(query(
             collection(db, 'recipes'),
-            where('status', '==', 'published'),
             orderBy(documentId()),
             limit(PAGE_SIZE)
           )),
@@ -77,7 +88,6 @@ export default function AdminDailyMenuPage() {
     try {
       const snap = await getDocs(query(
         collection(db, 'recipes'),
-        where('status', '==', 'published'),
         orderBy(documentId()),
         startAfter(lastDocRef.current),
         limit(PAGE_SIZE)
@@ -97,16 +107,20 @@ export default function AdminDailyMenuPage() {
   }
 
   const allRecipes = useMemo(() => {
+    // overriddenIds TÜM statülerden hesaplanır (bkz. PUBLIC_STATUSES notu) —
+    // bir statik tarif 'inactive' bir override'a sahipse bile burada
+    // "override edilmiş" sayılıp statik hâliyle tekrar görünmesin.
     const overriddenIds = new Set(
       firestoreRecipes
         .filter((r: any) => r.overridesStaticId != null)
         .map((r: any) => String(r.overridesStaticId))
     )
+    const displayable = firestoreRecipes.filter((r: any) => PUBLIC_STATUSES.includes(r.status))
     const map = new Map<string, Recipe>()
     staticRecipes
       .filter((r) => !overriddenIds.has(String(r.id)))
       .forEach((r) => map.set(String(r.id), r))
-    firestoreRecipes.forEach((r) => map.set(String(r.id), r))
+    displayable.forEach((r) => map.set(String(r.id), r))
     return Array.from(map.values())
   }, [firestoreRecipes])
 

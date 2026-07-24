@@ -29,6 +29,14 @@ export const revalidate = 3600
 // dinleyici değil) büyütmek maliyet insidentini geri getirmiyor.
 const FIRESTORE_OVERRIDE_FETCH_LIMIT = 3000
 
+// Sadece bu statüdeki Firestore kayıtları herkese açık sayfalarda gösterilir.
+// Admin panelinden bir statik tarif "gizlenirse" (status: 'inactive' override),
+// bu tarifin GÖRÜNTÜLENMEMESİ gerekir — ama sorgunun kendisi status'e göre
+// filtrelenmemeli, çünkü overriddenIds de bu sonuçtan hesaplanıyor: filtre
+// sorguda olsaydı, 'inactive' bir override sonuçtan hiç dönmez, statik tarif
+// "override edilmemiş" sanılıp eski hâliyle geri gelirdi (gizleme işe yaramazdı).
+const PUBLIC_STATUSES = ['published', 'approved']
+
 async function getHomeData() {
   try {
     const menuSnap = await getDoc(doc(db, 'settings', 'dailyMenu'))
@@ -37,7 +45,6 @@ async function getHomeData() {
     const queries = [
       getDocs(query(
         collection(db, 'recipes'),
-        where('status', 'in', ['published', 'approved']),
         limit(FIRESTORE_OVERRIDE_FETCH_LIMIT)
       )),
     ]
@@ -68,11 +75,12 @@ export default async function HomePage() {
       .filter((r: any) => r.overridesStaticId != null)
       .map((r: any) => String(r.overridesStaticId))
   )
+  const displayableFirestore = firestoreRecipes.filter((r: any) => PUBLIC_STATUSES.includes(r.status))
   const allMap = new Map<string, Recipe>()
   localRecipes
     .filter((r) => !overriddenIds.has(String(r.id)))
     .forEach((r) => allMap.set(String(r.id), r))
-  firestoreRecipes.forEach((r) => allMap.set(r.id, r))
+  displayableFirestore.forEach((r) => allMap.set(r.id, r))
   const allRecipes = Array.from(allMap.values())
 
   const dailyMenuRecipes = dailyIds
@@ -82,7 +90,7 @@ export default async function HomePage() {
     )
     .filter(Boolean) as Recipe[]
 
-  // Fisher-Yates — bu revalidate penceresi (15 dk) boyunca sabit kalan tek bir
+  // Fisher-Yates — bu revalidate penceresi (1 saat) boyunca sabit kalan tek bir
   // sırayla üretiliyor, önceki client-side shuffle'ın aksine (o da her ziyarette
   // yeniden karıştırıyordu, ki zaten CDN önbelleği bunu artık mümkün kılmıyor).
   const shuffled = [...allRecipes]

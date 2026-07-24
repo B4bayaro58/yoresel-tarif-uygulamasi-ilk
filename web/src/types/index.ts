@@ -25,7 +25,7 @@ export interface Recipe {
   difficulty: 'easy' | 'medium' | 'hard'
   isFavorite?: boolean
   // Firestore additional fields
-  status?: 'published' | 'pending' | 'draft'
+  status?: 'published' | 'approved' | 'pending' | 'draft' | 'inactive'
   authorId?: string
   authorName?: string
   createdAt?: string

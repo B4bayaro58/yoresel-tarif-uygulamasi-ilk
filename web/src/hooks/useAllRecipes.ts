@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import { collection, getDocs, query, where, limit } from 'firebase/firestore'
+import { collection, getDocs, query, limit } from 'firebase/firestore'
 import { db } from '@/config/firebase'
 import { Recipe } from '@/types'
 // @ts-ignore
@@ -27,6 +27,15 @@ const FIRESTORE_OVERRIDE_FETCH_LIMIT = 3000
 // kendi ayrı sorgu/veri mantıklarını tutuyorlar — buradaki bir değişiklik
 // onlara otomatik yansımaz (bkz. 2026-07-20 "Divriği Pilavı görünmüyor" hatası,
 // page.tsx'in kendi limit(200)'ü ayrı bir yerde unutulmuştu).
+//
+// NOT (2): Sorgu status'e göre FİLTRELENMİYOR — sadece 'published'/'approved'
+// çekilseydi, admin panelinden 'inactive' yapılmış (gizlenmiş) bir statik
+// override sonuçtan hiç dönmez, aşağıdaki overriddenIds onu "override
+// edilmemiş" sanıp statik hâliyle geri getirirdi (gizleme işe yaramazdı, bkz.
+// web/src/app/page.tsx'teki aynı düzeltme). Görüntülenecek Firebase kayıtları
+// PUBLIC_STATUSES ile ayrıca filtreleniyor.
+const PUBLIC_STATUSES = ['published', 'approved']
+
 export function useAllRecipes() {
   const [firestoreRecipes, setFirestoreRecipes] = useState<Recipe[]>([])
   const [loading, setLoading] = useState(true)
@@ -37,7 +46,6 @@ export function useAllRecipes() {
       try {
         const snap = await getDocs(query(
           collection(db, 'recipes'),
-          where('status', 'in', ['published', 'approved']),
           limit(FIRESTORE_OVERRIDE_FETCH_LIMIT)
         ))
         if (cancelled) return
@@ -58,11 +66,12 @@ export function useAllRecipes() {
         .filter((r: any) => r.overridesStaticId != null)
         .map((r: any) => String(r.overridesStaticId))
     )
+    const displayable = firestoreRecipes.filter((r: any) => PUBLIC_STATUSES.includes(r.status))
     const map = new Map<string, Recipe>()
     localRecipes
       .filter((r) => !overriddenIds.has(String(r.id)))
       .forEach((r) => map.set(String(r.id), r))
-    firestoreRecipes.forEach((r) => map.set(r.id, r))
+    displayable.forEach((r) => map.set(r.id, r))
     return Array.from(map.values())
   }, [firestoreRecipes])
 

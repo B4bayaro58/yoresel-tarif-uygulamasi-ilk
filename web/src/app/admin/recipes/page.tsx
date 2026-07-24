@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useMemo } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, Plus, Search, ChevronRight, ChevronDown, Trash2 } from 'lucide-react'
-import { collection, getDocs, query, orderBy, limit, startAfter, documentId, deleteDoc, doc, QueryDocumentSnapshot, DocumentData } from 'firebase/firestore'
+import { collection, getDocs, query, where, orderBy, limit, startAfter, documentId, deleteDoc, updateDoc, addDoc, doc, serverTimestamp, QueryDocumentSnapshot, DocumentData } from 'firebase/firestore'
 import { db } from '@/config/firebase'
 import { Recipe } from '@/types'
 // @ts-ignore
@@ -18,7 +18,11 @@ const staticRecipes: Recipe[] = (RECIPES_DATA as any).tr || []
 // sınırsız büyüyebilir. `documentId()` ile sayfalanıyor (bir veri alanı değil,
 // her dokümanda garanti var) — böylece hiçbir kayıt sessizce atlanmaz, sadece
 // "Daha Fazla Yükle" ile kademeli çekilir.
-const PAGE_SIZE = 300
+// 3000: eskiden 300'dü — arama kutusu yalnızca YÜKLENMİŞ sayfadaki kayıtlarda
+// arıyordu, ilk 300'ün dışında kalan bir tarif "bulunamadı" gibi görünüyordu.
+// Bu tek seferlik bir admin sorgusu (canlı dinleyici değil, halka açık sayfa
+// değil), büyütmek maliyet insidentini geri getirmiyor.
+const PAGE_SIZE = 3000
 
 const STATUS_INFO: Record<string, { label: string; bg: string; color: string }> = {
   published: { label: 'Yayında',       bg: 'rgba(34,197,94,0.12)',  color: '#16a34a' },
@@ -85,11 +89,46 @@ export default function AdminRecipesPage() {
     return [...staticRows, ...fbRows]
   }, [firestoreRecipes])
 
+  // Statik tarifler koddan geliyor, Firestore'da karşılık gelen bir doküman
+  // yok — doğrudan silinemezler. Bunun yerine tarifin "pasif" bir override'ını
+  // oluşturuyoruz; bu, siteden gizlenmesini sağlıyor (bkz. [id]/page.tsx'teki
+  // aynı override-oluşturma deseni) ve admin listesinde "Pasif" olarak görünür.
+  const hideStaticRecipe = async (recipe: Row) => {
+    setDeletingId(recipe.id)
+    try {
+      const existing = await getDocs(
+        query(collection(db, 'recipes'), where('overridesStaticId', '==', String(recipe.id)))
+      )
+      if (!existing.empty) {
+        await updateDoc(doc(db, 'recipes', existing.docs[0].id), { status: 'inactive' })
+        setFirestoreRecipes((prev) => prev.map((r) =>
+          r.id === existing.docs[0].id ? { ...r, status: 'inactive' } : r
+        ))
+      } else {
+        const { id: _sid, ...staticBase } = recipe as any
+        const ref = await addDoc(collection(db, 'recipes'), {
+          ...staticBase,
+          overridesStaticId: String(recipe.id),
+          status: 'inactive',
+          createdAt: serverTimestamp(),
+        })
+        setFirestoreRecipes((prev) => [...prev, { ...staticBase, id: ref.id, overridesStaticId: String(recipe.id), status: 'inactive' } as Recipe])
+      }
+    } catch (err) {
+      console.error(err)
+      alert('Gizleme işlemi başarısız oldu.')
+    } finally {
+      setDeletingId(null)
+    }
+  }
+
   const handleDelete = async (e: React.MouseEvent, recipe: Row) => {
     e.preventDefault()
     e.stopPropagation()
     if (recipe._source === 'static') {
-      alert('Statik tarifler koddan geliyor, doğrudan silinemez. Silmek yerine bir override oluşturup pasif duruma alabilirsiniz.')
+      if (confirm(`"${recipe.name}" statik bir tarif, doğrudan silinemez. Bunun yerine siteden gizlensin mi? (Pasif durumuna alınır, istersen tarif düzenleme sayfasından tekrar aktif edebilirsin.)`)) {
+        await hideStaticRecipe(recipe)
+      }
       return
     }
     if (!confirm(`"${recipe.name}" tarifini kalıcı olarak silmek istediğinize emin misiniz?`)) return
@@ -199,9 +238,9 @@ export default function AdminRecipesPage() {
                 <button
                   onClick={(e) => handleDelete(e, recipe)}
                   disabled={deletingId === recipe.id}
-                  title={recipe._source === 'static' ? 'Statik tarif — silinemez' : 'Tarifi sil'}
+                  title={recipe._source === 'static' ? 'Statik tarif — siteden gizle' : 'Tarifi sil'}
                   className="p-1.5 rounded-lg hover:opacity-70 transition-opacity flex-shrink-0"
-                  style={{ color: recipe._source === 'firebase' ? '#C4593A' : 'var(--text-muted)', opacity: deletingId === recipe.id ? 0.5 : 1 }}
+                  style={{ color: '#C4593A', opacity: deletingId === recipe.id ? 0.5 : 1 }}
                 >
                   <Trash2 size={15} />
                 </button>
