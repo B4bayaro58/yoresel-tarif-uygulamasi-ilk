@@ -43,7 +43,7 @@ const CATEGORIES = [
 ]
 
 interface FormState {
-  name: string; country: string; continent: string; category: string
+  name: string; country: string; city: string; continent: string; category: string
   emoji: string; photo: string; photoThumb: string; difficulty: string; status: string
   prepTime: string; servings: string; calories: string; rating: string
   ingredients: { name: string; amount: string; alternatives: string }[]
@@ -52,7 +52,7 @@ interface FormState {
 }
 
 const emptyForm = (): FormState => ({
-  name: '', country: '', continent: 'europe', category: 'main-course',
+  name: '', country: '', city: '', continent: 'europe', category: 'main-course',
   emoji: '🍽️', photo: '', photoThumb: '', difficulty: 'medium', status: 'published',
   prepTime: '', servings: '', calories: '', rating: '0',
   ingredients: [{ name: '', amount: '', alternatives: '' }],
@@ -63,6 +63,7 @@ const emptyForm = (): FormState => ({
 const recipeToForm = (r: Recipe): FormState => ({
   name: r.name || '',
   country: r.country || '',
+  city: r.city || '',
   continent: r.continent || 'europe',
   category: r.category || 'main-course',
   emoji: r.emoji || '🍽️',
@@ -86,7 +87,7 @@ const recipeToForm = (r: Recipe): FormState => ({
 })
 
 const formToRecipe = (f: FormState) => ({
-  name: f.name, country: f.country, continent: f.continent, category: f.category,
+  name: f.name, country: f.country, city: f.city.trim(), continent: f.continent, category: f.category,
   emoji: f.emoji, photo: f.photo, photoThumb: f.photoThumb, difficulty: f.difficulty, status: f.status,
   prepTime: Number(f.prepTime), servings: Number(f.servings),
   calories: Number(f.calories), rating: Number(f.rating),
@@ -436,6 +437,10 @@ export default function AdminRecipeDetailPage() {
             <div>
               <label className={labelCls} style={labelStyle}>Ülke</label>
               <input value={form.country} onChange={(e) => setForm((f) => ({ ...f, country: e.target.value }))} className={inputCls} style={inputStyle} placeholder="Türkiye" />
+            </div>
+            <div>
+              <label className={labelCls} style={labelStyle}>Şehir <span style={{ fontWeight: 400 }}>(opsiyonel)</span></label>
+              <input value={form.city} onChange={(e) => setForm((f) => ({ ...f, city: e.target.value }))} className={inputCls} style={inputStyle} placeholder="Adana" />
             </div>
             <div>
               <label className={labelCls} style={labelStyle}>Emoji</label>
