@@ -74,7 +74,7 @@ export default function HomeClient({ recipes, dailyMenuRecipes }: HomeClientProp
             <em style={{ color: 'var(--primary)', fontStyle: 'italic' }}>Lezzetleri</em>
           </h1>
           <p className="text-base mb-6 max-w-lg" style={{ color: 'var(--text-muted)' }}>
-            8 kıtadan özenle derlenen dünya lezzetlerini keşfedin.
+            Dünyanın dört bir yanından özenle derlenen lezzetleri keşfedin.
           </p>
         </div>
       </div>

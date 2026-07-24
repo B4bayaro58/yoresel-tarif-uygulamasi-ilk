@@ -28,11 +28,11 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: 'Yöresel Tarifler — Lezzet Atlası',
   description:
-    '1000\'den fazla yöresel tarif, 8 kıtadan özenle seçilmiş dünya lezzetleri. Favori tariflerinizi kaydedin, alışveriş listesi oluşturun.',
+    '1000\'den fazla yöresel tarif, dünyanın dört bir yanından özenle seçilmiş lezzetler. Favori tariflerinizi kaydedin, alışveriş listesi oluşturun.',
   keywords: 'tarif, yemek, dünya mutfağı, yöresel, recipe, lezzet atlası',
   openGraph: {
     title: 'Yöresel Tarifler — Lezzet Atlası',
-    description: '8 kıtadan 1000\'den fazla özgün yöresel tarif',
+    description: 'Dünyanın dört bir yanından 1000\'den fazla özgün yöresel tarif',
     type: 'website',
   },
   verification: {

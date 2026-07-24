@@ -13,7 +13,7 @@ export default function HakkimizdaPage() {
 
       <h2>Neler Sunuyoruz?</h2>
       <ul>
-        <li>8 kıtadan özenle seçilmiş yüzlerce yöresel tarif</li>
+        <li>Dünyanın dört bir yanından özenle seçilmiş yüzlerce yöresel tarif</li>
         <li>Türkiye&apos;nin şehirlerine özgü otantik lezzetler</li>
         <li>Favori tariflerinizi kaydetme ve alışveriş listesi oluşturma</li>
         <li>Kullanıcılar tarafından önerilen ve topluluk tarafından zenginleştirilen içerik</li>

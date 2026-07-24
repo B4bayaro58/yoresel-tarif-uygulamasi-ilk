@@ -1578,10 +1578,10 @@ export const TRANSLATIONS = {
     it: 'Scopri la Cucina Mondiale',
   },
   onboarding1Desc: {
-    tr: '8 kıtadan 100\'den fazla yöresel tarif. Her tarifin hikayesini keşfet.',
-    en: 'Over 100 regional recipes from 8 continents. Discover the story behind each dish.',
-    fr: 'Plus de 100 recettes régionales de 8 continents. Découvrez l\'histoire de chaque plat.',
-    it: 'Oltre 100 ricette regionali da 8 continenti. Scopri la storia di ogni piatto.',
+    tr: 'Dünyanın dört bir yanından 1000\'den fazla yöresel tarif. Her tarifin hikayesini keşfet.',
+    en: 'Over 1,000 regional recipes from around the world. Discover the story behind each dish.',
+    fr: 'Plus de 1 000 recettes régionales du monde entier. Découvrez l\'histoire de chaque plat.',
+    it: 'Oltre 1.000 ricette regionali da tutto il mondo. Scopri la storia di ogni piatto.',
   },
   onboarding2Title: {
     tr: 'Kolayca Pişir',
