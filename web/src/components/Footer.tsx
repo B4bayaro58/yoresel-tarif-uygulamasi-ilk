@@ -32,7 +32,7 @@ const FOOTER_LINKS = {
 }
 
 const SOCIAL = [
-  { icon: <Instagram size={18} />, href: '#', label: 'Instagram' },
+  { icon: <Instagram size={18} />, href: 'https://www.instagram.com/yoreseltarifcom/', label: 'Instagram' },
   { icon: <Youtube size={18} />, href: '#', label: 'YouTube' },
   { icon: <Twitter size={18} />, href: '#', label: 'Twitter / X' },
 ]
@@ -115,6 +115,7 @@ export default function Footer() {
                     key={s.label}
                     href={s.href}
                     aria-label={s.label}
+                    {...(s.href !== '#' ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                     className="w-9 h-9 rounded-xl flex items-center justify-center transition-all hover:opacity-80"
                     style={{
                       border: '1px solid var(--border)',
