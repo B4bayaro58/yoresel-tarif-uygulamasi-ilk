@@ -56,6 +56,17 @@ service cloud.firestore {
       );
       allow update: if isAuth() && (
         resource.data.submittedBy == request.auth.uid || isAdmin()
+        ||
+        // Any authenticated user leaving a review bumps the recipe's aggregate
+        // rating/reviewCount (ReviewsSection.js / .tsx) — without this branch
+        // that write 403s for anyone but the original submitter/admin, since
+        // most reviewers aren't the recipe's submitter. Mirrors the review
+        // reportCount pattern below: only these two fields, reviewCount by
+        // exactly +1, rating in valid range.
+        (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['rating', 'reviewCount'])
+          && request.resource.data.reviewCount == resource.data.get('reviewCount', 0) + 1
+          && request.resource.data.rating is number
+          && request.resource.data.rating >= 0 && request.resource.data.rating <= 5)
       );
       allow delete: if isAdmin();
     }

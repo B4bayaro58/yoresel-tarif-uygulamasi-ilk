@@ -138,14 +138,21 @@ export default function ReviewsSection({ recipe }) {
       } else {
         await addDoc(collection(db, 'reviews'), reviewData);
 
-        // Update average rating on the recipe (Firebase recipes only)
+        // Update average rating on the recipe (Firebase recipes only).
+        // Separate try/catch: the review itself is already saved, so a
+        // failure here shouldn't surface as "yorum gönderilemedi" and leave
+        // the form dirty (retrying would create a duplicate review).
         if (recipe.isFirebase) {
-          const newCount = reviews.length + 1;
-          const newAvg = ((recipe.rating || 0) * reviews.length + rating) / newCount;
-          await updateDoc(doc(db, 'recipes', recipe.id), {
-            rating: parseFloat(newAvg.toFixed(1)),
-            reviewCount: increment(1),
-          });
+          try {
+            const newCount = reviews.length + 1;
+            const newAvg = ((recipe.rating || 0) * reviews.length + rating) / newCount;
+            await updateDoc(doc(db, 'recipes', recipe.id), {
+              rating: parseFloat(newAvg.toFixed(1)),
+              reviewCount: increment(1),
+            });
+          } catch (error) {
+            console.error('Error updating recipe average rating:', error);
+          }
         }
       }
 

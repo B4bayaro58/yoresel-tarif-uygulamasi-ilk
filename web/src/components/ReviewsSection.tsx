@@ -159,14 +159,22 @@ export default function ReviewsSection({ recipe }: { recipe: Recipe & { isFireba
         })
 
         // Sadece Firebase kaynaklı tarifler için ortalama puanı güncelle
-        // (statik katalogdaki tarifler koddan geliyor, üzerine yazılamaz)
+        // (statik katalogdaki tarifler koddan geliyor, üzerine yazılamaz).
+        // Ayrı try/catch: yorum zaten kaydedildi, bu adım başarısız olsa bile
+        // kullanıcıya "yorum gönderilemedi" gibi yanlış bir hata gösterip
+        // formu kirli bırakmamalı (aksi halde tekrar denemek mükerrer yorum
+        // oluşturur).
         if (recipe.isFirebase) {
-          const newCount = reviews.length + 1
-          const newAvg = ((recipe.rating || 0) * reviews.length + rating) / newCount
-          await updateDoc(doc(db, 'recipes', recipe.id), {
-            rating: parseFloat(newAvg.toFixed(1)),
-            reviewCount: increment(1),
-          })
+          try {
+            const newCount = reviews.length + 1
+            const newAvg = ((recipe.rating || 0) * reviews.length + rating) / newCount
+            await updateDoc(doc(db, 'recipes', recipe.id), {
+              rating: parseFloat(newAvg.toFixed(1)),
+              reviewCount: increment(1),
+            })
+          } catch (e) {
+            console.error('Ortalama puan güncellenemedi:', e)
+          }
         }
       }
 
