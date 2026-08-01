@@ -124,7 +124,14 @@ export default function TarifOnerPage() {
         difficulty,
         status: 'pending',
         authorId: user.uid,
-        authorName: user.displayName || user.email || 'Anonim',
+        // firestore.rules' recipes.update owner-check reads `submittedBy` (the
+        // field mobile's AddRecipeScreen writes) — without it here, a
+        // web-submitted recipe's own author could never pass that check.
+        submittedBy: user.uid,
+        // `recipes` is world-readable including pending/unmoderated docs, so no raw
+        // email here (PendingRecipesScreen resolves the real identity via a
+        // users/{uid} lookup instead, which requires being signed in).
+        authorName: user.displayName || 'Anonim',
         createdAt: serverTimestamp(),
       })
       setSubmitted(true)

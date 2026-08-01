@@ -230,9 +230,14 @@ export default function AddRecipeScreen({ navigation, route }) {
     };
 
     const status = isAdmin ? 'approved' : 'pending';
+    // `recipes` is world-readable (`firestore.rules`: allow read: if true), including
+    // pending/unmoderated docs -- storing the submitter's raw email here would leak it
+    // to anyone querying status=='pending', authenticated or not. Store the uid only;
+    // PendingRecipesScreen resolves a friendly identity via a users/{uid} lookup, which
+    // requires being signed in (see firestore.rules users.read).
     const fullData = isAdmin
       ? recipeData
-      : { ...recipeData, submittedBy: user?.email || user?.uid || 'unknown' };
+      : { ...recipeData, submittedBy: user?.uid || 'unknown' };
 
     // Statik tarif düzenleniyorsa Firebase'e yeni kayıt olarak ekle (override)
     const isStaticEdit = isEditMode && !editRecipe.isFirebase;

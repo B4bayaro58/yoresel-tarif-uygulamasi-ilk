@@ -9,7 +9,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { CheckCircle2, XCircle, Eye } from 'lucide-react-native';
-import { collection, getDocs, query, where, orderBy, limit, startAfter, documentId, deleteDoc, doc } from 'firebase/firestore';
+import { collection, getDocs, getDoc, query, where, orderBy, limit, startAfter, documentId, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { useApp } from '../contexts/AppContext';
 
@@ -22,6 +22,7 @@ const PAGE_SIZE = 100;
 export default function PendingRecipesScreen({ navigation }) {
   const { colors, translate, approveRecipe, showNotification } = useApp();
   const [pendingRecipes, setPendingRecipes] = useState([]);
+  const [submitterNames, setSubmitterNames] = useState({});
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(true);
@@ -30,6 +31,26 @@ export default function PendingRecipesScreen({ navigation }) {
   useEffect(() => {
     loadPendingRecipes();
   }, []);
+
+  // `recipes.submittedBy` only stores a uid now (not raw email — that collection is
+  // world-readable, see AddRecipeScreen.js). This admin-only screen resolves the
+  // friendly identity via a direct users/{uid} lookup (firestore.rules: users.read
+  // only requires being signed in, which this screen already is).
+  const resolveSubmitterNames = async (recipes) => {
+    const uids = [...new Set(recipes.map(r => r.submittedBy).filter(Boolean))]
+      .filter(uid => !(uid in submitterNames));
+    if (uids.length === 0) return;
+    const entries = await Promise.all(uids.map(async (uid) => {
+      try {
+        const snap = await getDoc(doc(db, 'users', uid));
+        const data = snap.exists() ? snap.data() : null;
+        return [uid, data?.displayName || data?.email || null];
+      } catch {
+        return [uid, null];
+      }
+    }));
+    setSubmitterNames(prev => ({ ...prev, ...Object.fromEntries(entries) }));
+  };
 
   const loadPendingRecipes = async () => {
     try {
@@ -43,6 +64,7 @@ export default function PendingRecipesScreen({ navigation }) {
       const snapshot = await getDocs(q);
       const loaded = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
       setPendingRecipes(loaded);
+      resolveSubmitterNames(loaded);
       lastDocRef.current = snapshot.docs[snapshot.docs.length - 1] ?? null;
       setHasMore(snapshot.docs.length === PAGE_SIZE);
     } catch (error) {
@@ -66,6 +88,7 @@ export default function PendingRecipesScreen({ navigation }) {
       const snapshot = await getDocs(q);
       const loaded = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
       setPendingRecipes(prev => [...prev, ...loaded]);
+      resolveSubmitterNames(loaded);
       lastDocRef.current = snapshot.docs[snapshot.docs.length - 1] ?? null;
       setHasMore(snapshot.docs.length === PAGE_SIZE);
     } catch (error) {
@@ -159,7 +182,7 @@ export default function PendingRecipesScreen({ navigation }) {
                   {recipe.country} • {recipe.category}
                 </Text>
                 <Text style={[styles.submitter, { color: colors.textTertiary }]}>
-                  {translate('submittedBy')}: {recipe.submittedBy || translate('unknown')}
+                  {translate('submittedBy')}: {submitterNames[recipe.submittedBy] || recipe.authorName || translate('unknown')}
                 </Text>
               </View>
 
