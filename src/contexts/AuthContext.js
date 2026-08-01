@@ -10,7 +10,7 @@ import {
   EmailAuthProvider,
   sendPasswordResetEmail,
 } from 'firebase/auth';
-import { doc, setDoc, deleteDoc, collection, query, where, getDocs, writeBatch } from 'firebase/firestore';
+import { doc, getDoc, setDoc, deleteDoc, collection, query, where, getDocs, writeBatch } from 'firebase/firestore';
 import { auth, db } from '../config/firebase';
 import { useApp } from './AppContext';
 
@@ -40,9 +40,19 @@ export const AuthProvider = ({ children }) => {
         setUser(firebaseUser);
         setCurrentUserId(firebaseUser.uid);
 
-        // Check if admin
-        const admin = firebaseUser.email === ADMIN_EMAIL;
-        setIsAdmin(admin);
+        // Admin status: Firestore users/{uid}.isAdmin (set via ManageUsersScreen's
+        // "promote to admin") is the real source of truth, OR'd with the legacy
+        // hardcoded email so the original admin account never loses access even
+        // if its Firestore doc lacks the field. Without the Firestore check, a
+        // user promoted via ManageUsersScreen would pass firestore.rules'
+        // isAdmin() but never see the Admin Panel UI on mobile.
+        try {
+          const snap = await getDoc(doc(db, 'users', firebaseUser.uid));
+          const firestoreAdmin = snap.exists() && snap.data().isAdmin === true;
+          setIsAdmin(firestoreAdmin || firebaseUser.email === ADMIN_EMAIL);
+        } catch {
+          setIsAdmin(firebaseUser.email === ADMIN_EMAIL);
+        }
 
       } else {
         setUser(null);
