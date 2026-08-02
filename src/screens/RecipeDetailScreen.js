@@ -86,7 +86,7 @@ export default function RecipeDetailScreen({ route, navigation }) {
           `📋 Malzemeler:\n${ingredientList}\n\n` +
           `👨‍🍳 Hazırlanışı:\n${stepList}\n\n` +
           `Yöresel Tarifler uygulamasından paylaşıldı.\n` +
-          `yoreseltarifler://recipe/${recipe.id}`,
+          `yoreseltarif://recipe/${recipe.id}`,
       });
     } catch (error) {
       console.error('Share error:', error);

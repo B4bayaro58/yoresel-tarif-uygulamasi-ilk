@@ -51,7 +51,7 @@ export default ({ config }) => ({
         data: [
           {
             scheme: 'https',
-            host: 'yoreseltarifler.com',
+            host: 'yoreseltarif.com',
             pathPrefix: '/recipe',
           },
         ],
@@ -59,7 +59,7 @@ export default ({ config }) => ({
       },
     ],
   },
-  scheme: 'yoreseltarifler',
+  scheme: 'yoreseltarif',
   owner: 'cagatay58',
   extra: {
     eas: {

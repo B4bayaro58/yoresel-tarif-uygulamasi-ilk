@@ -32,7 +32,7 @@ const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 const linking = {
-  prefixes: ['yoreseltarifler://', 'https://yoreseltarifler.com'],
+  prefixes: ['yoreseltarif://', 'https://yoreseltarif.com'],
   config: {
     screens: {
       Main: {

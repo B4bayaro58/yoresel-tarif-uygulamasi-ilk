@@ -1842,10 +1842,10 @@ export const TRANSLATIONS = {
     it: '7. Contatto',
   },
   ppContactBody: {
-    tr: 'Gizlilik ile ilgili sorularınız için: destek@yoreseltarifler.com',
-    en: 'For privacy-related questions: destek@yoreseltarifler.com',
-    fr: 'Pour toute question relative à la confidentialité : destek@yoreseltarifler.com',
-    it: 'Per domande sulla privacy: destek@yoreseltarifler.com',
+    tr: 'Gizlilik ile ilgili sorularınız için: info@yoreseltarif.com',
+    en: 'For privacy-related questions: info@yoreseltarif.com',
+    fr: 'Pour toute question relative à la confidentialité : info@yoreseltarif.com',
+    it: 'Per domande sulla privacy: info@yoreseltarif.com',
   },
   termsOfService: {
     tr: 'Kullanım Koşulları',
@@ -1944,10 +1944,10 @@ export const TRANSLATIONS = {
     it: '7. Contatto',
   },
   tosSection7Body: {
-    tr: 'Kullanım koşullarıyla ilgili sorularınız için: destek@yoreseltarifler.com',
-    en: 'For questions about the terms of service: destek@yoreseltarifler.com',
-    fr: 'Pour toute question relative aux conditions d\'utilisation : destek@yoreseltarifler.com',
-    it: 'Per domande sui termini di servizio: destek@yoreseltarifler.com',
+    tr: 'Kullanım koşullarıyla ilgili sorularınız için: info@yoreseltarif.com',
+    en: 'For questions about the terms of service: info@yoreseltarif.com',
+    fr: 'Pour toute question relative aux conditions d\'utilisation : info@yoreseltarif.com',
+    it: 'Per domande sui termini di servizio: info@yoreseltarif.com',
   },
 
   ppAgeRestriction: {
