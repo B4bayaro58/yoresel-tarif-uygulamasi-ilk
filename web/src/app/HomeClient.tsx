@@ -5,7 +5,6 @@ import Image from 'next/image'
 import { useApp } from '@/contexts/AppContext'
 import RecipeCard from '@/components/RecipeCard'
 import ContinentFilter from '@/components/ContinentFilter'
-import AdBanner from '@/components/AdBanner'
 import { Recipe } from '@/types'
 import { isPreOptimized } from '@/lib/image'
 
@@ -146,11 +145,6 @@ export default function HomeClient({ recipes, dailyMenuRecipes }: HomeClientProp
           </div>
         )}
 
-        {/* ── AD: Leaderboard — Günün Menüsü ile filtre arası ── */}
-        <div className="flex justify-center mb-6">
-          <AdBanner size="leaderboard" />
-        </div>
-
         {/* ── Filter panel ──────────────────────────── */}
         <div
           className="rounded-2xl p-5 mb-6 relative z-10"
@@ -213,10 +207,6 @@ export default function HomeClient({ recipes, dailyMenuRecipes }: HomeClientProp
 
               {secondChunk.length > 0 && (
                 <>
-                  {/* ── AD: Rectangle — 8 karttan sonra ── */}
-                  <div className="flex justify-center my-6">
-                    <AdBanner size="rectangle" />
-                  </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                     {secondChunk.map((recipe) => (
                       <RecipeCard

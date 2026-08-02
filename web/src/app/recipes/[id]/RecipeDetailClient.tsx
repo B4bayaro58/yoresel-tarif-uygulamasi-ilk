@@ -22,7 +22,6 @@ import { doc, getDoc } from 'firebase/firestore'
 import { db } from '@/config/firebase'
 import { useApp } from '@/contexts/AppContext'
 import { Recipe, ShoppingItem } from '@/types'
-import AdBanner from '@/components/AdBanner'
 import ReviewsSection from '@/components/ReviewsSection'
 import { isPreOptimized } from '@/lib/image'
 import { getOverrideRecipe } from '@/lib/overridePhoto'
@@ -273,11 +272,6 @@ export default function RecipeDetailClient({ initialRecipe }: RecipeDetailClient
         </button>
       </div>
 
-      {/* ── AD: Rectangle — malzeme listesinden önce ── */}
-      <div className="flex justify-center mb-6">
-        <AdBanner size="rectangle" />
-      </div>
-
       {/* ── Ingredients ────────────────────────── */}
       <section className="mb-6">
         <h2 className="font-display font-bold text-lg mb-3 flex items-center gap-2" style={{ color: 'var(--text)' }}>
@@ -366,11 +360,6 @@ export default function RecipeDetailClient({ initialRecipe }: RecipeDetailClient
           </div>
         </section>
       )}
-
-      {/* ── AD: Leaderboard — malzemeler ile adımlar arası ── */}
-      <div className="flex justify-center mb-6">
-        <AdBanner size="leaderboard" />
-      </div>
 
       {/* ── Steps ─────────────────────────────── */}
       <section className="mb-10">

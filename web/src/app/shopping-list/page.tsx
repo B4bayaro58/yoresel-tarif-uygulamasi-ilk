@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { ShoppingCart, Trash2, CheckSquare, Square, X } from 'lucide-react'
 import { useApp } from '@/contexts/AppContext'
 import { ShoppingItem } from '@/types'
-import AdBanner from '@/components/AdBanner'
 
 export default function ShoppingListPage() {
   const { t, shoppingList, toggleShoppingItem, removeShoppingItem, clearShoppingList } = useApp()
@@ -26,11 +25,6 @@ export default function ShoppingListPage() {
   return (
     <div className="max-w-[1060px] mx-auto px-4 py-8">
       <div className="flex gap-6 items-start">
-
-        {/* ── Sol dikey reklam — sadece geniş ekranlarda ── */}
-        <aside className="hidden xl:flex flex-col items-center gap-4 flex-shrink-0" style={{ width: '160px', paddingTop: '8px' }}>
-          <AdBanner size="skyscraper" />
-        </aside>
 
         {/* ── Ana içerik ── */}
         <div className="flex-1 min-w-0 sm:px-2">
@@ -193,11 +187,6 @@ export default function ShoppingListPage() {
         </div>
       )}
         </div>{/* /Ana içerik */}
-
-        {/* ── Sağ dikey reklam — sadece geniş ekranlarda ── */}
-        <aside className="hidden xl:flex flex-col items-center gap-4 flex-shrink-0" style={{ width: '160px', paddingTop: '8px' }}>
-          <AdBanner size="skyscraper" />
-        </aside>
 
       </div>
     </div>

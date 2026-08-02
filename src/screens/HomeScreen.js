@@ -18,7 +18,6 @@ import { CATEGORIES } from '../constants/categories';
 import RecipeCard from '../components/RecipeCard';
 import SearchModal from '../components/SearchModal';
 import { RecipeGridSkeleton } from '../components/SkeletonLoader';
-import AdBanner from '../components/AdBanner';
 
 const { width } = Dimensions.get('window');
 const CAROUSEL_WIDTH = width - 32;
@@ -280,11 +279,6 @@ function HomeHeader({
         dailyMenuLoading={dailyMenuLoading}
         navigation={navigation}
       />
-
-      {/* ── AD: Banner — Günün Menüsü ile Kategori arası ── */}
-      <View style={styles.adRow}>
-        <AdBanner size="banner" />
-      </View>
 
       {/* Categories Filter */}
       <View style={styles.section}>
@@ -651,7 +645,6 @@ const styles = StyleSheet.create({
   skeletonWrapper: { paddingHorizontal: 16 },
   emptyState: { padding: 40, alignItems: 'center' },
   emptyText: { fontSize: 16, textAlign: 'center' },
-  adRow: { alignItems: 'center', marginBottom: 24 },
 
   // Daily Menu
   dailyMenuSection: { paddingHorizontal: 16, marginBottom: 24 },

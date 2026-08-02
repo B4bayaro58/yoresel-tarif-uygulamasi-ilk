@@ -28,7 +28,6 @@ import {
   Wrench,
 } from 'lucide-react-native';
 import { useApp } from '../contexts/AppContext';
-import AdBanner from '../components/AdBanner';
 import ReviewsSection from '../components/ReviewsSection';
 import RecipeCard from '../components/RecipeCard';
 import { logRecipeView, logShare } from '../services/analyticsService';
@@ -312,11 +311,6 @@ export default function RecipeDetailScreen({ route, navigation }) {
             </Text>
           </View>
 
-          {/* ── AD: Medium Rectangle — malzeme listesinden önce ── */}
-          <View style={styles.adContainer}>
-            <AdBanner size="rectangle" />
-          </View>
-
           {/* Ingredients */}
           <View style={styles.section}>
             <Text style={[styles.sectionTitle, { color: colors.text }]}>
@@ -536,11 +530,6 @@ export default function RecipeDetailScreen({ route, navigation }) {
                 </TouchableOpacity>
               );
             })}
-          </View>
-
-          {/* ── AD: Banner — adımlar bitti, benzer tariflerden önce ── */}
-          <View style={styles.adContainer}>
-            <AdBanner size="banner" />
           </View>
 
           {/* Similar Recipes */}
@@ -860,10 +849,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     marginLeft: 36,
-  },
-  adContainer: {
-    alignItems: 'center',
-    marginBottom: 24,
   },
   similarGrid: {
     flexDirection: 'row',
