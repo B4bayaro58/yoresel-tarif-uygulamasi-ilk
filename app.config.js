@@ -21,7 +21,6 @@ export default ({ config }) => ({
   ios: {
     supportsTablet: true,
     bundleIdentifier: 'com.cagatay58.yoreseltarifuygulamasi',
-    buildNumber: '1',
     privacyManifests: {
       NSPrivacyAccessedAPITypes: [],
     },
@@ -34,7 +33,6 @@ export default ({ config }) => ({
   },
   android: {
     package: 'com.cagatay58.yoreseltarifuygulamasi',
-    versionCode: 1,
     adaptiveIcon: {
       foregroundImage: './assets/adaptive-icon.png',
       backgroundColor: '#E86C2C',
