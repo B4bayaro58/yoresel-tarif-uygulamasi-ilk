@@ -31,10 +31,12 @@ const FIRESTORE_OVERRIDE_FETCH_LIMIT = 3000
 
 // Sadece bu statüdeki Firestore kayıtları herkese açık sayfalarda gösterilir.
 // Admin panelinden bir statik tarif "gizlenirse" (status: 'inactive' override),
-// bu tarifin GÖRÜNTÜLENMEMESİ gerekir — ama sorgunun kendisi status'e göre
-// filtrelenmemeli, çünkü overriddenIds de bu sonuçtan hesaplanıyor: filtre
-// sorguda olsaydı, 'inactive' bir override sonuçtan hiç dönmez, statik tarif
-// "override edilmemiş" sanılıp eski hâliyle geri gelirdi (gizleme işe yaramazdı).
+// bu tarifin GÖRÜNTÜLENMEMESİ gerekir — ama overriddenIds hesaplaması her
+// statüdeki override kaydını görebilmeli (aşağıya bkz.).
+// firestore.rules artık recipes.read'i status/override/owner/admin'e göre
+// kısıtlıyor (readiness-audit-round3) — bare bir `limit(N)` sorgusu anonim
+// kullanıcılar için tamamen reddedilir, bu yüzden kuralın iki genel-erişim
+// dalıyla birebir eşleşen iki ayrı sorgu atılıp sonuçlar birleştiriliyor.
 const PUBLIC_STATUSES = ['published', 'approved']
 
 async function getHomeData() {
@@ -45,6 +47,12 @@ async function getHomeData() {
     const queries = [
       getDocs(query(
         collection(db, 'recipes'),
+        where('status', 'in', PUBLIC_STATUSES),
+        limit(FIRESTORE_OVERRIDE_FETCH_LIMIT)
+      )),
+      getDocs(query(
+        collection(db, 'recipes'),
+        where('overridesStaticId', '!=', null),
         limit(FIRESTORE_OVERRIDE_FETCH_LIMIT)
       )),
     ]
@@ -54,10 +62,11 @@ async function getHomeData() {
         where('overridesStaticId', 'in', dailyIds.slice(0, 30))
       )))
     }
-    const [recipesSnap, dailyOverridesSnap] = await Promise.all(queries)
+    const [publicSnap, overridesSnap, dailyOverridesSnap] = await Promise.all(queries)
 
     const merged = new Map<string, Recipe>()
-    recipesSnap.docs.forEach((d) => merged.set(d.id, { id: d.id, ...d.data() } as Recipe))
+    publicSnap.docs.forEach((d) => merged.set(d.id, { id: d.id, ...d.data() } as Recipe))
+    overridesSnap.docs.forEach((d) => merged.set(d.id, { id: d.id, ...d.data() } as Recipe))
     dailyOverridesSnap?.docs.forEach((d) => merged.set(d.id, { id: d.id, ...d.data() } as Recipe))
 
     return { firestoreRecipes: Array.from(merged.values()), dailyIds }

@@ -46,7 +46,22 @@ service cloud.firestore {
 
     // Recipes collection
     match /recipes/{recipeId} {
-      allow read: if true;
+      // Public: published/approved content, or any override doc (admin-authored
+      // photo/content overrides — needed so an 'inactive' override that HIDES a
+      // static recipe is still detectable client-side to suppress the original
+      // static version; overridesStaticId docs aren't user-submitted so exposing
+      // one before it's 'published' isn't a moderation-bypass risk). Owners may
+      // read their own submissions regardless of status (AuthContext.js's
+      // deleteAccount cleanup needs to find+delete a user's own pending docs).
+      // Admins read everything. This intentionally does NOT gate on status alone,
+      // because every unfiltered `recipes` list query in the app (useAllRecipes.ts,
+      // homepage, admin panels) needs the override-detection docs regardless of
+      // their status — see readiness-audit-round3 memory for why a naive
+      // `status in [...]` gate would silently break the "hide a recipe" feature.
+      allow read: if resource.data.status in ['published', 'approved']
+        || resource.data.overridesStaticId != null
+        || isAdmin()
+        || (isAuth() && resource.data.submittedBy == request.auth.uid);
       // Only admins may create a recipe that's immediately live (published/approved/
       // draft/inactive) — everyone else's submission is forced into the pending-review
       // queue (web tarif-oner, mobile AddRecipeScreen) so a client can't self-publish
