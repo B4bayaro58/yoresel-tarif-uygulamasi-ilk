@@ -1,4 +1,4 @@
-import { collection, getDocs, query, where, limit, doc, getDoc } from 'firebase/firestore'
+import { collection, getDocs, query, where, limit, doc, getDoc, Timestamp } from 'firebase/firestore'
 import { db } from '@/config/firebase'
 import { Recipe } from '@/types'
 import HomeClient from './HomeClient'
@@ -39,10 +39,48 @@ const FIRESTORE_OVERRIDE_FETCH_LIMIT = 3000
 // dalıyla birebir eşleşen iki ayrı sorgu atılıp sonuçlar birleştiriliyor.
 const PUBLIC_STATUSES = ['published', 'approved']
 
+// `revalidate` yalnızca `next build && next start` ile gerçek Full Route
+// Cache sağlıyor — `npm run dev`'de bu üstteki iki limit(3000) sorgusu HER
+// navigasyonda sıfırdan çalışıyor, bu da lokal test sırasında 5-10sn'lik
+// yavaşlığın kaynağıydı (bkz. proje hafızası: food-tech-vision-build-
+// checkpoint-2026-08-03). Modül-seviyeli bu önbellek sadece dev sunucusu
+// process'i ayaktayken yaşar; production'da zaten ISR devrede olduğu için
+// zararsız/gereksiz bir ek katman, sorgu şeklini veya maliyet modelini
+// değiştirmiyor.
+let homeDataCache: { data: Awaited<ReturnType<typeof fetchHomeData>>; expires: number } | null = null
+const HOME_DATA_CACHE_TTL_MS = 60_000
+
 async function getHomeData() {
+  if (homeDataCache && homeDataCache.expires > Date.now()) {
+    return homeDataCache.data
+  }
+  const data = await fetchHomeData()
+  homeDataCache = { data, expires: Date.now() + HOME_DATA_CACHE_TTL_MS }
+  return data
+}
+
+// Firestore `createdAt`/`updatedAt` gelirken `Timestamp` nesnesi olarak
+// geliyor (ör. `{seconds, nanoseconds}` + `toJSON`), Recipe tipi bu alanları
+// `string` olarak tanımlıyor ama `...d.data()` spread'i tip kontrolünden
+// kaçıyordu. Sonuç: React dev modunda Server->Client Component prop
+// aktarımında HER tarif için "Only plain objects..." uyarısı basılıyordu —
+// ~1000+ tarif için bu, gerçek Firestore sorgu süresinden bağımsız, dev
+// sunucusunu asıl yavaşlatan şeydi.
+function toPlainRecipe(id: string, data: Record<string, unknown>): Recipe {
+  const plain: Record<string, unknown> = { ...data }
+  if (plain.createdAt instanceof Timestamp) plain.createdAt = plain.createdAt.toDate().toISOString()
+  if (plain.updatedAt instanceof Timestamp) plain.updatedAt = plain.updatedAt.toDate().toISOString()
+  return { id, ...plain } as Recipe
+}
+
+async function fetchHomeData() {
   try {
-    const menuSnap = await getDoc(doc(db, 'settings', 'dailyMenu'))
+    const [menuSnap, popularSnap] = await Promise.all([
+      getDoc(doc(db, 'settings', 'dailyMenu')),
+      getDoc(doc(db, 'settings', 'popularRecipes')),
+    ])
     const dailyIds: string[] = menuSnap.exists() ? menuSnap.data().recipeIds || [] : []
+    const popularIds: string[] = popularSnap.exists() ? popularSnap.data().recipeIds || [] : []
 
     const queries = [
       getDocs(query(
@@ -62,22 +100,26 @@ async function getHomeData() {
         where('overridesStaticId', 'in', dailyIds.slice(0, 30))
       )))
     }
-    const [publicSnap, overridesSnap, dailyOverridesSnap] = await Promise.all(queries)
+    if (popularIds.length > 0) {
+      queries.push(getDocs(query(
+        collection(db, 'recipes'),
+        where('overridesStaticId', 'in', popularIds.slice(0, 30))
+      )))
+    }
+    const snaps = await Promise.all(queries)
 
     const merged = new Map<string, Recipe>()
-    publicSnap.docs.forEach((d) => merged.set(d.id, { id: d.id, ...d.data() } as Recipe))
-    overridesSnap.docs.forEach((d) => merged.set(d.id, { id: d.id, ...d.data() } as Recipe))
-    dailyOverridesSnap?.docs.forEach((d) => merged.set(d.id, { id: d.id, ...d.data() } as Recipe))
+    snaps.forEach((snap) => snap.docs.forEach((d) => merged.set(d.id, toPlainRecipe(d.id, d.data()))))
 
-    return { firestoreRecipes: Array.from(merged.values()), dailyIds }
+    return { firestoreRecipes: Array.from(merged.values()), dailyIds, popularIds }
   } catch {
     // Firebase not configured or no connection — use local only
-    return { firestoreRecipes: [] as Recipe[], dailyIds: [] as string[] }
+    return { firestoreRecipes: [] as Recipe[], dailyIds: [] as string[], popularIds: [] as string[] }
   }
 }
 
 export default async function HomePage() {
-  const { firestoreRecipes, dailyIds } = await getHomeData()
+  const { firestoreRecipes, dailyIds, popularIds } = await getHomeData()
 
   const overriddenIds = new Set(
     firestoreRecipes
@@ -99,6 +141,13 @@ export default async function HomePage() {
     )
     .filter(Boolean) as Recipe[]
 
+  const popularRecipes = popularIds
+    .map((id) =>
+      allRecipes.find((r) => String(r.id) === String(id)) ||
+      allRecipes.find((r) => String((r as any).overridesStaticId) === String(id))
+    )
+    .filter(Boolean) as Recipe[]
+
   // Fisher-Yates — bu revalidate penceresi (1 saat) boyunca sabit kalan tek bir
   // sırayla üretiliyor, önceki client-side shuffle'ın aksine (o da her ziyarette
   // yeniden karıştırıyordu, ki zaten CDN önbelleği bunu artık mümkün kılmıyor).
@@ -108,5 +157,5 @@ export default async function HomePage() {
     ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
   }
 
-  return <HomeClient recipes={shuffled} dailyMenuRecipes={dailyMenuRecipes} />
+  return <HomeClient recipes={shuffled} dailyMenuRecipes={dailyMenuRecipes} popularRecipes={popularRecipes} />
 }

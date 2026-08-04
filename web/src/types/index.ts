@@ -29,6 +29,7 @@ export interface Recipe {
   authorId?: string
   authorName?: string
   createdAt?: string
+  updatedAt?: string
 }
 
 export interface ShoppingItem {
@@ -82,6 +83,20 @@ export interface ContinentItem {
 export interface CategoryItem {
   id: string
   icon: string
+}
+
+export interface BlogPost {
+  id: string
+  title: string
+  slug: string
+  excerpt: string
+  coverPhoto: string
+  content: unknown // TipTap JSON belge nesnesi
+  status: 'draft' | 'published'
+  authorName?: string
+  publishedAt?: string
+  createdAt?: string
+  updatedAt?: string
 }
 
 export interface Review {

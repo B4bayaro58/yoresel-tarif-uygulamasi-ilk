@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { cache } from 'react'
-import { doc, getDoc } from 'firebase/firestore'
+import { doc, getDoc, Timestamp } from 'firebase/firestore'
 import { db } from '@/config/firebase'
 import { Recipe } from '@/types'
 import { getOverrideRecipe } from '@/lib/overridePhoto'
@@ -8,6 +8,17 @@ import { buildRecipeJsonLd } from '@/lib/recipeJsonLd'
 import RecipeDetailClient from './RecipeDetailClient'
 // @ts-ignore
 import { RECIPES_DATA } from '@shared/recipes'
+
+// Firestore'dan gelen `createdAt`/`updatedAt` ham `Timestamp` nesnesi olarak
+// geliyor — Server Component'ten Client Component'e prop olarak geçerken
+// React dev modunda "Only plain objects..." uyarısı basıyor (bkz.
+// web/src/app/page.tsx'teki aynı düzeltme, kök neden orada tespit edildi).
+function toPlainRecipe(recipe: Recipe): Recipe {
+  const plain = { ...recipe } as Record<string, unknown>
+  if (plain.createdAt instanceof Timestamp) plain.createdAt = plain.createdAt.toDate().toISOString()
+  if (plain.updatedAt instanceof Timestamp) plain.updatedAt = plain.updatedAt.toDate().toISOString()
+  return plain as unknown as Recipe
+}
 
 const localRecipes: Recipe[] = (RECIPES_DATA as any).tr || []
 
@@ -30,7 +41,7 @@ const fetchRecipe = cache(async (id: string): Promise<Recipe | undefined> => {
     try {
       const timeout = new Promise<null>((resolve) => setTimeout(() => resolve(null), 3000))
       const override = await Promise.race([getOverrideRecipe(id), timeout])
-      return override ?? local
+      return override ? toPlainRecipe(override) : local
     } catch {
       return local
     }
@@ -39,7 +50,7 @@ const fetchRecipe = cache(async (id: string): Promise<Recipe | undefined> => {
   try {
     const timeout = new Promise<never>((_, reject) => setTimeout(() => reject(new Error('timeout')), 3000))
     const snap = await Promise.race([getDoc(doc(db, 'recipes', id)), timeout])
-    if (snap.exists()) return { id: snap.id, ...snap.data() } as Recipe
+    if (snap.exists()) return toPlainRecipe({ id: snap.id, ...snap.data() } as Recipe)
   } catch {
     // Firestore'a ulaşılamadı / zaman aşımı — genel metadata'ya düş
   }
