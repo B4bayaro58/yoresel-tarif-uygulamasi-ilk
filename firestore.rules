@@ -127,6 +127,21 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // Editorial collections (curated recipe groupings, e.g. "Sivas'tan Sofranıza")
+    // — admin-authored content, not user-owned, same pattern as settings above.
+    match /collections/{collectionId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Blog posts (editorial content, admin-authored) — drafts stay admin-only,
+    // published posts are public. Content is stored as TipTap JSON, never raw
+    // HTML, so there is no server-side render injection surface here.
+    match /blogPosts/{postId} {
+      allow read: if resource.data.status == 'published' || isAdmin();
+      allow write: if isAdmin();
+    }
+
     // Deny everything else by default
     match /{document=**} {
       allow read, write: if false;
