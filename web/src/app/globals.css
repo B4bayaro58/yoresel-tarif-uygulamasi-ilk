@@ -133,6 +133,28 @@ a { color: inherit; text-decoration: none; }
   box-shadow: 0 6px 28px rgba(217,149,32,0.4);
 }
 
+/* ── Blog içerik tipografisi (TipTap render çıktısı) ──────── */
+.blog-content { color: var(--text); font-size: 15px; line-height: 1.75; }
+.blog-content > * + * { margin-top: 1em; }
+.blog-content h2 { font-size: 1.5em; font-weight: 800; margin-top: 1.6em; color: var(--text); }
+.blog-content h3 { font-size: 1.2em; font-weight: 700; margin-top: 1.4em; color: var(--text); }
+.blog-content p { color: var(--text); }
+.blog-content ul, .blog-content ol { padding-left: 1.4em; color: var(--text); }
+.blog-content ul { list-style: disc; }
+.blog-content ol { list-style: decimal; }
+.blog-content li + li { margin-top: 0.35em; }
+.blog-content a { color: var(--primary); text-decoration: underline; text-underline-offset: 2px; }
+.blog-content strong { font-weight: 700; }
+.blog-content blockquote { border-left: 3px solid var(--primary); padding-left: 1em; color: var(--text-muted); font-style: italic; }
+.blog-content .ProseMirror { outline: none; }
+.blog-content .ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  color: var(--text-muted);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
 /* ── Decorative amber dot grid ──────────────────────────── */
 .dot-grid {
   background-image: radial-gradient(circle, rgba(185,122,26,0.18) 1px, transparent 1px);

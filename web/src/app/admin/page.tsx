@@ -12,6 +12,8 @@ import {
   Clock,
   ChevronRight,
   TrendingUp,
+  BookMarked,
+  Newspaper,
 } from 'lucide-react'
 import clsx from 'clsx'
 import { collection, getCountFromServer, getDocs, query, where } from 'firebase/firestore'
@@ -148,6 +150,27 @@ export default function AdminPage() {
       description: 'Öne çıkan tarif ve menü planlaması',
       icon: <CalendarDays size={20} />,
       color: 'text-green-500',
+    },
+    {
+      href: '/admin/collections',
+      label: 'Koleksiyonlar',
+      description: 'Editöryal derlemeler ve yöresel keşif modülleri',
+      icon: <BookMarked size={20} />,
+      color: 'text-purple-500',
+    },
+    {
+      href: '/admin/blog',
+      label: 'Blog Yazıları',
+      description: 'Yazı ekle, düzenle ve tarif kartları göm',
+      icon: <Newspaper size={20} />,
+      color: 'text-pink-500',
+    },
+    {
+      href: '/admin/popular-recipes',
+      label: 'Popüler Tarifler',
+      description: 'Ana sayfada öne çıkacak tarifleri seç',
+      icon: <TrendingUp size={20} />,
+      color: 'text-red-500',
     },
     {
       href: '/admin/pending',

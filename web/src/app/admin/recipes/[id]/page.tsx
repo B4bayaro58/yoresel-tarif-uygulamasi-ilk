@@ -16,6 +16,10 @@ import { Recipe } from '@/types'
 import { isPreOptimized } from '@/lib/image'
 // @ts-ignore
 import { RECIPES_DATA } from '@shared/recipes'
+// @ts-ignore
+import { QUICK_FILTERS, getRecipeTags } from '@shared/recipeTags'
+// @ts-ignore
+import { TRANSLATIONS } from '@shared/translations'
 
 const staticRecipes: Recipe[] = (RECIPES_DATA as any).tr || []
 
@@ -49,6 +53,7 @@ interface FormState {
   ingredients: { name: string; amount: string; alternatives: string }[]
   equipment: string[]
   steps: string[]
+  tags: string[]
 }
 
 const emptyForm = (): FormState => ({
@@ -58,6 +63,7 @@ const emptyForm = (): FormState => ({
   ingredients: [{ name: '', amount: '', alternatives: '' }],
   equipment: [''],
   steps: [''],
+  tags: [],
 })
 
 const recipeToForm = (r: Recipe): FormState => ({
@@ -84,6 +90,7 @@ const recipeToForm = (r: Recipe): FormState => ({
     : [{ name: '', amount: '', alternatives: '' }],
   equipment: r.equipment?.length ? r.equipment : [''],
   steps: r.steps?.length ? r.steps : [''],
+  tags: getRecipeTags(r),
 })
 
 const formToRecipe = (f: FormState) => ({
@@ -99,6 +106,7 @@ const formToRecipe = (f: FormState) => ({
     })),
   equipment: f.equipment.filter((e) => e.trim()),
   steps: f.steps.filter((s) => s.trim()),
+  tags: f.tags,
 })
 
 export default function AdminRecipeDetailPage() {
@@ -490,6 +498,35 @@ export default function AdminRecipeDetailPage() {
             <div>
               <label className={labelCls} style={labelStyle}>Puan (0–5)</label>
               <input type="number" min="0" max="5" step="0.1" value={form.rating} onChange={(e) => setForm((f) => ({ ...f, rating: e.target.value }))} className={inputCls} style={inputStyle} placeholder="4.5" />
+            </div>
+          </div>
+
+          {/* ── Hızlı filtre etiketleri (ana sayfa/onboarding ile aynı sözlük) ── */}
+          <div className="mt-4">
+            <label className={labelCls} style={labelStyle}>Hızlı Filtre Etiketleri (otomatik hesaplanır, elle düzeltebilirsiniz)</label>
+            <div className="flex flex-wrap gap-2 mt-1.5">
+              {QUICK_FILTERS.map((qf: { key: string; emoji: string; labelKey: string }) => {
+                const active = form.tags.includes(qf.key)
+                return (
+                  <button
+                    key={qf.key}
+                    type="button"
+                    onClick={() => setForm((f) => ({
+                      ...f,
+                      tags: f.tags.includes(qf.key) ? f.tags.filter((t) => t !== qf.key) : [...f.tags, qf.key],
+                    }))}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-opacity hover:opacity-80"
+                    style={
+                      active
+                        ? { background: 'linear-gradient(135deg, #B97A1A 0%, #D99520 100%)', color: 'white' }
+                        : { backgroundColor: 'var(--background)', color: 'var(--text)', border: '1px solid var(--border)' }
+                    }
+                  >
+                    <span>{qf.emoji}</span>
+                    <span>{(TRANSLATIONS as any)[qf.labelKey]?.tr || qf.labelKey}</span>
+                  </button>
+                )
+              })}
             </div>
           </div>
         </div>

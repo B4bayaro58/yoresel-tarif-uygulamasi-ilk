@@ -9,6 +9,7 @@ const FOOTER_LINKS = {
   discover: [
     { label: 'Ana Sayfa', href: '/' },
     { label: 'Tarifler', href: '/recipes' },
+    { label: 'Blog', href: '/blog' },
     { label: 'Favoriler', href: '/favorites' },
     { label: 'Alışveriş Listesi', href: '/shopping-list' },
   ],

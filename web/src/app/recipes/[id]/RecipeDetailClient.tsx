@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -14,8 +14,12 @@ import {
   Star,
   ChevronDown,
   ChevronUp,
+  ChevronLeft,
+  ChevronRight,
   CheckCircle2,
   Circle,
+  List,
+  LayoutGrid,
 } from 'lucide-react'
 import clsx from 'clsx'
 import { doc, getDoc } from 'firebase/firestore'
@@ -56,6 +60,9 @@ export default function RecipeDetailClient({ initialRecipe }: RecipeDetailClient
   const [expandedIngredient, setExpandedIngredient] = useState<number | null>(null)
   const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set())
   const [addedToList, setAddedToList] = useState(false)
+  const [stepViewMode, setStepViewMode] = useState<'swipe' | 'list'>('swipe')
+  const [activeStepIndex, setActiveStepIndex] = useState(0)
+  const stepScrollRef = useRef<HTMLDivElement>(null)
 
   const isFav = recipe ? favorites.includes(recipe.id) : false
   const ingredients = recipe?.ingredients || []
@@ -116,6 +123,19 @@ export default function RecipeDetailClient({ initialRecipe }: RecipeDetailClient
       next.has(i) ? next.delete(i) : next.add(i)
       return next
     })
+  }
+
+  const goToStep = (index: number) => {
+    if (index < 0 || index >= steps.length || !stepScrollRef.current) return
+    const el = stepScrollRef.current
+    el.scrollTo({ left: index * el.clientWidth, behavior: 'smooth' })
+    setActiveStepIndex(index)
+  }
+
+  const handleStepScroll = () => {
+    const el = stepScrollRef.current
+    if (!el || el.clientWidth === 0) return
+    setActiveStepIndex(Math.round(el.scrollLeft / el.clientWidth))
   }
 
   if (loading) {
@@ -363,10 +383,99 @@ export default function RecipeDetailClient({ initialRecipe }: RecipeDetailClient
 
       {/* ── Steps ─────────────────────────────── */}
       <section className="mb-10">
-        <h2 className="font-display font-bold text-lg mb-3" style={{ color: 'var(--text)' }}>
-          📋 {t('steps')}
-        </h2>
-        {steps.length > 0 ? (
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="font-display font-bold text-lg" style={{ color: 'var(--text)' }}>
+            📋 {t('steps')}
+          </h2>
+          {steps.length > 0 && (
+            <button
+              onClick={() => setStepViewMode(stepViewMode === 'swipe' ? 'list' : 'swipe')}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-opacity hover:opacity-80"
+              style={{ border: '1px solid var(--border)', color: 'var(--primary)' }}
+            >
+              {stepViewMode === 'swipe' ? <List size={14} /> : <LayoutGrid size={14} />}
+              {t(stepViewMode === 'swipe' ? 'stepViewList' : 'stepViewSwipe')}
+            </button>
+          )}
+        </div>
+
+        {steps.length === 0 && (
+          <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Bu tarif için yapılış adımları henüz eklenmedi.</p>
+        )}
+
+        {steps.length > 0 && stepViewMode === 'swipe' ? (
+          <div>
+            <p className="text-center text-xs font-semibold mb-3" style={{ color: 'var(--text-muted)' }}>
+              {t('stepCounter').replace('{current}', String(activeStepIndex + 1)).replace('{total}', String(steps.length))}
+            </p>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => goToStep(activeStepIndex - 1)}
+                disabled={activeStepIndex === 0}
+                className="flex-shrink-0 p-2 rounded-full disabled:opacity-30 transition-opacity hover:opacity-70"
+                style={{ border: '1px solid var(--border)' }}
+                aria-label="Önceki adım"
+              >
+                <ChevronLeft size={18} style={{ color: 'var(--text)' }} />
+              </button>
+
+              <div
+                ref={stepScrollRef}
+                onScroll={handleStepScroll}
+                className="flex-1 flex overflow-x-auto scrollbar-hidden"
+                style={{ scrollSnapType: 'x mandatory' }}
+              >
+                {steps.map((step, i) => {
+                  const done = completedSteps.has(i)
+                  return (
+                    <div
+                      key={i}
+                      className="w-full flex-shrink-0 flex flex-col justify-between p-6 rounded-2xl"
+                      style={{
+                        scrollSnapAlign: 'start',
+                        minHeight: '260px',
+                        backgroundColor: 'var(--surface)',
+                        border: '1px solid var(--border)',
+                        boxShadow: 'var(--shadow)',
+                      }}
+                    >
+                      <p
+                        className="text-lg leading-relaxed font-semibold"
+                        style={{
+                          color: done ? 'var(--text-muted)' : 'var(--text)',
+                          textDecoration: done ? 'line-through' : 'none',
+                        }}
+                      >
+                        {step}
+                      </p>
+                      <button
+                        onClick={() => {
+                          toggleStep(i)
+                          if (!done) goToStep(i + 1)
+                        }}
+                        className="self-start flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm text-white mt-6 transition-opacity hover:opacity-90"
+                        style={{ backgroundColor: done ? '#22c55e' : 'var(--primary)' }}
+                      >
+                        {done ? <CheckCircle2 size={18} /> : <Circle size={18} />}
+                        {t(done ? 'completed' : 'step')} {i + 1}
+                      </button>
+                    </div>
+                  )
+                })}
+              </div>
+
+              <button
+                onClick={() => goToStep(activeStepIndex + 1)}
+                disabled={activeStepIndex === steps.length - 1}
+                className="flex-shrink-0 p-2 rounded-full disabled:opacity-30 transition-opacity hover:opacity-70"
+                style={{ border: '1px solid var(--border)' }}
+                aria-label="Sonraki adım"
+              >
+                <ChevronRight size={18} style={{ color: 'var(--text)' }} />
+              </button>
+            </div>
+          </div>
+        ) : steps.length > 0 ? (
           <div className="space-y-3">
             {steps.map((step, i) => {
               const done = completedSteps.has(i)
@@ -406,9 +515,7 @@ export default function RecipeDetailClient({ initialRecipe }: RecipeDetailClient
               )
             })}
           </div>
-        ) : (
-          <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Bu tarif için yapılış adımları henüz eklenmedi.</p>
-        )}
+        ) : null}
 
         {/* Completion message */}
         {steps.length > 0 && completedSteps.size === steps.length && (

@@ -27,6 +27,9 @@ interface AppContextType {
   removeShoppingItem: (id: string) => void
   clearShoppingList: () => void
   t: (key: string) => string
+  preferredQuickFilters: string[]
+  onboardingPrefsSet: boolean
+  saveOnboardingPreferences: (keys: string[]) => void
 }
 
 const AppContext = createContext<AppContextType | null>(null)
@@ -35,6 +38,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [isDark, setIsDark] = useState(false)
   const [favorites, setFavorites] = useState<string[]>([])
   const [shoppingList, setShoppingList] = useState<ShoppingItem[]>([])
+  const [preferredQuickFilters, setPreferredQuickFilters] = useState<string[]>([])
+  const [onboardingPrefsSet, setOnboardingPrefsSet] = useState(true)
   const favoritesRef = useRef<string[]>(favorites)
   const { user } = useAuth()
 
@@ -64,9 +69,22 @@ export function AppProvider({ children }: { children: ReactNode }) {
         // ignore
       }
     }
+
+    // Onboarding tercihleri (hızlı filtre kişiselleştirmesi)
+    const storedPrefs = localStorage.getItem('preferredQuickFilters')
+    if (storedPrefs) {
+      try {
+        setPreferredQuickFilters(JSON.parse(storedPrefs))
+      } catch {
+        // ignore
+      }
+      setOnboardingPrefsSet(true)
+    } else {
+      setOnboardingPrefsSet(false)
+    }
   }, [])
 
-  // Sync favorites with Firestore when user changes
+  // Sync favorites + shopping list with Firestore when user changes
   useEffect(() => {
     if (!user || user.isAnonymous) {
       // Load from localStorage for guests
@@ -87,10 +105,16 @@ export function AppProvider({ children }: { children: ReactNode }) {
     // sekmede sayfa yenilenene kadar görünmez.
     getDoc(doc(db, 'users', user.uid)).then((snap) => {
       if (snap.exists()) {
-        setFavorites(snap.data().favorites || [])
+        const data = snap.data()
+        setFavorites(data.favorites || [])
+        // Alışveriş listesi de mobil ile aynı `users/{uid}.shoppingList` alanından
+        // senkronlanır — cihazlar arasında ortak liste (Whisk benzeri ekosistem kilidi).
+        if (Array.isArray(data.shoppingList)) {
+          setShoppingList(data.shoppingList)
+        }
       }
     }).catch((err) => {
-      console.error('Favoriler yüklenemedi:', err)
+      console.error('Favoriler/alışveriş listesi yüklenemedi:', err)
     })
   }, [user])
 
@@ -156,28 +180,57 @@ export function AppProvider({ children }: { children: ReactNode }) {
     [user]
   )
 
+  // Giriş yapmış kullanıcı için alışveriş listesini `users/{uid}.shoppingList`
+  // alanına yazar — favoriler kuralının aksine (sahiplik kontrolsüz), bu alan
+  // mevcut düzgün scope'lanmış `users/{uid}` update kuralı üzerinden korunur.
+  const saveShoppingListToFirebase = useCallback(async (updated: ShoppingItem[]) => {
+    if (!user || user.isAnonymous) return
+    try {
+      await updateDoc(doc(db, 'users', user.uid), { shoppingList: updated })
+    } catch (err) {
+      console.error('Alışveriş listesi kaydedilemedi:', err)
+    }
+  }, [user])
+
   const addToShoppingList = useCallback((items: ShoppingItem[]) => {
     setShoppingList((prev) => {
       const existingIds = new Set(prev.map((i) => `${i.recipeId}-${i.ingredientName}`))
       const newItems = items.filter(
         (item) => !existingIds.has(`${item.recipeId}-${item.ingredientName}`)
       )
-      return [...prev, ...newItems]
+      const updated = [...prev, ...newItems]
+      saveShoppingListToFirebase(updated)
+      return updated
     })
-  }, [])
+  }, [saveShoppingListToFirebase])
 
   const toggleShoppingItem = useCallback((id: string) => {
-    setShoppingList((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, checked: !item.checked } : item))
-    )
-  }, [])
+    setShoppingList((prev) => {
+      const updated = prev.map((item) => (item.id === id ? { ...item, checked: !item.checked } : item))
+      saveShoppingListToFirebase(updated)
+      return updated
+    })
+  }, [saveShoppingListToFirebase])
 
   const removeShoppingItem = useCallback((id: string) => {
-    setShoppingList((prev) => prev.filter((item) => item.id !== id))
-  }, [])
+    setShoppingList((prev) => {
+      const updated = prev.filter((item) => item.id !== id)
+      saveShoppingListToFirebase(updated)
+      return updated
+    })
+  }, [saveShoppingListToFirebase])
 
   const clearShoppingList = useCallback(() => {
     setShoppingList([])
+    saveShoppingListToFirebase([])
+  }, [saveShoppingListToFirebase])
+
+  const saveOnboardingPreferences = useCallback((keys: string[]) => {
+    setPreferredQuickFilters(keys)
+    setOnboardingPrefsSet(true)
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('preferredQuickFilters', JSON.stringify(keys))
+    }
   }, [])
 
   const t = useCallback((key: string): string => {
@@ -200,6 +253,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
         removeShoppingItem,
         clearShoppingList,
         t,
+        preferredQuickFilters,
+        onboardingPrefsSet,
+        saveOnboardingPreferences,
       }}
     >
       {children}

@@ -17,6 +17,7 @@ import {
   User,
   LogOut,
   Shield,
+  Newspaper,
 } from 'lucide-react'
 import clsx from 'clsx'
 import { useApp } from '@/contexts/AppContext'
@@ -48,6 +49,7 @@ export default function Header() {
 
   const navLinks = [
     { href: '/', label: t('home'), icon: <Home size={15} /> },
+    { href: '/blog', label: 'Blog', icon: <Newspaper size={15} /> },
     { href: '/favorites', label: t('favorites'), icon: <Heart size={15} />, badge: favorites.length },
     { href: '/shopping-list', label: t('shoppingList'), icon: <ShoppingCart size={15} />, badge: uncheckedItems },
   ]
