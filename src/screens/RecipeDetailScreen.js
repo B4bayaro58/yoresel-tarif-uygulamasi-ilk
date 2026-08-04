@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useCallback } from 'react';
 import {
   View,
   Text,
@@ -8,6 +8,7 @@ import {
   Dimensions,
   Share,
   Linking,
+  FlatList,
 } from 'react-native';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -26,6 +27,10 @@ import {
   Share2,
   Youtube,
   Wrench,
+  List,
+  LayoutGrid,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react-native';
 import { useApp } from '../contexts/AppContext';
 import ReviewsSection from '../components/ReviewsSection';
@@ -93,6 +98,16 @@ export default function RecipeDetailScreen({ route, navigation }) {
   };
   const [scaledServings, setScaledServings] = useState(recipe.servings || 4);
   const [timerMinutes, setTimerMinutes] = useState(recipe.prepTime || 10);
+  const [stepViewMode, setStepViewMode] = useState('swipe');
+  const [activeStepIndex, setActiveStepIndex] = useState(0);
+  const stepListRef = useRef(null);
+  const STEP_CARD_WIDTH = width - 40;
+
+  const goToStep = useCallback((index) => {
+    if (index < 0 || index >= steps.length) return;
+    setActiveStepIndex(index);
+    stepListRef.current?.scrollToIndex({ index, animated: true });
+  }, [steps.length]);
   const isFav = isFavorite(recipe.id);
   const progress = getRecipeProgress(recipe.id, steps.length);
 
@@ -489,47 +504,141 @@ export default function RecipeDetailScreen({ route, navigation }) {
 
           {/* Steps */}
           <View style={styles.section}>
-            <Text style={[styles.sectionTitle, { color: colors.text }]}>
-              {translate('steps')}
-            </Text>
+            <View style={styles.stepsSectionHeader}>
+              <Text style={[styles.sectionTitle, { color: colors.text, marginBottom: 0 }]}>
+                {translate('steps')}
+              </Text>
+              {steps.length > 0 && (
+                <TouchableOpacity
+                  style={[styles.stepViewToggle, { borderColor: colors.border }]}
+                  onPress={() => setStepViewMode(stepViewMode === 'swipe' ? 'list' : 'swipe')}
+                  activeOpacity={0.7}
+                >
+                  {stepViewMode === 'swipe' ? (
+                    <List size={16} color={colors.primary} />
+                  ) : (
+                    <LayoutGrid size={16} color={colors.primary} />
+                  )}
+                  <Text style={[styles.stepViewToggleText, { color: colors.primary }]}>
+                    {translate(stepViewMode === 'swipe' ? 'stepViewList' : 'stepViewSwipe')}
+                  </Text>
+                </TouchableOpacity>
+              )}
+            </View>
+
             {steps.length === 0 && (
               <Text style={{ color: colors.textSecondary }}>{translate('noStepsAvailable')}</Text>
             )}
-            {steps.map((step, index) => {
-              const completed = isStepCompleted(recipe.id, index);
-              return (
-                <TouchableOpacity
-                  key={index}
-                  style={[
-                    styles.stepItem,
-                    { backgroundColor: colors.card, borderColor: colors.border },
-                    completed && { borderColor: colors.success, borderWidth: 2 },
-                  ]}
-                  onPress={() => toggleStep(recipe.id, index, steps.length, recipe.name)}
-                  activeOpacity={0.7}
-                >
-                  <View style={styles.stepHeader}>
-                    {completed ? (
-                      <CheckCircle2 size={24} color={colors.success} />
-                    ) : (
-                      <Circle size={24} color={colors.textTertiary} />
-                    )}
-                    <Text style={[styles.stepNumber, { color: colors.textSecondary }]}>
-                      {translate('step')} {index + 1}
-                    </Text>
-                  </View>
-                  <Text
+
+            {steps.length > 0 && stepViewMode === 'swipe' ? (
+              <View>
+                <Text style={[styles.stepCounter, { color: colors.textSecondary }]}>
+                  {translate('stepCounter', { current: activeStepIndex + 1, total: steps.length })}
+                </Text>
+                <FlatList
+                  ref={stepListRef}
+                  data={steps}
+                  keyExtractor={(_, index) => String(index)}
+                  horizontal
+                  pagingEnabled
+                  showsHorizontalScrollIndicator={false}
+                  snapToInterval={STEP_CARD_WIDTH}
+                  decelerationRate="fast"
+                  getItemLayout={(_, index) => ({
+                    length: STEP_CARD_WIDTH,
+                    offset: STEP_CARD_WIDTH * index,
+                    index,
+                  })}
+                  onMomentumScrollEnd={(e) => {
+                    const index = Math.round(e.nativeEvent.contentOffset.x / STEP_CARD_WIDTH);
+                    setActiveStepIndex(index);
+                  }}
+                  renderItem={({ item: step, index }) => {
+                    const completed = isStepCompleted(recipe.id, index);
+                    return (
+                      <View style={[styles.stepCard, { width: STEP_CARD_WIDTH, backgroundColor: colors.card, borderColor: colors.border }]}>
+                        <Text style={[styles.stepCardText, { color: colors.text }]}>{step}</Text>
+                        <View style={styles.stepCardFooter}>
+                          <TouchableOpacity
+                            style={styles.stepCardNavButton}
+                            onPress={() => goToStep(index - 1)}
+                            disabled={index === 0}
+                          >
+                            <ChevronLeft size={22} color={index === 0 ? colors.textTertiary : colors.primary} />
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                            style={[
+                              styles.stepCardCompleteButton,
+                              { backgroundColor: completed ? colors.success : colors.primary },
+                            ]}
+                            onPress={() => {
+                              toggleStep(recipe.id, index, steps.length, recipe.name);
+                              if (!completed) goToStep(index + 1);
+                            }}
+                            activeOpacity={0.85}
+                          >
+                            {completed ? (
+                              <CheckCircle2 size={20} color="#FFFFFF" />
+                            ) : (
+                              <Circle size={20} color="#FFFFFF" />
+                            )}
+                            <Text style={styles.stepCardCompleteText}>
+                              {translate(completed ? 'completed' : 'step')}
+                            </Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                            style={styles.stepCardNavButton}
+                            onPress={() => goToStep(index + 1)}
+                            disabled={index === steps.length - 1}
+                          >
+                            <ChevronRight
+                              size={22}
+                              color={index === steps.length - 1 ? colors.textTertiary : colors.primary}
+                            />
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                    );
+                  }}
+                />
+              </View>
+            ) : (
+              steps.map((step, index) => {
+                const completed = isStepCompleted(recipe.id, index);
+                return (
+                  <TouchableOpacity
+                    key={index}
                     style={[
-                      styles.stepText,
-                      { color: colors.text },
-                      completed && { textDecorationLine: 'line-through', opacity: 0.6 },
+                      styles.stepItem,
+                      { backgroundColor: colors.card, borderColor: colors.border },
+                      completed && { borderColor: colors.success, borderWidth: 2 },
                     ]}
+                    onPress={() => toggleStep(recipe.id, index, steps.length, recipe.name)}
+                    activeOpacity={0.7}
                   >
-                    {step}
-                  </Text>
-                </TouchableOpacity>
-              );
-            })}
+                    <View style={styles.stepHeader}>
+                      {completed ? (
+                        <CheckCircle2 size={24} color={colors.success} />
+                      ) : (
+                        <Circle size={24} color={colors.textTertiary} />
+                      )}
+                      <Text style={[styles.stepNumber, { color: colors.textSecondary }]}>
+                        {translate('step')} {index + 1}
+                      </Text>
+                    </View>
+                    <Text
+                      style={[
+                        styles.stepText,
+                        { color: colors.text },
+                        completed && { textDecorationLine: 'line-through', opacity: 0.6 },
+                      ]}
+                    >
+                      {step}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })
+            )}
           </View>
 
           {/* Similar Recipes */}
@@ -849,6 +958,64 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     marginLeft: 36,
+  },
+  stepsSectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 16,
+  },
+  stepViewToggle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    borderRadius: 10,
+    borderWidth: 1,
+  },
+  stepViewToggleText: { fontSize: 12, fontWeight: '600' },
+  stepCounter: {
+    fontSize: 13,
+    fontWeight: '600',
+    textAlign: 'center',
+    marginBottom: 12,
+  },
+  stepCard: {
+    minHeight: 260,
+    borderRadius: 20,
+    borderWidth: 1,
+    padding: 24,
+    marginRight: 0,
+    justifyContent: 'space-between',
+  },
+  stepCardText: {
+    fontSize: 20,
+    lineHeight: 30,
+    fontWeight: '600',
+    flex: 1,
+  },
+  stepCardFooter: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 20,
+  },
+  stepCardNavButton: {
+    padding: 10,
+  },
+  stepCardCompleteButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 14,
+  },
+  stepCardCompleteText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '700',
   },
   similarGrid: {
     flexDirection: 'row',

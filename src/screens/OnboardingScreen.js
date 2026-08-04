@@ -9,9 +9,13 @@ import {
   Animated,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Check } from 'lucide-react-native';
 import { useApp } from '../contexts/AppContext';
+import { QUICK_FILTERS } from '../constants/recipeTags';
 
 const { width } = Dimensions.get('window');
+const PREF_GRID_GAP = 14;
+const PREF_TILE_WIDTH = (width - 64 - PREF_GRID_GAP) / 2;
 
 const SLIDES = [
   {
@@ -35,18 +39,32 @@ const SLIDES = [
     titleKey: 'onboarding3Title',
     descKey: 'onboarding3Desc',
   },
+  {
+    key: '4',
+    type: 'prefs',
+    titleKey: 'onboardingPrefsTitle',
+    descKey: 'onboardingPrefsDesc',
+  },
 ];
 
 export default function OnboardingScreen({ onFinish }) {
-  const { colors, translate } = useApp();
+  const { colors, translate, saveOnboardingPreferences } = useApp();
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [selectedPrefs, setSelectedPrefs] = useState([]);
   const flatListRef = useRef(null);
   const scrollX = useRef(new Animated.Value(0)).current;
+
+  const togglePref = (key) => {
+    setSelectedPrefs(prev =>
+      prev.includes(key) ? prev.filter(k => k !== key) : [...prev, key]
+    );
+  };
 
   const goNext = () => {
     if (currentIndex < SLIDES.length - 1) {
       flatListRef.current?.scrollToIndex({ index: currentIndex + 1, animated: true });
     } else {
+      saveOnboardingPreferences(selectedPrefs);
       onFinish();
     }
   };
@@ -79,20 +97,59 @@ export default function OnboardingScreen({ onFinish }) {
         }}
         renderItem={({ item }) => (
           <View style={styles.slide}>
-            <LinearGradient
-              colors={item.gradients}
-              style={styles.emojiCircle}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-            >
-              <Text style={styles.slideEmoji}>{item.emoji}</Text>
-            </LinearGradient>
-            <Text style={[styles.slideTitle, { color: colors.text }]}>
+            {item.type === 'prefs' ? (
+              <Text style={styles.prefsEmoji}>🍽️</Text>
+            ) : (
+              <LinearGradient
+                colors={item.gradients}
+                style={styles.emojiCircle}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+              >
+                <Text style={styles.slideEmoji}>{item.emoji}</Text>
+              </LinearGradient>
+            )}
+            <Text style={[styles.slideTitle, item.type === 'prefs' && styles.prefsTitle, { color: colors.text }]}>
               {translate(item.titleKey)}
             </Text>
-            <Text style={[styles.slideDesc, { color: colors.textSecondary }]}>
+            <Text style={[styles.slideDesc, item.type === 'prefs' && styles.prefsDesc, { color: colors.textSecondary }]}>
               {translate(item.descKey)}
             </Text>
+            {item.type === 'prefs' && (
+              <View style={styles.prefsGrid}>
+                {QUICK_FILTERS.map(qf => {
+                  const isSelected = selectedPrefs.includes(qf.key);
+                  return (
+                    <TouchableOpacity
+                      key={qf.key}
+                      style={[styles.prefTile, { width: PREF_TILE_WIDTH, height: PREF_TILE_WIDTH * 0.88 }]}
+                      onPress={() => togglePref(qf.key)}
+                      activeOpacity={0.85}
+                    >
+                      <LinearGradient
+                        colors={qf.gradient}
+                        style={[styles.prefTileGradient, { opacity: isSelected ? 1 : 0.55 }]}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 1 }}
+                      >
+                        <Text style={styles.prefTileEmoji}>{qf.emoji}</Text>
+                        <Text style={styles.prefTileLabel} numberOfLines={2}>
+                          {translate(qf.labelKey)}
+                        </Text>
+                      </LinearGradient>
+                      {isSelected && (
+                        <>
+                          <View style={styles.prefTileBorder} pointerEvents="none" />
+                          <View style={styles.prefTileCheck}>
+                            <Check size={13} color={qf.gradient[0]} strokeWidth={3} />
+                          </View>
+                        </>
+                      )}
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+            )}
           </View>
         )}
       />
@@ -173,6 +230,71 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'center',
     lineHeight: 26,
+  },
+  prefsEmoji: {
+    fontSize: 56,
+    marginBottom: 12,
+  },
+  prefsTitle: {
+    fontSize: 24,
+    marginBottom: 8,
+  },
+  prefsDesc: {
+    fontSize: 14,
+    marginBottom: 8,
+  },
+  prefsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    gap: PREF_GRID_GAP,
+    marginTop: 20,
+  },
+  prefTile: {
+    borderRadius: 20,
+    overflow: 'hidden',
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.18,
+    shadowRadius: 8,
+  },
+  prefTileGradient: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 10,
+    gap: 8,
+  },
+  prefTileEmoji: { fontSize: 32 },
+  prefTileLabel: {
+    color: '#FFFFFF',
+    fontSize: 13,
+    fontWeight: '800',
+    textAlign: 'center',
+    lineHeight: 17,
+  },
+  prefTileBorder: {
+    ...StyleSheet.absoluteFillObject,
+    borderRadius: 20,
+    borderWidth: 3,
+    borderColor: '#FFFFFF',
+  },
+  prefTileCheck: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
   },
   dotsRow: {
     flexDirection: 'row',

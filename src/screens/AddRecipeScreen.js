@@ -14,6 +14,7 @@ import { Save, X, Camera } from 'lucide-react-native';
 import { useApp } from '../contexts/AppContext';
 import { useAuth } from '../contexts/AuthContext';
 import { pickImage, uploadRecipeImage } from '../services/imageUploadService';
+import { QUICK_FILTERS, getRecipeTags } from '../constants/recipeTags';
 
 const CONTINENT_KEYS = [
   { key: 'continent-europe', value: 'europe' },
@@ -135,6 +136,10 @@ export default function AddRecipeScreen({ navigation, route }) {
   const [videoUrl, setVideoUrl] = useState(editRecipe?.videoUrl || '');
   const [emoji, setEmoji] = useState(editRecipe?.emoji || '');
   const [description, setDescription] = useState(editRecipe?.description || '');
+  const [tags, setTags] = useState(editRecipe ? getRecipeTags(editRecipe) : []);
+  const toggleTag = (key) => {
+    setTags(prev => prev.includes(key) ? prev.filter(t => t !== key) : [...prev, key]);
+  };
   const [ingredients, setIngredients] = useState(
     isEditMode ? formatIngredientsForEdit(editRecipe.ingredients) : ''
   );
@@ -227,6 +232,7 @@ export default function AddRecipeScreen({ navigation, route }) {
       description: description.trim(),
       ingredients: parseIngredients(ingredients),
       steps: parseSteps(steps),
+      ...(isAdmin ? { tags } : {}),
     };
 
     const status = isAdmin ? 'approved' : 'pending';
@@ -365,6 +371,32 @@ export default function AddRecipeScreen({ navigation, route }) {
           onSelect={setDifficulty}
           colors={colors}
         />
+
+        {isAdmin && (
+          <View style={styles.inputGroup}>
+            <Text style={[styles.label, { color: colors.text }]}>{translate('quickFiltersTitle')}</Text>
+            <View style={styles.tagChipsRow}>
+              {QUICK_FILTERS.map(qf => {
+                const active = tags.includes(qf.key);
+                return (
+                  <TouchableOpacity
+                    key={qf.key}
+                    style={[
+                      styles.tagChip,
+                      { backgroundColor: colors.card, borderColor: active ? colors.primary : colors.border },
+                      active && { borderWidth: 2 },
+                    ]}
+                    onPress={() => toggleTag(qf.key)}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={styles.tagChipEmoji}>{qf.emoji}</Text>
+                    <Text style={[styles.tagChipText, { color: colors.text }]}>{translate(qf.labelKey)}</Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          </View>
+        )}
 
         <View style={styles.row}>
           <View style={[styles.inputGroup, styles.halfWidth]}>
@@ -558,6 +590,22 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  tagChipsRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  tagChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 16,
+    borderWidth: 1,
+  },
+  tagChipEmoji: { fontSize: 14 },
+  tagChipText: { fontSize: 12, fontWeight: '600' },
   header: {
     padding: 20,
     paddingTop: 24,

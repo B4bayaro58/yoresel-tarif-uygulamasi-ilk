@@ -18,6 +18,7 @@ import {
   ChevronRight,
   UtensilsCrossed,
   Flag,
+  BookMarked,
 } from 'lucide-react-native';
 import { useApp } from '../contexts/AppContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -154,6 +155,20 @@ export default function AdminPanelScreen({ navigation }) {
       subtitle: translate('manageDailyMenuDesc'),
       color: '#0EA5E9',
       onPress: () => navigation.navigate('DailyMenu'),
+    },
+    {
+      icon: BookMarked,
+      title: translate('manageCollections'),
+      subtitle: translate('manageCollectionsDesc'),
+      color: '#A855F7',
+      onPress: () => navigation.navigate('ManageCollections'),
+    },
+    {
+      icon: TrendingUp,
+      title: translate('managePopularRecipes'),
+      subtitle: translate('managePopularRecipesDesc'),
+      color: '#EF4444',
+      onPress: () => navigation.navigate('PopularRecipes'),
     },
   ];
 

@@ -15,9 +15,11 @@ import { Search, X, Check, Clock, Star } from 'lucide-react-native';
 import { useApp } from '../contexts/AppContext';
 import { CONTINENTS } from '../constants/continents';
 import { CATEGORIES } from '../constants/categories';
+import { QUICK_FILTERS } from '../constants/recipeTags';
 import RecipeCard from '../components/RecipeCard';
 import SearchModal from '../components/SearchModal';
 import { RecipeGridSkeleton } from '../components/SkeletonLoader';
+import { getCollections } from '../services/collectionsService';
 
 const { width } = Dimensions.get('window');
 const CAROUSEL_WIDTH = width - 32;
@@ -101,14 +103,143 @@ function DailyMenuSection({ colors, translate, dailyMenu, dailyMenuLoading, navi
 
 const MemoDailyMenuSection = React.memo(DailyMenuSection);
 
+// === Populer Tarifler ========================================================
+function PopularRecipesSection({ colors, translate, popularRecipes, popularRecipesLoading, navigation }) {
+  if (popularRecipesLoading || !popularRecipes.length) return null;
+
+  return (
+    <View style={styles.dailyMenuSection}>
+      <Text style={[styles.sectionTitle, { color: colors.text }]}>{translate('popularRecipesTitle')}</Text>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.dailyMenuScroll}>
+        {popularRecipes.map(item => (
+          <TouchableOpacity
+            key={item.id}
+            style={styles.popularCard}
+            onPress={() => navigation.navigate('RecipeDetail', { recipe: item })}
+            activeOpacity={0.85}
+          >
+            {item.photo ? (
+              <Image
+                source={{ uri: item.photo }}
+                style={StyleSheet.absoluteFillObject}
+                contentFit="cover"
+                cachePolicy="disk"
+                transition={150}
+              />
+            ) : (
+              <LinearGradient
+                colors={item.gradient || ['#4A6CF7', '#3A5CE5']}
+                style={StyleSheet.absoluteFillObject}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+              />
+            )}
+            <View style={styles.popularRatingBadge}>
+              <Star size={10} color="#FFFFFF" fill="#FFFFFF" />
+              <Text style={styles.popularRatingText}>{item.rating}</Text>
+            </View>
+            <View style={styles.popularCardOverlay}>
+              <Text style={styles.popularCardName} numberOfLines={2}>{item.name}</Text>
+              <Text style={styles.popularCardCountry} numberOfLines={1}>{item.country}</Text>
+            </View>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+    </View>
+  );
+}
+
+const MemoPopularRecipesSection = React.memo(PopularRecipesSection);
+
+// === Koleksiyonlar (Haftanın Özel Derlemesi + Yöresel Keşif) ================
+function CollectionsSection({ colors, translate, collections, navigation }) {
+  if (!collections.length) return null;
+
+  const featured = collections.find(c => !c.region) || collections[0];
+  const regional = collections.filter(c => c.region && c.id !== featured?.id);
+
+  return (
+    <View style={styles.collectionsSection}>
+      {featured && (
+        <TouchableOpacity
+          style={styles.featuredCollectionCard}
+          onPress={() => navigation.navigate('CollectionDetail', { collectionId: featured.id })}
+          activeOpacity={0.9}
+        >
+          {featured.coverPhoto ? (
+            <Image source={{ uri: featured.coverPhoto }} style={StyleSheet.absoluteFillObject} contentFit="cover" />
+          ) : (
+            <LinearGradient
+              colors={['#B97A1A', '#D99520']}
+              style={StyleSheet.absoluteFillObject}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+            />
+          )}
+          <LinearGradient
+            colors={['rgba(185,122,26,0.92)', 'rgba(217,149,32,0.75)']}
+            style={styles.featuredCollectionOverlay}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+          >
+            <Text style={styles.featuredCollectionEyebrow}>{translate('weeklyCollectionTitle')}</Text>
+            <Text style={styles.featuredCollectionTitle} numberOfLines={2}>{featured.title}</Text>
+            {!!featured.subtitle && (
+              <Text style={styles.featuredCollectionSubtitle} numberOfLines={2}>{featured.subtitle}</Text>
+            )}
+          </LinearGradient>
+        </TouchableOpacity>
+      )}
+
+      {regional.length > 0 && (
+        <View style={{ marginTop: 16 }}>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>
+            {translate('regionalDiscoveryTitle')}
+          </Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.dailyMenuScroll}>
+            {regional.map(c => (
+              <TouchableOpacity
+                key={c.id}
+                style={styles.regionalCard}
+                onPress={() => navigation.navigate('CollectionDetail', { collectionId: c.id })}
+                activeOpacity={0.85}
+              >
+                {c.coverPhoto ? (
+                  <Image source={{ uri: c.coverPhoto }} style={StyleSheet.absoluteFillObject} contentFit="cover" />
+                ) : (
+                  <LinearGradient
+                    colors={['#8B4513', '#A0522D']}
+                    style={StyleSheet.absoluteFillObject}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 1 }}
+                  />
+                )}
+                <View style={styles.regionalCardOverlay}>
+                  <Text style={styles.regionalCardTitle} numberOfLines={2}>{c.title}</Text>
+                  <Text style={styles.regionalCardRegion}>{c.region}</Text>
+                </View>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </View>
+      )}
+    </View>
+  );
+}
+
+const MemoCollectionsSection = React.memo(CollectionsSection);
+
 // Header ayri component -- stable referans icin HomeScreen disinda tanimlanir
 function HomeHeader({
   colors, translate, featuredRecipes, navigation,
   selectedContinent, selectedCategory,
   onContinentPress, onCategoryPress,
+  selectedQuickFilter, onQuickFilterPress,
   activeFilters, clearFilters,
   filteredCount, recipesLoading,
   dailyMenu, dailyMenuLoading,
+  popularRecipes, popularRecipesLoading,
+  collections,
 }) {
   const [carouselIndex, setCarouselIndex] = useState(0);
   const carouselRef = useRef(null);
@@ -271,12 +402,67 @@ function HomeHeader({
         </View>
       </View>
 
+      {/* Quick Filters */}
+      <View style={styles.section}>
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>
+          {translate('quickFiltersTitle')}
+        </Text>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.categoriesContainer}
+        >
+          {QUICK_FILTERS.map(qf => {
+            const isSelected = selectedQuickFilter === qf.key;
+            return (
+              <TouchableOpacity
+                key={qf.key}
+                style={[
+                  styles.quickFilterChip,
+                  { backgroundColor: colors.card, borderColor: colors.border },
+                  isSelected && { backgroundColor: colors.primary, borderColor: colors.primary },
+                ]}
+                onPress={() => onQuickFilterPress(qf.key)}
+                activeOpacity={0.7}
+                accessibilityRole="button"
+                accessibilityLabel={translate(qf.labelKey)}
+                accessibilityState={{ selected: isSelected }}
+              >
+                <View style={[styles.quickFilterBadge, { backgroundColor: isSelected ? '#FFFFFF' : qf.gradient[0] + '26' }]}>
+                  <Text style={styles.quickFilterBadgeEmoji}>{qf.emoji}</Text>
+                </View>
+                <Text style={[styles.categoryText, { color: colors.text }, isSelected && { color: '#FFFFFF' }]}>
+                  {translate(qf.labelKey)}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </ScrollView>
+      </View>
+
       {/* Daily Menu */}
       <MemoDailyMenuSection
         colors={colors}
         translate={translate}
         dailyMenu={dailyMenu}
         dailyMenuLoading={dailyMenuLoading}
+        navigation={navigation}
+      />
+
+      {/* Popüler Tarifler */}
+      <MemoPopularRecipesSection
+        colors={colors}
+        translate={translate}
+        popularRecipes={popularRecipes}
+        popularRecipesLoading={popularRecipesLoading}
+        navigation={navigation}
+      />
+
+      {/* Koleksiyonlar (Haftanın Özel Derlemesi + Yöresel Keşif) */}
+      <MemoCollectionsSection
+        colors={colors}
+        translate={translate}
+        collections={collections}
         navigation={navigation}
       />
 
@@ -377,6 +563,8 @@ export default function HomeScreen({ navigation }) {
     setSelectedContinent,
     selectedCategory,
     setSelectedCategory,
+    selectedQuickFilter,
+    setSelectedQuickFilter,
     getFilteredRecipes,
     clearFilters,
     hasActiveFilters,
@@ -384,6 +572,8 @@ export default function HomeScreen({ navigation }) {
     recipesLoading,
     dailyMenu,
     dailyMenuLoading,
+    popularRecipes,
+    popularRecipesLoading,
   } = useApp();
 
   useEffect(() => {
@@ -403,6 +593,11 @@ export default function HomeScreen({ navigation }) {
 
   const featuredRecipes = useMemo(() => recipes.slice(0, 4), [recipes]);
 
+  const [collections, setCollections] = useState([]);
+  useEffect(() => {
+    getCollections().then(setCollections);
+  }, []);
+
   // getFilteredRecipes useCallback ile stable -- sadece filtreler degisince hesaplar
   const filteredRecipes = useMemo(() => getFilteredRecipes(), [getFilteredRecipes]);
 
@@ -421,18 +616,23 @@ export default function HomeScreen({ navigation }) {
     [setSelectedCategory, selectedCategory]
   );
 
+  const handleQuickFilterPress = useCallback(
+    key => setSelectedQuickFilter(key === selectedQuickFilter ? null : key),
+    [setSelectedQuickFilter, selectedQuickFilter]
+  );
+
   const headerOnLayout = useCallback(e => {
     headerHeight.current = e.nativeEvent.layout.height;
   }, []);
 
   useEffect(() => {
-    if (selectedContinent || selectedCategory) {
+    if (selectedContinent || selectedCategory || selectedQuickFilter) {
       const timer = setTimeout(() => {
         flatListRef.current?.scrollToOffset({ offset: headerHeight.current, animated: true });
       }, 150);
       return () => clearTimeout(timer);
     }
-  }, [selectedContinent, selectedCategory]);
+  }, [selectedContinent, selectedCategory, selectedQuickFilter]);
 
   const renderItem = useCallback(
     ({ item }) => (
@@ -477,12 +677,17 @@ export default function HomeScreen({ navigation }) {
             selectedCategory={selectedCategory}
             onContinentPress={handleContinentPress}
             onCategoryPress={handleCategoryPress}
+            selectedQuickFilter={selectedQuickFilter}
+            onQuickFilterPress={handleQuickFilterPress}
             activeFilters={activeFilters}
             clearFilters={clearFilters}
             filteredCount={filteredRecipes.length}
             recipesLoading={recipesLoading}
             dailyMenu={dailyMenu}
             dailyMenuLoading={dailyMenuLoading}
+            popularRecipes={popularRecipes}
+            popularRecipesLoading={popularRecipesLoading}
+            collections={collections}
           />
         }
         ListEmptyComponent={renderEmpty}
@@ -626,6 +831,29 @@ const styles = StyleSheet.create({
   },
   categoryIcon: { fontSize: 18 },
   categoryText: { fontSize: 14, fontWeight: '600' },
+  quickFilterChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    paddingVertical: 9,
+    paddingHorizontal: 14,
+    borderRadius: 26,
+    borderWidth: 2,
+    marginRight: 12,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  quickFilterBadge: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  quickFilterBadgeEmoji: { fontSize: 15 },
   clearFiltersContainer: { paddingHorizontal: 16, marginBottom: 16 },
   clearFiltersButton: {
     flexDirection: 'row',
@@ -700,5 +928,108 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: 'rgba(255,255,255,0.9)',
     fontWeight: '600',
+  },
+
+  // Popüler Tarifler
+  popularCard: {
+    width: 150,
+    height: 190,
+    borderRadius: 16,
+    marginRight: 12,
+    overflow: 'hidden',
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.18,
+    shadowRadius: 8,
+  },
+  popularRatingBadge: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 3,
+    backgroundColor: 'rgba(0,0,0,0.45)',
+    paddingHorizontal: 7,
+    paddingVertical: 3,
+    borderRadius: 10,
+  },
+  popularRatingText: { color: '#FFFFFF', fontSize: 11, fontWeight: '700' },
+  popularCardOverlay: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    padding: 10,
+    paddingTop: 24,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  popularCardName: { color: '#FFFFFF', fontSize: 13, fontWeight: '800', lineHeight: 17 },
+  popularCardCountry: { color: 'rgba(255,255,255,0.75)', fontSize: 11, marginTop: 2 },
+
+  // Collections
+  collectionsSection: { paddingHorizontal: 16, marginBottom: 24 },
+  featuredCollectionCard: {
+    height: 160,
+    borderRadius: 20,
+    overflow: 'hidden',
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.18,
+    shadowRadius: 8,
+  },
+  featuredCollectionOverlay: {
+    flex: 1,
+    padding: 18,
+    justifyContent: 'center',
+  },
+  featuredCollectionEyebrow: {
+    color: 'rgba(255,255,255,0.85)',
+    fontSize: 11,
+    fontWeight: '800',
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+    marginBottom: 6,
+  },
+  featuredCollectionTitle: {
+    color: '#FFFFFF',
+    fontSize: 22,
+    fontWeight: '800',
+    marginBottom: 4,
+  },
+  featuredCollectionSubtitle: {
+    color: 'rgba(255,255,255,0.85)',
+    fontSize: 13,
+  },
+  regionalCard: {
+    width: 180,
+    height: 120,
+    borderRadius: 16,
+    overflow: 'hidden',
+    marginRight: 12,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+  },
+  regionalCardOverlay: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    padding: 12,
+    backgroundColor: 'rgba(0,0,0,0.25)',
+  },
+  regionalCardTitle: {
+    color: '#FFFFFF',
+    fontSize: 13,
+    fontWeight: '700',
+    lineHeight: 17,
+  },
+  regionalCardRegion: {
+    color: 'rgba(255,255,255,0.8)',
+    fontSize: 11,
+    marginTop: 2,
   },
 });

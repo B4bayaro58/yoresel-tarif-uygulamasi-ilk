@@ -27,6 +27,9 @@ import PendingRecipesScreen from '../screens/PendingRecipesScreen';
 import ReportedReviewsScreen from '../screens/ReportedReviewsScreen';
 import DailyMenuScreen from '../screens/DailyMenuScreen';
 import OnboardingScreen from '../screens/OnboardingScreen';
+import CollectionDetailScreen from '../screens/CollectionDetailScreen';
+import ManageCollectionsScreen from '../screens/ManageCollectionsScreen';
+import PopularRecipesScreen from '../screens/PopularRecipesScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -42,6 +45,7 @@ const linking = {
         },
       },
       RecipeDetail: 'recipe/:recipeId',
+      CollectionDetail: 'koleksiyon/:collectionId',
     },
   },
 };
@@ -299,6 +303,31 @@ function MainStack() {
         component={DailyMenuScreen}
         options={{
           headerTitle: translate('manageDailyMenu'),
+          headerBackTitle: translate('back'),
+        }}
+      />
+      <Stack.Screen
+        name="CollectionDetail"
+        component={CollectionDetailScreen}
+        options={{
+          headerTitle: '',
+          headerTransparent: true,
+          headerBackTitle: translate('back'),
+        }}
+      />
+      <Stack.Screen
+        name="ManageCollections"
+        component={ManageCollectionsScreen}
+        options={{
+          headerTitle: translate('manageCollections'),
+          headerBackTitle: translate('back'),
+        }}
+      />
+      <Stack.Screen
+        name="PopularRecipes"
+        component={PopularRecipesScreen}
+        options={{
+          headerTitle: translate('managePopularRecipes'),
           headerBackTitle: translate('back'),
         }}
       />

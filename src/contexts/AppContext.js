@@ -12,6 +12,7 @@ import {
 import { THEMES } from '../constants/themes';
 import { t } from '../constants/translations';
 import { RECIPES_DATA } from '../constants/recipes';
+import { getRecipeTags } from '../constants/recipeTags';
 import { COUNTRY_I18N, RECIPE_I18N } from '../constants/recipeI18n';
 import { INGREDIENT_I18N, STEPS_I18N } from '../constants/recipeTranslationsI18n';
 import { getRank, getNextRank } from '../constants/ranks';
@@ -57,7 +58,11 @@ export const AppProvider = ({ children }) => {
   const [selectedContinent, setSelectedContinent] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedCountry, setSelectedCountry] = useState(null);
+  const [selectedQuickFilter, setSelectedQuickFilter] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
+
+  // Onboarding sırasında seçilen beslenme tercihleri (quick-filter anahtarları)
+  const [preferredQuickFilters, setPreferredQuickFilters] = useState([]);
 
   // UI State
   const [showSearch, setShowSearch] = useState(false);
@@ -68,6 +73,10 @@ export const AppProvider = ({ children }) => {
   // Daily Menu State
   const [dailyMenuIds, setDailyMenuIds] = useState([]);
   const [dailyMenuLoading, setDailyMenuLoading] = useState(true);
+
+  // Popular Recipes State
+  const [popularRecipeIds, setPopularRecipeIds] = useState([]);
+  const [popularRecipesLoading, setPopularRecipesLoading] = useState(true);
 
   // Personal Menu State
   const [personalMenuIds, setPersonalMenuIds] = useState([]);
@@ -84,6 +93,7 @@ export const AppProvider = ({ children }) => {
     loadPersistedData();
     loadFirebaseRecipes();
     loadDailyMenu();
+    loadPopularRecipes();
     initNotifications();
   }, []);
 
@@ -96,10 +106,11 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // Sync favorites from Firebase when user logs in
+  // Sync favorites + shopping list from Firebase when user logs in
   useEffect(() => {
     if (currentUserId) {
       syncFavoritesFromFirebase(currentUserId);
+      syncShoppingListFromFirebase(currentUserId);
     }
   }, [currentUserId]);
 
@@ -123,6 +134,32 @@ export const AppProvider = ({ children }) => {
       await updateDoc(doc(db, 'users', uid), { favorites: updatedFavorites });
     } catch (error) {
       console.error('Error saving favorites to Firebase:', error);
+    }
+  };
+
+  // Alışveriş listesi bulut senkronu — favoriler ile aynı desen, ama
+  // `favorites/{docId}` kuralının aksine (sahiplik kontrolsüz) mevcut
+  // düzgün scope'lanmış `users/{uid}` update kuralı üzerinden yazılır.
+  const syncShoppingListFromFirebase = async (uid) => {
+    try {
+      const userDoc = await getDoc(doc(db, 'users', uid));
+      if (userDoc.exists()) {
+        const data = userDoc.data();
+        if (Array.isArray(data.shoppingList)) {
+          setShoppingList(data.shoppingList);
+          await AsyncStorage.setItem('shoppingList', JSON.stringify(data.shoppingList));
+        }
+      }
+    } catch (error) {
+      console.error('Error syncing shopping list:', error);
+    }
+  };
+
+  const saveShoppingListToFirebase = async (uid, updatedList) => {
+    try {
+      await updateDoc(doc(db, 'users', uid), { shoppingList: updatedList });
+    } catch (error) {
+      console.error('Error saving shopping list to Firebase:', error);
     }
   };
 
@@ -192,6 +229,34 @@ export const AppProvider = ({ children }) => {
     }
   };
 
+  const loadPopularRecipes = async () => {
+    setPopularRecipesLoading(true);
+    try {
+      const snap = await getDoc(doc(db, 'settings', 'popularRecipes'));
+      if (snap.exists()) {
+        setPopularRecipeIds(snap.data().recipeIds || []);
+      }
+    } catch (error) {
+      console.error('Popular recipes load error:', error);
+    } finally {
+      setPopularRecipesLoading(false);
+    }
+  };
+
+  const savePopularRecipes = async (recipeIds) => {
+    try {
+      await setDoc(doc(db, 'settings', 'popularRecipes'), {
+        recipeIds,
+        updatedAt: serverTimestamp(),
+      });
+      setPopularRecipeIds(recipeIds);
+      return { success: true };
+    } catch (error) {
+      console.error('Popular recipes save error:', error);
+      return { success: false, error: error.message };
+    }
+  };
+
   const addRecipe = async (recipeData, status = 'approved') => {
     try {
       const docRef = await addDoc(collection(db, 'recipes'), {
@@ -249,17 +314,18 @@ export const AppProvider = ({ children }) => {
   // Save data when it changes
   useEffect(() => {
     savePersistedData();
-  }, [favorites, shoppingList, language, theme, completedSteps, personalMenuIds]);
+  }, [favorites, shoppingList, language, theme, completedSteps, personalMenuIds, preferredQuickFilters]);
 
   const loadPersistedData = async () => {
     try {
-      const [favs, shopping, lang, thm, steps, personalMenu] = await Promise.all([
+      const [favs, shopping, lang, thm, steps, personalMenu, quickPrefs] = await Promise.all([
         AsyncStorage.getItem('favorites'),
         AsyncStorage.getItem('shoppingList'),
         AsyncStorage.getItem('language'),
         AsyncStorage.getItem('theme'),
         AsyncStorage.getItem('completedSteps'),
         AsyncStorage.getItem('personalMenuIds'),
+        AsyncStorage.getItem('preferredQuickFilters'),
       ]);
 
       if (favs) setFavorites(JSON.parse(favs));
@@ -268,6 +334,12 @@ export const AppProvider = ({ children }) => {
       if (thm) setTheme(thm);
       if (steps) setCompletedSteps(JSON.parse(steps));
       if (personalMenu) setPersonalMenuIds(JSON.parse(personalMenu));
+      if (quickPrefs) {
+        const parsed = JSON.parse(quickPrefs);
+        setPreferredQuickFilters(parsed);
+        // İlk açılışta onboarding'de seçilen tercihi varsayılan aktif çip yap
+        if (parsed.length > 0) setSelectedQuickFilter(parsed[0]);
+      }
     } catch (error) {
       console.error('Error loading persisted data:', error);
     }
@@ -282,11 +354,18 @@ export const AppProvider = ({ children }) => {
         AsyncStorage.setItem('theme', theme),
         AsyncStorage.setItem('completedSteps', JSON.stringify(completedSteps)),
         AsyncStorage.setItem('personalMenuIds', JSON.stringify(personalMenuIds)),
+        AsyncStorage.setItem('preferredQuickFilters', JSON.stringify(preferredQuickFilters)),
       ]);
     } catch (error) {
       console.error('Error saving persisted data:', error);
     }
   };
+
+  // Onboarding'de seçilen tercihleri kaydeder (OnboardingScreen tarafından çağrılır)
+  const saveOnboardingPreferences = useCallback((quickFilterKeys) => {
+    setPreferredQuickFilters(quickFilterKeys);
+    if (quickFilterKeys.length > 0) setSelectedQuickFilter(quickFilterKeys[0]);
+  }, []);
 
   // Get current theme colors
   const colors = THEMES[theme];
@@ -332,6 +411,11 @@ export const AppProvider = ({ children }) => {
     if (!dailyMenuIds.length) return [];
     return dailyMenuIds.map(findByIdOrOverride).filter(Boolean);
   }, [dailyMenuIds, recipes]);
+
+  const popularRecipes = useMemo(() => {
+    if (!popularRecipeIds.length) return [];
+    return popularRecipeIds.map(findByIdOrOverride).filter(Boolean);
+  }, [popularRecipeIds, recipes]);
 
   // Personal menu resolved recipes
   const personalMenuRecipes = useMemo(() => {
@@ -391,32 +475,47 @@ export const AppProvider = ({ children }) => {
       amount: item.amount,
       checked: false,
     };
-    setShoppingList(prev => [...prev, newItem]);
+    setShoppingList(prev => {
+      const updated = [...prev, newItem];
+      if (currentUserId) saveShoppingListToFirebase(currentUserId, updated);
+      return updated;
+    });
     showNotification(t('addToShoppingList', language));
     logShoppingAdd(item.name);
-  }, [language, showNotification]);
+  }, [currentUserId, language, showNotification]);
 
   const toggleShoppingItem = useCallback((itemId) => {
-    setShoppingList(prev =>
-      prev.map(item =>
+    setShoppingList(prev => {
+      const updated = prev.map(item =>
         item.id === itemId ? { ...item, checked: !item.checked } : item
-      )
-    );
-  }, []);
+      );
+      if (currentUserId) saveShoppingListToFirebase(currentUserId, updated);
+      return updated;
+    });
+  }, [currentUserId]);
 
   const deleteShoppingItem = useCallback((itemId) => {
-    setShoppingList(prev => prev.filter(item => item.id !== itemId));
-  }, []);
+    setShoppingList(prev => {
+      const updated = prev.filter(item => item.id !== itemId);
+      if (currentUserId) saveShoppingListToFirebase(currentUserId, updated);
+      return updated;
+    });
+  }, [currentUserId]);
 
   const deleteSelectedShoppingItems = useCallback(() => {
-    setShoppingList(prev => prev.filter(item => !item.checked));
+    setShoppingList(prev => {
+      const updated = prev.filter(item => !item.checked);
+      if (currentUserId) saveShoppingListToFirebase(currentUserId, updated);
+      return updated;
+    });
     showNotification(t('deleteSelected', language));
-  }, [language, showNotification]);
+  }, [currentUserId, language, showNotification]);
 
   const clearShoppingList = useCallback(() => {
     setShoppingList([]);
+    if (currentUserId) saveShoppingListToFirebase(currentUserId, []);
     showNotification(t('clearAll', language));
-  }, [language, showNotification]);
+  }, [currentUserId, language, showNotification]);
 
   // Steps Completion
   const toggleStep = useCallback((recipeId, stepIndex, totalSteps, recipeName) => {
@@ -553,6 +652,10 @@ export const AppProvider = ({ children }) => {
       filtered = filtered.filter(r => r.country === selectedCountry);
     }
 
+    if (selectedQuickFilter) {
+      filtered = filtered.filter(r => getRecipeTags(r).includes(selectedQuickFilter));
+    }
+
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(r => {
@@ -565,7 +668,7 @@ export const AppProvider = ({ children }) => {
     }
 
     return filtered;
-  }, [recipes, selectedContinent, selectedCategory, selectedCountry, searchQuery]);
+  }, [recipes, selectedContinent, selectedCategory, selectedCountry, selectedQuickFilter, searchQuery]);
 
   // Arama logunu yalnızca kullanıcı yazmayı bıraktıktan 600ms sonra tek sefer yaz
   // (önceden her tuş vuruşunda Firestore'a yazıyordu — bkz. maliyet denetimi 2026-07-09)
@@ -580,12 +683,13 @@ export const AppProvider = ({ children }) => {
     setSelectedContinent(null);
     setSelectedCategory(null);
     setSelectedCountry(null);
+    setSelectedQuickFilter(null);
     setSearchQuery('');
   }, []);
 
   const hasActiveFilters = useCallback(() => {
-    return selectedContinent || selectedCategory || selectedCountry || searchQuery;
-  }, [selectedContinent, selectedCategory, selectedCountry, searchQuery]);
+    return selectedContinent || selectedCategory || selectedCountry || selectedQuickFilter || searchQuery;
+  }, [selectedContinent, selectedCategory, selectedCountry, selectedQuickFilter, searchQuery]);
 
   // Timer Functions
   const startTimer = useCallback(async (minutes, recipeName = '') => {
@@ -674,6 +778,13 @@ export const AppProvider = ({ children }) => {
     saveDailyMenu,
     loadDailyMenu,
 
+    // Popular Recipes
+    popularRecipes,
+    popularRecipeIds,
+    popularRecipesLoading,
+    savePopularRecipes,
+    loadPopularRecipes,
+
     // Personal Menu
     personalMenuRecipes,
     personalMenuIds,
@@ -705,6 +816,10 @@ export const AppProvider = ({ children }) => {
     setSelectedCategory,
     selectedCountry,
     setSelectedCountry,
+    selectedQuickFilter,
+    setSelectedQuickFilter,
+    preferredQuickFilters,
+    saveOnboardingPreferences,
     searchQuery,
     setSearchQuery,
     getFilteredRecipes,

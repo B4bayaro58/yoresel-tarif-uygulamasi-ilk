@@ -1719,6 +1719,36 @@ export const TRANSLATIONS = {
     fr: 'Gerer le Menu du Jour',
     it: 'Gestisci Menu del Giorno',
   },
+  managePopularRecipes: {
+    tr: 'Popüler Tarifleri Yönet',
+    en: 'Manage Popular Recipes',
+    fr: 'Gérer les Recettes Populaires',
+    it: 'Gestisci le Ricette Popolari',
+  },
+  managePopularRecipesDesc: {
+    tr: 'Ana sayfada öne çıkacak tarifleri seç',
+    en: 'Choose recipes to feature on the home screen',
+    fr: "Choisissez les recettes à mettre en avant sur l'accueil",
+    it: 'Scegli le ricette da mettere in evidenza in home',
+  },
+  manageCollections: {
+    tr: 'Koleksiyonları Yönet',
+    en: 'Manage Collections',
+    fr: 'Gérer les Collections',
+    it: 'Gestisci le Collezioni',
+  },
+  popularRecipesTitle: {
+    tr: 'Popüler Tarifler',
+    en: 'Popular Recipes',
+    fr: 'Recettes Populaires',
+    it: 'Ricette Popolari',
+  },
+  manageCollectionsDesc: {
+    tr: 'Editöryal derlemeler ve yöresel keşif modülleri',
+    en: 'Editorial collections and regional discovery modules',
+    fr: 'Sélections éditoriales et modules de découverte régionale',
+    it: 'Raccolte editoriali e moduli di scoperta regionale',
+  },
   manageDailyMenuDesc: {
     tr: 'Ana sayfada gorunecek tarifleri sec',
     en: 'Select recipes to show on home page',
@@ -2017,6 +2047,98 @@ export const TRANSLATIONS = {
     en: 'Removed from your menu',
     fr: 'Retiré de votre menu',
     it: 'Rimosso dal tuo menu',
+  },
+
+  // Hızlı filtre çipleri (ana sayfa + onboarding + admin tag override)
+  quickFiltersTitle: {
+    tr: 'Hızlı Filtreler',
+    en: 'Quick Filters',
+    fr: 'Filtres Rapides',
+    it: 'Filtri Rapidi',
+  },
+  quickFilterQuick: {
+    tr: '30 Dakika Altı',
+    en: 'Under 30 Min',
+    fr: 'Moins de 30 Min',
+    it: 'Sotto i 30 Min',
+  },
+  quickFilterHighProtein: {
+    tr: 'Yüksek Protein',
+    en: 'High Protein',
+    fr: 'Riche en Protéines',
+    it: 'Alto Contenuto Proteico',
+  },
+  quickFilterOnePot: {
+    tr: 'Tek Tencere',
+    en: 'One Pot',
+    fr: 'Une Seule Casserole',
+    it: 'Una Sola Pentola',
+  },
+  quickFilterNoOven: {
+    tr: 'Fırınsız',
+    en: 'No Oven',
+    fr: 'Sans Four',
+    it: 'Senza Forno',
+  },
+
+  // Onboarding kişiselleştirme sorusu
+  onboardingPrefsTitle: {
+    tr: 'Bugün nasıl beslenmek istiyorsun?',
+    en: 'How do you want to eat today?',
+    fr: "Comment voulez-vous manger aujourd'hui ?",
+    it: 'Come vuoi mangiare oggi?',
+  },
+  onboardingPrefsDesc: {
+    tr: 'Sana uygun tarifleri öne çıkaralım. İstediğin zaman değiştirebilirsin.',
+    en: "We'll highlight recipes that fit you. You can change this anytime.",
+    fr: 'Nous mettrons en avant des recettes adaptées. Vous pourrez changer cela à tout moment.',
+    it: 'Metteremo in evidenza le ricette più adatte a te. Potrai cambiarle in qualsiasi momento.',
+  },
+
+  // Kaydırmalı (story) adım formatı
+  stepViewSwipe: {
+    tr: 'Kaydırmalı Görünüm',
+    en: 'Swipe View',
+    fr: 'Vue Défilante',
+    it: 'Vista Scorrevole',
+  },
+  stepViewList: {
+    tr: 'Liste Görünümü',
+    en: 'List View',
+    fr: 'Vue en Liste',
+    it: 'Vista Elenco',
+  },
+  stepCounter: {
+    tr: 'Adım {current}/{total}',
+    en: 'Step {current}/{total}',
+    fr: 'Étape {current}/{total}',
+    it: 'Passo {current}/{total}',
+  },
+
+  // Editöryal koleksiyonlar / yöresel keşif
+  weeklyCollectionTitle: {
+    tr: 'Haftanın Özel Derlemesi',
+    en: "This Week's Collection",
+    fr: 'La Sélection de la Semaine',
+    it: 'La Raccolta della Settimana',
+  },
+  regionalDiscoveryTitle: {
+    tr: 'Yöresel Keşif',
+    en: 'Regional Discovery',
+    fr: 'Découverte Régionale',
+    it: 'Scoperta Regionale',
+  },
+  ecosystemSyncBannerTitle: {
+    tr: 'Tariflerini Kaydet, Alışveriş Listeni Cebinde Taşı',
+    en: 'Save Your Recipes, Carry Your Shopping List in Your Pocket',
+    fr: 'Enregistrez vos Recettes, Emportez votre Liste de Courses',
+    it: 'Salva le Ricette, Porta la Lista della Spesa in Tasca',
+  },
+  ecosystemSyncBannerDesc: {
+    tr: 'Giriş yap, web ve mobil arasında favorilerin ve alışveriş listen otomatik senkronlansın.',
+    en: 'Sign in and your favorites and shopping list sync automatically between web and mobile.',
+    fr: 'Connectez-vous et synchronisez automatiquement vos favoris et votre liste de courses.',
+    it: 'Accedi e sincronizza automaticamente preferiti e lista della spesa tra web e mobile.',
   },
 };
 
