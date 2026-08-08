@@ -21,6 +21,7 @@ import SearchModal from '../components/SearchModal';
 import { RecipeGridSkeleton } from '../components/SkeletonLoader';
 import { getCollections } from '../services/collectionsService';
 import { getLatestBlogPosts, formatBlogDate } from '../services/blogService';
+import { getGridPhotoUrl } from '../utils/imageResize';
 
 const { width } = Dimensions.get('window');
 const CAROUSEL_WIDTH = width - 32;
@@ -65,37 +66,56 @@ function DailyMenuSection({ colors, translate, dailyMenu, dailyMenuLoading, navi
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.dailyMenuScroll}
         >
-          {dailyMenu.map(item => (
-            <TouchableOpacity
-              key={item.id}
-              style={styles.dailyMenuCard}
-              onPress={() => navigation.navigate('RecipeDetail', { recipe: item })}
-              activeOpacity={0.85}
-            >
-              <LinearGradient
-                colors={item.gradient || ['#4A6CF7', '#3A5CE5']}
-                style={styles.dailyMenuGradient}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
+          {dailyMenu.map(item => {
+            const photo = getGridPhotoUrl(item.photoThumb || item.photo);
+            return (
+              <TouchableOpacity
+                key={item.id}
+                style={styles.dailyMenuCard}
+                onPress={() => navigation.navigate('RecipeDetail', { recipe: item })}
+                activeOpacity={0.85}
               >
-                <Text style={styles.dailyMenuEmoji}>{item.emoji}</Text>
-                <View style={styles.dailyMenuInfo}>
-                  <Text style={styles.dailyMenuName} numberOfLines={2}>{item.name}</Text>
-                  <Text style={styles.dailyMenuCountry} numberOfLines={1}>{item.country}</Text>
-                  <View style={styles.dailyMenuMeta}>
-                    <View style={styles.dailyMenuMetaItem}>
-                      <Star size={11} color="rgba(255,255,255,0.9)" fill="rgba(255,255,255,0.9)" />
-                      <Text style={styles.dailyMenuMetaText}>{item.rating}</Text>
+                <View style={styles.dailyMenuGradient}>
+                  {photo ? (
+                    <Image
+                      source={{ uri: photo }}
+                      style={StyleSheet.absoluteFillObject}
+                      contentFit="cover"
+                      cachePolicy="disk"
+                      transition={150}
+                    />
+                  ) : (
+                    <LinearGradient
+                      colors={item.gradient || ['#4A6CF7', '#3A5CE5']}
+                      style={StyleSheet.absoluteFillObject}
+                      start={{ x: 0, y: 0 }}
+                      end={{ x: 1, y: 1 }}
+                    />
+                  )}
+                  <LinearGradient
+                    colors={['transparent', 'rgba(0,0,0,0.75)']}
+                    style={styles.dailyMenuOverlay}
+                  >
+                    {!photo && <Text style={styles.dailyMenuEmoji}>{item.emoji}</Text>}
+                    <View style={styles.dailyMenuInfo}>
+                      <Text style={styles.dailyMenuName} numberOfLines={2}>{item.name}</Text>
+                      <Text style={styles.dailyMenuCountry} numberOfLines={1}>{item.country}</Text>
+                      <View style={styles.dailyMenuMeta}>
+                        <View style={styles.dailyMenuMetaItem}>
+                          <Star size={11} color="rgba(255,255,255,0.9)" fill="rgba(255,255,255,0.9)" />
+                          <Text style={styles.dailyMenuMetaText}>{item.rating}</Text>
+                        </View>
+                        <View style={styles.dailyMenuMetaItem}>
+                          <Clock size={11} color="rgba(255,255,255,0.9)" />
+                          <Text style={styles.dailyMenuMetaText}>{item.prepTime} dk</Text>
+                        </View>
+                      </View>
                     </View>
-                    <View style={styles.dailyMenuMetaItem}>
-                      <Clock size={11} color="rgba(255,255,255,0.9)" />
-                      <Text style={styles.dailyMenuMetaText}>{item.prepTime} dk</Text>
-                    </View>
-                  </View>
+                  </LinearGradient>
                 </View>
-              </LinearGradient>
-            </TouchableOpacity>
-          ))}
+              </TouchableOpacity>
+            );
+          })}
         </ScrollView>
       )}
     </View>
@@ -633,6 +653,7 @@ export default function HomeScreen({ navigation }) {
     dailyMenuLoading,
     popularRecipes,
     popularRecipesLoading,
+    featuredRecipes,
   } = useApp();
 
   useEffect(() => {
@@ -649,8 +670,6 @@ export default function HomeScreen({ navigation }) {
       ),
     });
   }, [navigation, colors]);
-
-  const featuredRecipes = useMemo(() => recipes.slice(0, 4), [recipes]);
 
   const [collections, setCollections] = useState([]);
   useEffect(() => {
@@ -963,10 +982,14 @@ const styles = StyleSheet.create({
   },
   dailyMenuGradient: {
     flex: 1,
-    padding: 14,
-    justifyContent: 'space-between',
+    position: 'relative',
   },
-  dailyMenuEmoji: { fontSize: 44 },
+  dailyMenuOverlay: {
+    flex: 1,
+    padding: 14,
+    justifyContent: 'flex-end',
+  },
+  dailyMenuEmoji: { fontSize: 44, marginBottom: 6 },
   dailyMenuInfo: { gap: 3 },
   dailyMenuName: {
     fontSize: 14,

@@ -33,6 +33,57 @@ const AppContext = createContext();
 // için (canlı dinleyici değil) büyütmek maliyet insidentini geri getirmiyor.
 const FIREBASE_RECIPE_FETCH_LIMIT = 3000;
 
+// AsyncStorage'ın Android'deki SQLite backend'i tek bir satırı ~2MB'ta
+// sınırlıyor -- tüm override+native tarif listesini (900+ doküman, foto/
+// malzeme/adım metinleriyle kolayca bu sınırı aşıyor) TEK bir JSON string
+// olarak yazmak "Row too big to fit into CursorWindow" hatasıyla sessizce
+// başarısız oluyordu (hem okuma hem yazmada), yani cache hiç çalışmıyor ve
+// her soğuk açılış tam ağ sorgusunu bekliyordu. Listeyi küçük parçalara
+// bölüp ayrı anahtarlarda tutmak bu sınırın altında kalıyor.
+const RECIPE_CACHE_CHUNK_SIZE = 150;
+const RECIPE_CACHE_KEY_PREFIX = 'cachedFirebaseRecipes_v2_chunk_';
+const RECIPE_CACHE_META_KEY = 'cachedFirebaseRecipes_v2_meta';
+
+async function loadCachedRecipesChunked() {
+  try {
+    const metaRaw = await AsyncStorage.getItem(RECIPE_CACHE_META_KEY);
+    if (!metaRaw) return null;
+    const { chunkCount } = JSON.parse(metaRaw);
+    const keys = Array.from({ length: chunkCount }, (_, i) => `${RECIPE_CACHE_KEY_PREFIX}${i}`);
+    const pairs = await AsyncStorage.multiGet(keys);
+    const all = [];
+    for (const [, value] of pairs) {
+      if (!value) return null; // eksik parça varsa tüm cache güvenilmez sayılır
+      all.push(...JSON.parse(value));
+    }
+    return all;
+  } catch {
+    return null;
+  }
+}
+
+async function saveCachedRecipesChunked(recipesList) {
+  try {
+    const chunks = [];
+    for (let i = 0; i < recipesList.length; i += RECIPE_CACHE_CHUNK_SIZE) {
+      chunks.push(recipesList.slice(i, i + RECIPE_CACHE_CHUNK_SIZE));
+    }
+    const pairs = chunks.map((chunk, i) => [`${RECIPE_CACHE_KEY_PREFIX}${i}`, JSON.stringify(chunk)]);
+    await AsyncStorage.multiSet(pairs);
+    await AsyncStorage.setItem(RECIPE_CACHE_META_KEY, JSON.stringify({ chunkCount: chunks.length }));
+  } catch {
+    // yazılamazsa sessizce yok say -- sıradaki soğuk açılış yine network'e düşer
+  }
+}
+
+// Herkese açık (yayında) tarifler. Sadece bununla filtrelemek admin panelinden
+// "Pasif (Gizli)" yapılmış override'ları sorgu seviyesinde tamamen dışarıda
+// bırakırdı -- aşağıdaki `recipes` useMemo'sunun statik orijinali gizleyebilmesi
+// için o override dokümanının (durumu ne olursa olsun) yine de fetch edilmiş
+// olması gerekiyor. Web tarafı bunu zaten iki ayrı sorguyla çözüyor (bkz.
+// web/src/hooks/useAllRecipes.ts, web/src/app/page.tsx) -- aynı desen burada.
+const PUBLIC_STATUSES = ['published', 'approved'];
+
 export const useApp = () => {
   const context = useContext(AppContext);
   if (!context) {
@@ -78,6 +129,10 @@ export const AppProvider = ({ children }) => {
   const [popularRecipeIds, setPopularRecipeIds] = useState([]);
   const [popularRecipesLoading, setPopularRecipesLoading] = useState(true);
 
+  // Featured Recipes State (anasayfa "Öne Çıkanlar" carousel'i)
+  const [featuredRecipeIds, setFeaturedRecipeIds] = useState([]);
+  const [featuredRecipesLoading, setFeaturedRecipesLoading] = useState(true);
+
   // Personal Menu State
   const [personalMenuIds, setPersonalMenuIds] = useState([]);
 
@@ -94,6 +149,7 @@ export const AppProvider = ({ children }) => {
     loadFirebaseRecipes();
     loadDailyMenu();
     loadPopularRecipes();
+    loadFeaturedRecipes();
     initNotifications();
   }, []);
 
@@ -172,28 +228,32 @@ export const AppProvider = ({ children }) => {
     // ağ hatasında bir fallback olarak kullanılıyordu, her açılışta boşuna
     // network round-trip'i bekleniyordu.
     let hadCache = false;
-    try {
-      const cached = await AsyncStorage.getItem('cachedFirebaseRecipes');
-      if (cached) {
-        setFirebaseRecipes(JSON.parse(cached));
-        setRecipesLoading(false);
-        hadCache = true;
-      }
-    } catch (cacheError) {
-      console.error('Cache load error:', cacheError);
+    const cached = await loadCachedRecipesChunked();
+    if (cached) {
+      setFirebaseRecipes(cached);
+      setRecipesLoading(false);
+      hadCache = true;
     }
 
     try {
-      const snapshot = await getDocs(query(
-        collection(db, 'recipes'),
-        where('status', 'in', ['published', 'approved']),
-        limit(FIREBASE_RECIPE_FETCH_LIMIT)
-      ));
-      const loaded = snapshot.docs.map(d => ({ id: d.id, ...d.data(), isFirebase: true }));
+      const [publicSnap, overridesSnap] = await Promise.all([
+        getDocs(query(
+          collection(db, 'recipes'),
+          where('status', 'in', PUBLIC_STATUSES),
+          limit(FIREBASE_RECIPE_FETCH_LIMIT)
+        )),
+        getDocs(query(
+          collection(db, 'recipes'),
+          where('overridesStaticId', '!=', null),
+          limit(FIREBASE_RECIPE_FETCH_LIMIT)
+        )),
+      ]);
+      const merged = new Map();
+      publicSnap.docs.forEach(d => merged.set(d.id, { id: d.id, ...d.data(), isFirebase: true }));
+      overridesSnap.docs.forEach(d => merged.set(d.id, { id: d.id, ...d.data(), isFirebase: true }));
+      const loaded = Array.from(merged.values());
       setFirebaseRecipes(loaded);
-      try {
-        await AsyncStorage.setItem('cachedFirebaseRecipes', JSON.stringify(loaded));
-      } catch {}
+      await saveCachedRecipesChunked(loaded);
     } catch (error) {
       console.error('Firebase recipes unavailable' + (hadCache ? ' (cache already shown)' : ', no cache') + ':', error);
     } finally {
@@ -253,6 +313,34 @@ export const AppProvider = ({ children }) => {
       return { success: true };
     } catch (error) {
       console.error('Popular recipes save error:', error);
+      return { success: false, error: error.message };
+    }
+  };
+
+  const loadFeaturedRecipes = async () => {
+    setFeaturedRecipesLoading(true);
+    try {
+      const snap = await getDoc(doc(db, 'settings', 'featuredRecipes'));
+      if (snap.exists()) {
+        setFeaturedRecipeIds(snap.data().recipeIds || []);
+      }
+    } catch (error) {
+      console.error('Featured recipes load error:', error);
+    } finally {
+      setFeaturedRecipesLoading(false);
+    }
+  };
+
+  const saveFeaturedRecipes = async (recipeIds) => {
+    try {
+      await setDoc(doc(db, 'settings', 'featuredRecipes'), {
+        recipeIds,
+        updatedAt: serverTimestamp(),
+      });
+      setFeaturedRecipeIds(recipeIds);
+      return { success: true };
+    } catch (error) {
+      console.error('Featured recipes save error:', error);
       return { success: false, error: error.message };
     }
   };
@@ -416,6 +504,14 @@ export const AppProvider = ({ children }) => {
     if (!popularRecipeIds.length) return [];
     return popularRecipeIds.map(findByIdOrOverride).filter(Boolean);
   }, [popularRecipeIds, recipes]);
+
+  // Featured recipes (anasayfa hero carousel) -- admin henüz seçim yapmadıysa
+  // (veya seçtiği tarifler artık mevcut değilse) katalogdan ilk 4 tarife düşer,
+  // böylece carousel hiç boş kalmaz.
+  const featuredRecipes = useMemo(() => {
+    const curated = featuredRecipeIds.map(findByIdOrOverride).filter(Boolean);
+    return curated.length ? curated : recipes.slice(0, 4);
+  }, [featuredRecipeIds, recipes]);
 
   // Personal menu resolved recipes
   const personalMenuRecipes = useMemo(() => {
@@ -784,6 +880,11 @@ export const AppProvider = ({ children }) => {
     popularRecipesLoading,
     savePopularRecipes,
     loadPopularRecipes,
+    featuredRecipes,
+    featuredRecipeIds,
+    featuredRecipesLoading,
+    saveFeaturedRecipes,
+    loadFeaturedRecipes,
 
     // Personal Menu
     personalMenuRecipes,

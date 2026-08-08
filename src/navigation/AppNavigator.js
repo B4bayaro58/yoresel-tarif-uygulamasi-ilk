@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, Text, Image, ActivityIndicator, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { LinearGradient } from 'expo-linear-gradient';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
@@ -30,6 +29,7 @@ import OnboardingScreen from '../screens/OnboardingScreen';
 import CollectionDetailScreen from '../screens/CollectionDetailScreen';
 import ManageCollectionsScreen from '../screens/ManageCollectionsScreen';
 import PopularRecipesScreen from '../screens/PopularRecipesScreen';
+import FeaturedRecipesScreen from '../screens/FeaturedRecipesScreen';
 import BlogListScreen from '../screens/BlogListScreen';
 import BlogDetailScreen from '../screens/BlogDetailScreen';
 
@@ -54,18 +54,14 @@ const linking = {
   },
 };
 
-function ModernHeaderTitle({ title, colors }) {
+function ModernHeaderTitle() {
   return (
     <View style={headerStyles.titleContainer}>
-      <LinearGradient
-        colors={[colors.primary, colors.primary + 'CC']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 0 }}
-        style={headerStyles.titleBadge}
-      >
-        <Text style={headerStyles.titleEmoji}>🍽️</Text>
-      </LinearGradient>
-      <Text style={[headerStyles.titleText, { color: colors.text }]}>{title}</Text>
+      <Image
+        source={require('../../assets/logo.png')}
+        style={headerStyles.logo}
+        resizeMode="contain"
+      />
     </View>
   );
 }
@@ -102,7 +98,7 @@ function HomeTabs() {
           elevation: 0,
           shadowOpacity: 0,
           borderBottomWidth: 0,
-          height: 72,
+          height: 84,
         },
         headerTintColor: colors.text,
         headerTitleStyle: {
@@ -116,10 +112,8 @@ function HomeTabs() {
         name="HomeTab"
         component={HomeScreen}
         options={{
-          headerTitle: () => (
-            <ModernHeaderTitle title={translate('appTitle')} colors={colors} />
-          ),
-          headerTitleAlign: 'left',
+          headerTitle: () => <ModernHeaderTitle />,
+          headerTitleAlign: 'center',
           tabBarLabel: translate('home'),
           tabBarIcon: ({ color, size }) => (
             <Home color={color} size={size} />
@@ -336,6 +330,14 @@ function MainStack() {
         }}
       />
       <Stack.Screen
+        name="FeaturedRecipes"
+        component={FeaturedRecipesScreen}
+        options={{
+          headerTitle: translate('manageFeaturedRecipes'),
+          headerBackTitle: translate('back'),
+        }}
+      />
+      <Stack.Screen
         name="PrivacyPolicy"
         component={PrivacyPolicyScreen}
         options={{
@@ -413,21 +415,13 @@ const headerStyles = StyleSheet.create({
   titleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
   },
-  titleBadge: {
-    width: 34,
-    height: 34,
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  titleEmoji: {
-    fontSize: 18,
-  },
-  titleText: {
-    fontSize: 22,
-    fontWeight: '800',
-    letterSpacing: -0.5,
+  // logo.png web'deki üst banner logosuyla aynı dosya (yoreseltarif.com
+  // yazısı görselin içinde) -- 749x566 orijinal orana sabit piksel ölçüsüyle
+  // uyarlandı (aspectRatio + tek boyut kombinasyonu native header içinde
+  // güvenilir çalışmadı, logo header'ı taşıp tüm ekranı kaplıyordu).
+  logo: {
+    width: 77,
+    height: 58,
   },
 });

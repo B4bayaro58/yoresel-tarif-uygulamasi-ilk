@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -10,32 +10,21 @@ import { Image } from 'expo-image';
 import { Star, Clock, Users, Heart } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useApp } from '../contexts/AppContext';
-import { getOverrideRecipe } from '../services/overridePhoto';
+import { getGridPhotoUrl } from '../utils/imageResize';
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = (width - 48) / 2; // 2 columns with padding
 
 function RecipeCard({ recipe, onPress }) {
   const { colors, translate, isFavorite, toggleFavorite } = useApp();
-  const [override, setOverride] = useState(null);
 
-  // Kart FlatList tarafından render edildiğinde (virtualization sayesinde bu
-  // zaten sadece görünüm penceresine yakın kartlar için olur) o tarife özel
-  // yüklenmiş bir fotoğraf var mı diye tek seferlik, hedefli bir sorgu
-  // çalıştırır. Toplu/limitli bir sorguyla önceden hepsini çekmek yerine
-  // yalnızca kullanıcının fiilen kaydırıp gördüğü kartlar Firestore okuması
-  // tetikler (bkz. src/services/overridePhoto.js).
-  useEffect(() => {
-    if (recipe.isFirebase) return; // zaten çözülmüş bir Firestore kaydı
-    let cancelled = false;
-    getOverrideRecipe(String(recipe.id)).then(found => {
-      if (!cancelled && found) setOverride(found);
-    });
-    return () => { cancelled = true; };
-  }, [recipe]);
-
-  const displayRecipe = override || recipe;
+  // `recipe`, AppContext'teki `recipes` listesinden geliyor -- override'lı
+  // (fotoğraf/isim değişmiş) statik tarifler orada zaten kendi Firestore
+  // kaydıyla yer aldığı için burada ayrıca kart başına bir override sorgusu
+  // atmaya gerek yok (bkz. AppContext.js loadFirebaseRecipes).
+  const displayRecipe = recipe;
   const isFav = isFavorite(recipe.id);
+  const gridPhoto = getGridPhotoUrl(displayRecipe.photoThumb || displayRecipe.photo);
 
   return (
     <TouchableOpacity
@@ -59,10 +48,13 @@ function RecipeCard({ recipe, onPress }) {
 
           {/* Photo Overlay — expo-image: disk cache + kart boyutuna göre otomatik
               downsampling (bkz. maliyet denetimi 2026-07-09, önceden RN Image her
-              açılışta tam çözünürlüğü ağdan tekrar çekiyordu) */}
+              açılışta tam çözünürlüğü ağdan tekrar çekiyordu). gridPhoto ayrıca
+              Unsplash kaynaklı fotoğrafları küçük kart boyutuna indirger (bkz.
+              utils/imageResize.js) -- statik katalogdaki 915 tariften sadece 30'u
+              zaten boyutlu bir URL taşıyordu, geri kalanı tam çözünürlük indiriyordu. */}
           <View style={styles.photoOverlay}>
             <Image
-              source={displayRecipe.photo ? { uri: displayRecipe.photo } : require('../../assets/icon.png')}
+              source={gridPhoto ? { uri: gridPhoto } : require('../../assets/icon.png')}
               style={styles.photoImage}
               contentFit="cover"
               cachePolicy="disk"

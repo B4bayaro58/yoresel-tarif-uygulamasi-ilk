@@ -19,6 +19,7 @@ import {
   UtensilsCrossed,
   Flag,
   BookMarked,
+  Sparkles,
 } from 'lucide-react-native';
 import { useApp } from '../contexts/AppContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -169,6 +170,13 @@ export default function AdminPanelScreen({ navigation }) {
       subtitle: translate('managePopularRecipesDesc'),
       color: '#EF4444',
       onPress: () => navigation.navigate('PopularRecipes'),
+    },
+    {
+      icon: Sparkles,
+      title: translate('manageFeaturedRecipes'),
+      subtitle: translate('manageFeaturedRecipesDesc'),
+      color: '#F59E0B',
+      onPress: () => navigation.navigate('FeaturedRecipes'),
     },
   ];
 

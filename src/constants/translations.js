@@ -1731,6 +1731,24 @@ export const TRANSLATIONS = {
     fr: "Choisissez les recettes à mettre en avant sur l'accueil",
     it: 'Scegli le ricette da mettere in evidenza in home',
   },
+  manageFeaturedRecipes: {
+    tr: 'Öne Çıkanları Yönet',
+    en: 'Manage Featured Recipes',
+    fr: 'Gérer les Recettes en Vedette',
+    it: 'Gestisci le Ricette in Evidenza',
+  },
+  manageFeaturedRecipesDesc: {
+    tr: 'Ana sayfa üst carousel\'inde dönecek tarifleri seç (max 8)',
+    en: 'Choose recipes for the home page hero carousel (max 8)',
+    fr: "Choisissez les recettes du carrousel principal (max 8)",
+    it: "Scegli le ricette per il carosello principale (max 8)",
+  },
+  selectRecipesForFeatured: {
+    tr: 'Öne çıkacak tarifleri seçin (max 8)',
+    en: 'Select recipes to feature (max 8)',
+    fr: 'Sélectionnez les recettes à mettre en avant (max 8)',
+    it: 'Seleziona le ricette da mettere in evidenza (max 8)',
+  },
   manageCollections: {
     tr: 'Koleksiyonları Yönet',
     en: 'Manage Collections',
