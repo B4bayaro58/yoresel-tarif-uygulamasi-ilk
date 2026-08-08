@@ -30,6 +30,8 @@ import OnboardingScreen from '../screens/OnboardingScreen';
 import CollectionDetailScreen from '../screens/CollectionDetailScreen';
 import ManageCollectionsScreen from '../screens/ManageCollectionsScreen';
 import PopularRecipesScreen from '../screens/PopularRecipesScreen';
+import BlogListScreen from '../screens/BlogListScreen';
+import BlogDetailScreen from '../screens/BlogDetailScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -46,6 +48,8 @@ const linking = {
       },
       RecipeDetail: 'recipe/:recipeId',
       CollectionDetail: 'koleksiyon/:collectionId',
+      BlogList: 'blog',
+      BlogDetail: 'blog/:slug',
     },
   },
 };
@@ -344,6 +348,23 @@ function MainStack() {
         component={TermsOfServiceScreen}
         options={{
           headerTitle: translate('termsOfService'),
+          headerBackTitle: translate('back'),
+        }}
+      />
+      <Stack.Screen
+        name="BlogList"
+        component={BlogListScreen}
+        options={{
+          headerTitle: translate('blogTitle'),
+          headerBackTitle: translate('back'),
+        }}
+      />
+      <Stack.Screen
+        name="BlogDetail"
+        component={BlogDetailScreen}
+        options={{
+          headerTitle: '',
+          headerTransparent: true,
           headerBackTitle: translate('back'),
         }}
       />

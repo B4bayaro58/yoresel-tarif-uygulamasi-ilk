@@ -20,6 +20,7 @@ import RecipeCard from '../components/RecipeCard';
 import SearchModal from '../components/SearchModal';
 import { RecipeGridSkeleton } from '../components/SkeletonLoader';
 import { getCollections } from '../services/collectionsService';
+import { getLatestBlogPosts, formatBlogDate } from '../services/blogService';
 
 const { width } = Dimensions.get('window');
 const CAROUSEL_WIDTH = width - 32;
@@ -229,6 +230,55 @@ function CollectionsSection({ colors, translate, collections, navigation }) {
 
 const MemoCollectionsSection = React.memo(CollectionsSection);
 
+// === Blog ====================================================================
+function BlogSection({ colors, translate, latestPosts, navigation }) {
+  if (!latestPosts.length) return null;
+
+  return (
+    <View style={styles.dailyMenuSection}>
+      <View style={styles.blogHeaderRow}>
+        <Text style={[styles.sectionTitle, { color: colors.text, marginBottom: 0 }]}>{translate('blogSectionTitle')}</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('BlogList')} activeOpacity={0.7}>
+          <Text style={[styles.blogSeeAll, { color: colors.primary }]}>{translate('blogSeeAll')}</Text>
+        </TouchableOpacity>
+      </View>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.dailyMenuScroll}>
+        {latestPosts.map(post => (
+          <TouchableOpacity
+            key={post.id}
+            style={styles.blogCard}
+            onPress={() => navigation.navigate('BlogDetail', { slug: post.slug })}
+            activeOpacity={0.85}
+          >
+            {post.coverPhoto ? (
+              <Image
+                source={{ uri: post.coverPhoto }}
+                style={StyleSheet.absoluteFillObject}
+                contentFit="cover"
+                cachePolicy="disk"
+                transition={150}
+              />
+            ) : (
+              <LinearGradient
+                colors={['#B97A1A', '#D99520']}
+                style={StyleSheet.absoluteFillObject}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+              />
+            )}
+            <View style={styles.blogCardOverlay}>
+              <Text style={styles.blogCardDate} numberOfLines={1}>{formatBlogDate(post.publishedAt)}</Text>
+              <Text style={styles.blogCardTitle} numberOfLines={2}>{post.title}</Text>
+            </View>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+    </View>
+  );
+}
+
+const MemoBlogSection = React.memo(BlogSection);
+
 // Header ayri component -- stable referans icin HomeScreen disinda tanimlanir
 function HomeHeader({
   colors, translate, featuredRecipes, navigation,
@@ -240,6 +290,7 @@ function HomeHeader({
   dailyMenu, dailyMenuLoading,
   popularRecipes, popularRecipesLoading,
   collections,
+  latestPosts,
 }) {
   const [carouselIndex, setCarouselIndex] = useState(0);
   const carouselRef = useRef(null);
@@ -466,6 +517,14 @@ function HomeHeader({
         navigation={navigation}
       />
 
+      {/* Blog */}
+      <MemoBlogSection
+        colors={colors}
+        translate={translate}
+        latestPosts={latestPosts}
+        navigation={navigation}
+      />
+
       {/* Categories Filter */}
       <View style={styles.section}>
         <Text style={[styles.sectionTitle, { color: colors.text }]}>
@@ -598,6 +657,11 @@ export default function HomeScreen({ navigation }) {
     getCollections().then(setCollections);
   }, []);
 
+  const [latestPosts, setLatestPosts] = useState([]);
+  useEffect(() => {
+    getLatestBlogPosts(6).then(setLatestPosts);
+  }, []);
+
   // getFilteredRecipes useCallback ile stable -- sadece filtreler degisince hesaplar
   const filteredRecipes = useMemo(() => getFilteredRecipes(), [getFilteredRecipes]);
 
@@ -688,6 +752,7 @@ export default function HomeScreen({ navigation }) {
             popularRecipes={popularRecipes}
             popularRecipesLoading={popularRecipesLoading}
             collections={collections}
+            latestPosts={latestPosts}
           />
         }
         ListEmptyComponent={renderEmpty}
@@ -967,6 +1032,32 @@ const styles = StyleSheet.create({
   },
   popularCardName: { color: '#FFFFFF', fontSize: 13, fontWeight: '800', lineHeight: 17 },
   popularCardCountry: { color: 'rgba(255,255,255,0.75)', fontSize: 11, marginTop: 2 },
+
+  // Blog
+  blogHeaderRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 },
+  blogSeeAll: { fontSize: 13, fontWeight: '700' },
+  blogCard: {
+    width: 200,
+    height: 150,
+    borderRadius: 16,
+    marginRight: 12,
+    overflow: 'hidden',
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.18,
+    shadowRadius: 8,
+  },
+  blogCardOverlay: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    padding: 12,
+    backgroundColor: 'rgba(0,0,0,0.55)',
+  },
+  blogCardDate: { color: 'rgba(255,255,255,0.85)', fontSize: 10, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 3 },
+  blogCardTitle: { color: '#FFFFFF', fontSize: 14, fontWeight: '800', lineHeight: 18 },
 
   // Collections
   collectionsSection: { paddingHorizontal: 16, marginBottom: 24 },

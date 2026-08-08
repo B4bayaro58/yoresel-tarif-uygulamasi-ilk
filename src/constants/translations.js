@@ -2140,6 +2140,50 @@ export const TRANSLATIONS = {
     fr: 'Connectez-vous et synchronisez automatiquement vos favoris et votre liste de courses.',
     it: 'Accedi e sincronizza automaticamente preferiti e lista della spesa tra web e mobile.',
   },
+
+  // Blog
+  blogTitle: {
+    tr: 'Yöresel Mutfaktan Notlar',
+    en: 'Notes from Regional Cuisine',
+    fr: 'Notes de la Cuisine Régionale',
+    it: 'Note dalla Cucina Regionale',
+  },
+  blogSectionTitle: {
+    tr: 'En Güncel Yazılar',
+    en: 'Latest Posts',
+    fr: 'Derniers Articles',
+    it: 'Ultimi Articoli',
+  },
+  blogSeeAll: {
+    tr: 'Tüm Yazılar →',
+    en: 'All Posts →',
+    fr: 'Tous les Articles →',
+    it: 'Tutti gli Articoli →',
+  },
+  blogEmpty: {
+    tr: 'Henüz yazı yayınlanmadı.',
+    en: 'No posts published yet.',
+    fr: "Aucun article publié pour l'instant.",
+    it: 'Nessun articolo pubblicato ancora.',
+  },
+  blogPostNotFound: {
+    tr: 'Yazı bulunamadı',
+    en: 'Post not found',
+    fr: 'Article introuvable',
+    it: 'Articolo non trovato',
+  },
+  recipeCardEyebrow: {
+    tr: 'Tarif',
+    en: 'Recipe',
+    fr: 'Recette',
+    it: 'Ricetta',
+  },
+  recipeUnavailable: {
+    tr: 'Tarif',
+    en: 'Recipe',
+    fr: 'Recette',
+    it: 'Ricetta',
+  },
 };
 
 // Helper function to get translation
