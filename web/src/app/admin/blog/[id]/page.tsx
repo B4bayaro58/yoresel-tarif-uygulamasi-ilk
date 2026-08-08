@@ -36,6 +36,7 @@ export default function AdminBlogEditPage() {
   const [uploading, setUploading] = useState(false)
   const [uploadError, setUploadError] = useState<string | null>(null)
   const contentRef = useRef<unknown>(null)
+  const hasPublishedAtRef = useRef(false)
 
   useEffect(() => {
     if (isNew) return
@@ -49,6 +50,7 @@ export default function AdminBlogEditPage() {
         setStatus(data.status || 'draft')
         setContent(data.content ?? null)
         contentRef.current = data.content ?? null
+        hasPublishedAtRef.current = Boolean(data.publishedAt)
       }
       setLoading(false)
     }).catch(() => setLoading(false))
@@ -83,6 +85,12 @@ export default function AdminBlogEditPage() {
     setSaving(true)
     setSaveError(null)
     try {
+      // publishedAt sadece bir yazının İLK yayınlanma anında damgalanır ve
+      // sonrasında sabit kalır — daha önce her kaydetmede yeniden yazılıyordu,
+      // bu da eski bir yazının ufak bir düzeltmeyle (ör. kapak fotoğrafı
+      // ekleme) listenin en başına zıplamasına yol açıyordu (bkz. proje
+      // hafızası: blog-post-order-publishedat-bug).
+      const shouldStampPublishedAt = status === 'published' && !hasPublishedAtRef.current
       const data = {
         title: title.trim(),
         slug: slug.trim(),
@@ -91,14 +99,16 @@ export default function AdminBlogEditPage() {
         content: contentRef.current,
         status,
         updatedAt: serverTimestamp(),
-        ...(status === 'published' ? { publishedAt: serverTimestamp() } : {}),
+        ...(shouldStampPublishedAt ? { publishedAt: serverTimestamp() } : {}),
       }
       if (isNew) {
         const docRef = await addDoc(collection(db, 'blogPosts'), { ...data, createdAt: serverTimestamp() })
+        if (shouldStampPublishedAt) hasPublishedAtRef.current = true
         setSaved(true)
         setTimeout(() => { setSaved(false); router.push(`/admin/blog/${docRef.id}`) }, 800)
       } else {
         await setDoc(doc(db, 'blogPosts', id), data, { merge: true })
+        if (shouldStampPublishedAt) hasPublishedAtRef.current = true
         setSaved(true)
         setTimeout(() => setSaved(false), 2000)
       }

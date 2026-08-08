@@ -479,12 +479,12 @@ export default function HomeClient({ recipes, dailyMenuRecipes, popularRecipes }
                 Tüm Yazılar →
               </Link>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="flex gap-4 overflow-x-auto scrollbar-hidden pb-1 -mx-4 px-4 sm:mx-0 sm:px-0 sm:grid sm:grid-cols-2 sm:overflow-visible lg:grid-cols-4">
               {latestPosts.map((post) => (
                 <Link
                   key={post.id}
                   href={`/blog/${post.slug}`}
-                  className="rounded-2xl overflow-hidden card-hover group"
+                  className="flex-shrink-0 w-[220px] sm:w-auto rounded-2xl overflow-hidden card-hover group"
                   style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)', boxShadow: 'var(--shadow)' }}
                 >
                   <div className="relative w-full" style={{ aspectRatio: '3 / 2' }}>
@@ -493,7 +493,7 @@ export default function HomeClient({ recipes, dailyMenuRecipes, popularRecipes }
                         src={post.coverPhoto}
                         alt={post.title}
                         fill
-                        sizes="(max-width: 768px) 100vw, 25vw"
+                        sizes="(max-width: 640px) 220px, (max-width: 1024px) 50vw, 25vw"
                         loading="lazy"
                         unoptimized={isPreOptimized(post.coverPhoto)}
                         className="object-cover transition-transform duration-300 group-hover:scale-105"
