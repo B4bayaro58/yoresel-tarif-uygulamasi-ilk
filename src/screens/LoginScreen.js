@@ -163,6 +163,8 @@ export default function LoginScreen() {
               <TouchableOpacity
                 style={styles.forgotButton}
                 onPress={() => { setResetEmail(email); setShowResetModal(true); }}
+                accessibilityRole="button"
+                accessibilityLabel={translate('resetPassword')}
               >
                 <Text style={styles.forgotButtonText}>
                   {translate('resetPassword')}
@@ -174,6 +176,8 @@ export default function LoginScreen() {
             <TouchableOpacity
               style={styles.toggleButton}
               onPress={() => setIsLogin(!isLogin)}
+              accessibilityRole="button"
+              accessibilityLabel={isLogin ? translate('registerButton') : translate('loginButton')}
             >
               <Text style={styles.toggleText}>
                 {isLogin ? translate('noAccount') : translate('hasAccount')}
@@ -187,6 +191,8 @@ export default function LoginScreen() {
             <TouchableOpacity
               style={styles.guestButton}
               onPress={continueAsGuest}
+              accessibilityRole="button"
+              accessibilityLabel={translate('continueAsGuest')}
             >
               <Text style={styles.guestButtonText}>
                 {translate('continueAsGuest')}
@@ -195,11 +201,19 @@ export default function LoginScreen() {
 
             {/* Legal Links */}
             <View style={styles.legalLinks}>
-              <TouchableOpacity onPress={() => navigation.navigate('TermsOfService')}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('TermsOfService')}
+                accessibilityRole="button"
+                accessibilityLabel={translate('termsOfService')}
+              >
                 <Text style={styles.legalLinkText}>{translate('termsOfService')}</Text>
               </TouchableOpacity>
               <Text style={styles.legalSeparator}>·</Text>
-              <TouchableOpacity onPress={() => navigation.navigate('PrivacyPolicy')}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('PrivacyPolicy')}
+                accessibilityRole="button"
+                accessibilityLabel={translate('privacyPolicy')}
+              >
                 <Text style={styles.legalLinkText}>{translate('privacyPolicy')}</Text>
               </TouchableOpacity>
             </View>
@@ -214,7 +228,12 @@ export default function LoginScreen() {
           style={styles.resetOverlay}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
-          <TouchableOpacity style={styles.resetBackdrop} onPress={() => setShowResetModal(false)} />
+          <TouchableOpacity
+            style={styles.resetBackdrop}
+            onPress={() => setShowResetModal(false)}
+            accessibilityRole="button"
+            accessibilityLabel={translate('cancel')}
+          />
           <View style={styles.resetSheet}>
             <Text style={styles.resetTitle}>{translate('resetPassword')}</Text>
             <View style={styles.inputContainer}>
@@ -233,13 +252,20 @@ export default function LoginScreen() {
               style={[styles.submitButton, (!resetEmail.trim() || resetLoading) && { opacity: 0.5 }]}
               onPress={handleResetPassword}
               disabled={!resetEmail.trim() || resetLoading}
+              accessibilityRole="button"
+              accessibilityLabel={translate('confirm')}
             >
               {resetLoading
                 ? <ActivityIndicator color="#FFFFFF" />
                 : <Text style={styles.submitButtonText}>{translate('confirm')}</Text>
               }
             </TouchableOpacity>
-            <TouchableOpacity style={styles.forgotButton} onPress={() => setShowResetModal(false)}>
+            <TouchableOpacity
+              style={styles.forgotButton}
+              onPress={() => setShowResetModal(false)}
+              accessibilityRole="button"
+              accessibilityLabel={translate('cancel')}
+            >
               <Text style={styles.forgotButtonText}>{translate('cancel')}</Text>
             </TouchableOpacity>
           </View>

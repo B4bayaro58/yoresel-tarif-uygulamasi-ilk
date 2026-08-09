@@ -9,6 +9,7 @@ import {
   Share,
   Linking,
   FlatList,
+  ActivityIndicator,
 } from 'react-native';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -39,8 +40,13 @@ import { logRecipeView, logShare } from '../services/analyticsService';
 
 const { width } = Dimensions.get('window');
 
-export default function RecipeDetailScreen({ route, navigation }) {
-  const { recipe } = route.params;
+// Route parametrelerinde her zaman tam `recipe` objesi olmayabilir --
+// deep link'ler (yoreseltarif://recipe/:recipeId ve App Link
+// yoreseltarif.com/recipe/*, bkz. AppNavigator.js linking config) sadece
+// `recipeId` taşır. Bu yüzden asıl ekran mantığı burada, recipe'nin garanti
+// dolu olduğu bir iç bileşende yaşıyor; dışarıdaki wrapper (dosya sonunda)
+// recipe'yi çözüp yükleniyor/bulunamadı durumlarını ele alıyor.
+function RecipeDetailContent({ recipe, navigation }) {
   const steps = recipe.steps || [];
   const ingredients = recipe.ingredients || [];
   const {
@@ -185,6 +191,8 @@ export default function RecipeDetailScreen({ route, navigation }) {
                 <TouchableOpacity
                   style={[styles.actionButton, { backgroundColor: 'rgba(0, 0, 0, 0.6)' }]}
                   onPress={() => navigation.goBack()}
+                  accessibilityRole="button"
+                  accessibilityLabel={translate('back')}
                 >
                   <Text style={styles.backButtonText}>←</Text>
                 </TouchableOpacity>
@@ -192,6 +200,8 @@ export default function RecipeDetailScreen({ route, navigation }) {
                   <TouchableOpacity
                     style={[styles.actionButton, { backgroundColor: 'rgba(0, 0, 0, 0.6)' }]}
                     onPress={handleShare}
+                    accessibilityRole="button"
+                    accessibilityLabel="Tarifi paylaş"
                   >
                     <Share2 size={22} color="#FFFFFF" />
                   </TouchableOpacity>
@@ -201,6 +211,9 @@ export default function RecipeDetailScreen({ route, navigation }) {
                       { backgroundColor: isFav ? colors.primary : 'rgba(0, 0, 0, 0.6)' },
                     ]}
                     onPress={() => toggleFavorite(recipe.id)}
+                    accessibilityRole="button"
+                    accessibilityLabel={isFav ? translate('removeFromFavorites') : translate('addToFavorites')}
+                    accessibilityState={{ selected: isFav }}
                   >
                     <Heart
                       size={24}
@@ -249,6 +262,8 @@ export default function RecipeDetailScreen({ route, navigation }) {
                 <TouchableOpacity
                   onPress={() => setScaledServings(s => Math.max(1, s - 1))}
                   hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                  accessibilityRole="button"
+                  accessibilityLabel={`${translate('servings')} -1`}
                 >
                   <Text style={[styles.servingsBtn, { color: colors.primary }]}>−</Text>
                 </TouchableOpacity>
@@ -258,6 +273,8 @@ export default function RecipeDetailScreen({ route, navigation }) {
                 <TouchableOpacity
                   onPress={() => setScaledServings(s => s + 1)}
                   hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                  accessibilityRole="button"
+                  accessibilityLabel={`${translate('servings')} +1`}
                 >
                   <Text style={[styles.servingsBtn, { color: colors.primary }]}>+</Text>
                 </TouchableOpacity>
@@ -283,6 +300,8 @@ export default function RecipeDetailScreen({ route, navigation }) {
               style={[styles.videoButton, { backgroundColor: '#FF0000' }]}
               onPress={() => Linking.openURL(recipe.videoUrl)}
               activeOpacity={0.8}
+              accessibilityRole="button"
+              accessibilityLabel={translate('watchVideo')}
             >
               <Youtube size={22} color="#fff" />
               <Text style={styles.videoButtonText}>{translate('watchVideo')}</Text>
@@ -355,6 +374,8 @@ export default function RecipeDetailScreen({ route, navigation }) {
                     <TouchableOpacity
                       style={[styles.alternativeButton, { borderColor: colors.primary }]}
                       onPress={() => openAlternatives(ingredient)}
+                      accessibilityRole="button"
+                      accessibilityLabel={`${ingredient.name} ${translate('alternatives')}`}
                     >
                       <Text style={[styles.alternativeButtonText, { color: colors.primary }]}>
                         {translate('alternatives')}
@@ -364,6 +385,8 @@ export default function RecipeDetailScreen({ route, navigation }) {
                   <TouchableOpacity
                     style={[styles.shoppingButton, { backgroundColor: colors.primary }]}
                     onPress={() => addToShoppingList({ ...ingredient, amount: scaleAmount(ingredient.amount) })}
+                    accessibilityRole="button"
+                    accessibilityLabel={`${ingredient.name} ${translate('addToShoppingList')}`}
                   >
                     <ShoppingCart size={18} color="#FFFFFF" />
                   </TouchableOpacity>
@@ -408,12 +431,16 @@ export default function RecipeDetailScreen({ route, navigation }) {
                   <TouchableOpacity
                     style={[styles.timerAdjustBtn, { backgroundColor: colors.border }]}
                     onPress={() => adjustTimer(-5)}
+                    accessibilityRole="button"
+                    accessibilityLabel="5 dakika azalt"
                   >
                     <Text style={[styles.timerAdjustBtnText, { color: colors.text }]}>−5</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={[styles.timerAdjustBtn, { backgroundColor: colors.border }]}
                     onPress={() => adjustTimer(-1)}
+                    accessibilityRole="button"
+                    accessibilityLabel="1 dakika azalt"
                   >
                     <Text style={[styles.timerAdjustBtnText, { color: colors.text }]}>−1</Text>
                   </TouchableOpacity>
@@ -425,12 +452,16 @@ export default function RecipeDetailScreen({ route, navigation }) {
                   <TouchableOpacity
                     style={[styles.timerAdjustBtn, { backgroundColor: colors.border }]}
                     onPress={() => adjustTimer(1)}
+                    accessibilityRole="button"
+                    accessibilityLabel="1 dakika artır"
                   >
                     <Text style={[styles.timerAdjustBtnText, { color: colors.text }]}>+1</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={[styles.timerAdjustBtn, { backgroundColor: colors.border }]}
                     onPress={() => adjustTimer(5)}
+                    accessibilityRole="button"
+                    accessibilityLabel="5 dakika artır"
                   >
                     <Text style={[styles.timerAdjustBtnText, { color: colors.text }]}>+5</Text>
                   </TouchableOpacity>
@@ -439,6 +470,8 @@ export default function RecipeDetailScreen({ route, navigation }) {
                 <TouchableOpacity
                   style={[styles.timerStartBtn, { backgroundColor: colors.success }]}
                   onPress={() => startTimer(timerMinutes, recipe.name)}
+                  accessibilityRole="button"
+                  accessibilityLabel={translate('startTimer')}
                 >
                   <Play size={20} color="#FFFFFF" />
                   <Text style={styles.timerButtonText}>{translate('startTimer')}</Text>
@@ -454,6 +487,9 @@ export default function RecipeDetailScreen({ route, navigation }) {
                   <TouchableOpacity
                     style={[styles.timerButton, { backgroundColor: colors.warning }]}
                     onPress={pauseTimer}
+                    accessibilityRole="button"
+                    accessibilityLabel={timerPaused ? translate('resume') : translate('pauseTimer')}
+                    accessibilityState={{ selected: timerPaused }}
                   >
                     {timerPaused ? (
                       <>
@@ -470,6 +506,8 @@ export default function RecipeDetailScreen({ route, navigation }) {
                   <TouchableOpacity
                     style={[styles.timerButton, { backgroundColor: colors.error }]}
                     onPress={stopTimer}
+                    accessibilityRole="button"
+                    accessibilityLabel={translate('stopTimer')}
                   >
                     <Square size={20} color="#FFFFFF" />
                     <Text style={styles.timerButtonText}>{translate('stopTimer')}</Text>
@@ -513,6 +551,9 @@ export default function RecipeDetailScreen({ route, navigation }) {
                   style={[styles.stepViewToggle, { borderColor: colors.border }]}
                   onPress={() => setStepViewMode(stepViewMode === 'swipe' ? 'list' : 'swipe')}
                   activeOpacity={0.7}
+                  accessibilityRole="button"
+                  accessibilityLabel={translate(stepViewMode === 'swipe' ? 'stepViewList' : 'stepViewSwipe')}
+                  accessibilityState={{ selected: stepViewMode === 'list' }}
                 >
                   {stepViewMode === 'swipe' ? (
                     <List size={16} color={colors.primary} />
@@ -563,6 +604,8 @@ export default function RecipeDetailScreen({ route, navigation }) {
                             style={styles.stepCardNavButton}
                             onPress={() => goToStep(index - 1)}
                             disabled={index === 0}
+                            accessibilityRole="button"
+                            accessibilityLabel={`${translate('step')} ${index}`}
                           >
                             <ChevronLeft size={22} color={index === 0 ? colors.textTertiary : colors.primary} />
                           </TouchableOpacity>
@@ -576,6 +619,9 @@ export default function RecipeDetailScreen({ route, navigation }) {
                               if (!completed) goToStep(index + 1);
                             }}
                             activeOpacity={0.85}
+                            accessibilityRole="button"
+                            accessibilityLabel={`${translate('step')} ${index + 1} ${translate(completed ? 'completed' : 'step')}`}
+                            accessibilityState={{ selected: completed }}
                           >
                             {completed ? (
                               <CheckCircle2 size={20} color="#FFFFFF" />
@@ -590,6 +636,8 @@ export default function RecipeDetailScreen({ route, navigation }) {
                             style={styles.stepCardNavButton}
                             onPress={() => goToStep(index + 1)}
                             disabled={index === steps.length - 1}
+                            accessibilityRole="button"
+                            accessibilityLabel={`${translate('step')} ${index + 2}`}
                           >
                             <ChevronRight
                               size={22}
@@ -615,6 +663,9 @@ export default function RecipeDetailScreen({ route, navigation }) {
                     ]}
                     onPress={() => toggleStep(recipe.id, index, steps.length, recipe.name)}
                     activeOpacity={0.7}
+                    accessibilityRole="button"
+                    accessibilityLabel={`${translate('step')} ${index + 1}: ${step}`}
+                    accessibilityState={{ selected: completed }}
                   >
                     <View style={styles.stepHeader}>
                       {completed ? (
@@ -664,9 +715,66 @@ export default function RecipeDetailScreen({ route, navigation }) {
   );
 }
 
+export default function RecipeDetailScreen({ route, navigation }) {
+  const { colors, translate, recipes, recipesLoading } = useApp();
+  const paramRecipe = route.params?.recipe;
+  const recipeId = route.params?.recipeId;
+  const recipe =
+    paramRecipe ||
+    (recipeId ? recipes.find(r => r.id === recipeId || r.overridesStaticId === recipeId) : null);
+
+  if (!recipe) {
+    if (recipesLoading) {
+      return (
+        <View style={[styles.container, styles.centeredState, { backgroundColor: colors.background }]}>
+          <ActivityIndicator size="large" color={colors.primary} />
+        </View>
+      );
+    }
+    return (
+      <View style={[styles.container, styles.centeredState, { backgroundColor: colors.background }]}>
+        <Text style={[styles.notFoundText, { color: colors.text }]}>
+          {translate('recipeNotFound')}
+        </Text>
+        <TouchableOpacity
+          style={[styles.notFoundButton, { backgroundColor: colors.primary }]}
+          onPress={() => navigation.goBack()}
+          accessibilityRole="button"
+          accessibilityLabel={translate('back')}
+        >
+          <Text style={styles.notFoundButtonText}>{translate('back')}</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+  return <RecipeDetailContent recipe={recipe} navigation={navigation} />;
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  centeredState: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 24,
+    gap: 16,
+  },
+  notFoundText: {
+    fontSize: 16,
+    fontWeight: '600',
+    textAlign: 'center',
+  },
+  notFoundButton: {
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 24,
+  },
+  notFoundButtonText: {
+    color: '#FFFFFF',
+    fontSize: 15,
+    fontWeight: '700',
   },
   heroContainer: {
     width: width,

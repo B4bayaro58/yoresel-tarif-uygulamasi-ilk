@@ -92,6 +92,9 @@ function SelectGroup({ label, options, value, onSelect, colors }) {
             ]}
             onPress={() => onSelect(opt.value)}
             activeOpacity={0.7}
+            accessibilityRole="button"
+            accessibilityLabel={opt.label}
+            accessibilityState={{ selected: value === opt.value }}
           >
             <Text
               style={[
@@ -290,6 +293,8 @@ export default function AddRecipeScreen({ navigation, route }) {
             style={[styles.photoPicker, { backgroundColor: colors.card, borderColor: colors.border }]}
             onPress={handlePickImage}
             activeOpacity={0.7}
+            accessibilityRole="button"
+            accessibilityLabel={translate('selectPhoto')}
           >
             {photoUri ? (
               <Image source={{ uri: photoUri }} style={styles.photoPreview} />
@@ -388,6 +393,9 @@ export default function AddRecipeScreen({ navigation, route }) {
                     ]}
                     onPress={() => toggleTag(qf.key)}
                     activeOpacity={0.7}
+                    accessibilityRole="button"
+                    accessibilityLabel={translate(qf.labelKey)}
+                    accessibilityState={{ selected: active }}
                   >
                     <Text style={styles.tagChipEmoji}>{qf.emoji}</Text>
                     <Text style={[styles.tagChipText, { color: colors.text }]}>{translate(qf.labelKey)}</Text>
@@ -559,6 +567,8 @@ export default function AddRecipeScreen({ navigation, route }) {
           onPress={() => navigation.goBack()}
           activeOpacity={0.7}
           disabled={loading}
+          accessibilityRole="button"
+          accessibilityLabel={translate('cancel')}
         >
           <X size={20} color={colors.text} />
           <Text style={[styles.buttonText, { color: colors.text }]}>{translate('cancel')}</Text>
@@ -569,6 +579,8 @@ export default function AddRecipeScreen({ navigation, route }) {
           onPress={handleSave}
           activeOpacity={0.7}
           disabled={loading}
+          accessibilityRole="button"
+          accessibilityLabel={loading ? translate('saving') : isEditMode ? translate('update') : translate('save')}
         >
           {loading ? (
             <ActivityIndicator size="small" color="#fff" />

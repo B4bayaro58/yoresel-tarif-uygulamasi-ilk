@@ -186,6 +186,8 @@ export default function ManageUsersScreen() {
                 ]}
                 onPress={() => handleToggleAdmin(user)}
                 activeOpacity={0.7}
+                accessibilityRole="button"
+                accessibilityLabel={`${user.isAdmin ? translate('revoke') : translate('grant')} ${translate('adminPermission')} - ${user.email}`}
               >
                 <Shield size={18} color={user.isAdmin ? '#F59E0B' : '#3B82F6'} />
               </TouchableOpacity>
@@ -194,6 +196,8 @@ export default function ManageUsersScreen() {
                 style={[styles.actionButton, { backgroundColor: '#EF444420' }]}
                 onPress={() => handleDeleteUser(user)}
                 activeOpacity={0.7}
+                accessibilityRole="button"
+                accessibilityLabel={`${translate('deleteUser')} - ${user.email}`}
               >
                 <UserX size={18} color="#EF4444" />
               </TouchableOpacity>
@@ -216,6 +220,8 @@ export default function ManageUsersScreen() {
             onPress={loadMoreUsers}
             disabled={loadingMore}
             activeOpacity={0.7}
+            accessibilityRole="button"
+            accessibilityLabel="Daha Fazla Yükle"
           >
             {loadingMore ? (
               <ActivityIndicator size="small" color={colors.primary} />

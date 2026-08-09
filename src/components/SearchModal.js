@@ -53,6 +53,9 @@ const FilterChips = React.memo(function FilterChips({ label, options, selected, 
               ]}
               onPress={() => onSelect(opt.value)}
               activeOpacity={0.7}
+              accessibilityRole="button"
+              accessibilityLabel={opt.label}
+              accessibilityState={{ selected: selected === opt.value }}
             >
               <Text
                 style={[
@@ -137,7 +140,11 @@ export default function SearchModal({ navigation }) {
               autoCapitalize="none"
             />
             {query.length > 0 && (
-              <TouchableOpacity onPress={() => setQuery('')}>
+              <TouchableOpacity
+                onPress={() => setQuery('')}
+                accessibilityRole="button"
+                accessibilityLabel={translate('clearAll')}
+              >
                 <X size={20} color={colors.textSecondary} />
               </TouchableOpacity>
             )}
@@ -148,13 +155,20 @@ export default function SearchModal({ navigation }) {
               { backgroundColor: hasActiveFilters ? colors.primary : colors.card },
             ]}
             onPress={() => setShowFilters(prev => !prev)}
+            accessibilityRole="button"
+            accessibilityLabel="Filtreler"
+            accessibilityState={{ expanded: showFilters }}
           >
             <SlidersHorizontal
               size={20}
               color={hasActiveFilters ? '#fff' : colors.textSecondary}
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={handleClose}>
+          <TouchableOpacity
+            onPress={handleClose}
+            accessibilityRole="button"
+            accessibilityLabel={translate('cancel')}
+          >
             <Text style={[styles.cancelText, { color: colors.primary }]}>
               {translate('cancel')}
             </Text>

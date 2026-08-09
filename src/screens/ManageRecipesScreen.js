@@ -98,6 +98,8 @@ export default function ManageRecipesScreen({ navigation }) {
           style={[styles.actionButton, { backgroundColor: colors.primary + '20' }]}
           onPress={() => handleView(recipe)}
           activeOpacity={0.7}
+          accessibilityRole="button"
+          accessibilityLabel={`${recipe.name} — Görüntüle`}
         >
           <Eye size={18} color={colors.primary} />
         </TouchableOpacity>
@@ -106,6 +108,8 @@ export default function ManageRecipesScreen({ navigation }) {
           style={[styles.actionButton, { backgroundColor: '#3B82F620' }]}
           onPress={() => handleEdit(recipe)}
           activeOpacity={0.7}
+          accessibilityRole="button"
+          accessibilityLabel={`${recipe.name} — ${translate('editRecipe')}`}
         >
           <Edit3 size={18} color="#3B82F6" />
         </TouchableOpacity>
@@ -117,6 +121,8 @@ export default function ManageRecipesScreen({ navigation }) {
           ]}
           onPress={() => handleDelete(recipe)}
           activeOpacity={0.7}
+          accessibilityRole="button"
+          accessibilityLabel={`${recipe.name} — ${translate('deleteRecipe')}`}
         >
           <Trash2 size={18} color={recipe.isFirebase ? '#EF4444' : colors.textTertiary} />
         </TouchableOpacity>

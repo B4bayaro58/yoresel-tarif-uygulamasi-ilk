@@ -149,6 +149,8 @@ export default function ManageCollectionsScreen() {
             style={[styles.newButton, { backgroundColor: colors.primary }]}
             onPress={openNew}
             activeOpacity={0.85}
+            accessibilityRole="button"
+            accessibilityLabel="Yeni Koleksiyon"
           >
             <Plus size={16} color="#FFFFFF" />
             <Text style={styles.newButtonText}>Yeni Koleksiyon</Text>
@@ -173,10 +175,20 @@ export default function ManageCollectionsScreen() {
                     {(item.recipeIds || []).length} tarif{item.region ? ` • ${item.region}` : ''} • {item.isActive ? 'Yayında' : 'Pasif'}
                   </Text>
                 </View>
-                <TouchableOpacity style={[styles.iconButton, { backgroundColor: '#3B82F620' }]} onPress={() => openEdit(item)}>
+                <TouchableOpacity
+                  style={[styles.iconButton, { backgroundColor: '#3B82F620' }]}
+                  onPress={() => openEdit(item)}
+                  accessibilityRole="button"
+                  accessibilityLabel={`${item.title} — Düzenle`}
+                >
                   <Edit3 size={16} color="#3B82F6" />
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.iconButton, { backgroundColor: '#EF444420' }]} onPress={() => handleDelete(item)}>
+                <TouchableOpacity
+                  style={[styles.iconButton, { backgroundColor: '#EF444420' }]}
+                  onPress={() => handleDelete(item)}
+                  accessibilityRole="button"
+                  accessibilityLabel={`${item.title} — Sil`}
+                >
                   <Trash2 size={16} color="#EF4444" />
                 </TouchableOpacity>
               </View>
@@ -190,7 +202,12 @@ export default function ManageCollectionsScreen() {
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <ScrollView contentContainerStyle={styles.formScroll} keyboardShouldPersistTaps="handled">
-        <TouchableOpacity style={styles.backRow} onPress={() => setMode('list')}>
+        <TouchableOpacity
+          style={styles.backRow}
+          onPress={() => setMode('list')}
+          accessibilityRole="button"
+          accessibilityLabel={translate('back')}
+        >
           <ArrowLeft size={18} color={colors.primary} />
           <Text style={[styles.backText, { color: colors.primary }]}>Koleksiyonlar</Text>
         </TouchableOpacity>
@@ -267,7 +284,11 @@ export default function ManageCollectionsScreen() {
           {selectedRecipes.map(r => (
             <View key={r.id} style={[styles.selectedChip, { backgroundColor: colors.primary + '20' }]}>
               <Text style={[styles.selectedChipText, { color: colors.primary }]} numberOfLines={1}>{r.name}</Text>
-              <TouchableOpacity onPress={() => toggleRecipe(String(r.id))}>
+              <TouchableOpacity
+                onPress={() => toggleRecipe(String(r.id))}
+                accessibilityRole="button"
+                accessibilityLabel={`${r.name} — Koleksiyondan Çıkar`}
+              >
                 <X size={14} color={colors.primary} />
               </TouchableOpacity>
             </View>
@@ -301,6 +322,9 @@ export default function ManageCollectionsScreen() {
               ]}
               onPress={() => toggleRecipe(canonicalId)}
               activeOpacity={0.7}
+              accessibilityRole="checkbox"
+              accessibilityState={{ checked: isSelected }}
+              accessibilityLabel={item.name}
             >
               <Text style={styles.pickerEmoji}>{item.emoji}</Text>
               <View style={styles.itemInfo}>
@@ -326,6 +350,8 @@ export default function ManageCollectionsScreen() {
           onPress={handleSave}
           disabled={saving || !form.title.trim()}
           activeOpacity={0.85}
+          accessibilityRole="button"
+          accessibilityLabel={translate('save')}
         >
           {saving ? <ActivityIndicator size="small" color="#FFFFFF" /> : <Text style={styles.saveButtonText}>{translate('save')}</Text>}
         </TouchableOpacity>

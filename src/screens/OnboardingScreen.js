@@ -73,7 +73,12 @@ export default function OnboardingScreen({ onFinish }) {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <TouchableOpacity style={styles.skipButton} onPress={onFinish}>
+      <TouchableOpacity
+        style={styles.skipButton}
+        onPress={onFinish}
+        accessibilityRole="button"
+        accessibilityLabel={translate('skip')}
+      >
         <Text style={[styles.skipText, { color: colors.textSecondary }]}>
           {translate('skip')}
         </Text>
@@ -125,6 +130,9 @@ export default function OnboardingScreen({ onFinish }) {
                       style={[styles.prefTile, { width: PREF_TILE_WIDTH, height: PREF_TILE_WIDTH * 0.88 }]}
                       onPress={() => togglePref(qf.key)}
                       activeOpacity={0.85}
+                      accessibilityRole="button"
+                      accessibilityLabel={translate(qf.labelKey)}
+                      accessibilityState={{ selected: isSelected }}
                     >
                       <LinearGradient
                         colors={qf.gradient}
@@ -175,6 +183,8 @@ export default function OnboardingScreen({ onFinish }) {
         style={[styles.nextButton, { backgroundColor: colors.primary }]}
         onPress={goNext}
         activeOpacity={0.85}
+        accessibilityRole="button"
+        accessibilityLabel={isLast ? translate('getStarted') : translate('next')}
       >
         <Text style={styles.nextButtonText}>
           {isLast ? translate('getStarted') : translate('next')}

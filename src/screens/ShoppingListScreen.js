@@ -77,6 +77,8 @@ export default function ShoppingListScreen({ navigation }) {
           style={[styles.addButton, { backgroundColor: colors.primary }, !itemName.trim() && styles.addButtonDisabled]}
           onPress={handleAdd}
           disabled={!itemName.trim()}
+          accessibilityRole="button"
+          accessibilityLabel={translate('addItem')}
         >
           <Plus size={22} color="#FFFFFF" />
           <Text style={styles.addButtonText}>{translate('addItem')}</Text>
@@ -90,6 +92,8 @@ export default function ShoppingListScreen({ navigation }) {
             <TouchableOpacity
               style={[styles.actionButton, { backgroundColor: colors.error }]}
               onPress={deleteSelectedShoppingItems}
+              accessibilityRole="button"
+              accessibilityLabel={translate('deleteSelected')}
             >
               <CheckSquare size={18} color="#FFFFFF" />
               <Text style={styles.actionButtonText}>{translate('deleteSelected')}</Text>
@@ -98,6 +102,8 @@ export default function ShoppingListScreen({ navigation }) {
           <TouchableOpacity
             style={[styles.actionButton, { backgroundColor: colors.textSecondary }]}
             onPress={clearShoppingList}
+            accessibilityRole="button"
+            accessibilityLabel={translate('clearAll')}
           >
             <Trash2 size={18} color="#FFFFFF" />
             <Text style={styles.actionButtonText}>{translate('clearAll')}</Text>
@@ -146,6 +152,9 @@ export default function ShoppingListScreen({ navigation }) {
                 item.checked && { backgroundColor: colors.success, borderColor: colors.success },
               ]}
               onPress={() => toggleShoppingItem(item.id)}
+              accessibilityRole="checkbox"
+              accessibilityState={{ checked: item.checked }}
+              accessibilityLabel={item.name}
             >
               {item.checked && <Text style={styles.checkmark}>✓</Text>}
             </TouchableOpacity>
@@ -170,6 +179,8 @@ export default function ShoppingListScreen({ navigation }) {
             <TouchableOpacity
               style={styles.deleteButton}
               onPress={() => deleteShoppingItem(item.id)}
+              accessibilityRole="button"
+              accessibilityLabel={`${item.name} ürününü sil`}
             >
               <Trash2 size={20} color={colors.error} />
             </TouchableOpacity>

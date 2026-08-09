@@ -197,6 +197,8 @@ export default function ReportedReviewsScreen() {
                   style={[styles.actionButton, { backgroundColor: '#EF444420' }]}
                   onPress={() => handleDeleteReview(review)}
                   activeOpacity={0.7}
+                  accessibilityRole="button"
+                  accessibilityLabel={`${translate('deleteReview')} - ${review.userName}`}
                 >
                   <Trash2 size={15} color="#EF4444" />
                   <Text style={[styles.actionButtonText, { color: '#EF4444' }]}>
@@ -207,6 +209,8 @@ export default function ReportedReviewsScreen() {
                   style={[styles.actionButton, { backgroundColor: '#F59E0B20' }]}
                   onPress={() => handleBlockUser(review)}
                   activeOpacity={0.7}
+                  accessibilityRole="button"
+                  accessibilityLabel={`${translate('blockUser')} - ${review.userName}`}
                 >
                   <UserX size={15} color="#F59E0B" />
                   <Text style={[styles.actionButtonText, { color: '#F59E0B' }]}>
@@ -224,6 +228,8 @@ export default function ReportedReviewsScreen() {
             onPress={loadMoreReported}
             disabled={loadingMore}
             activeOpacity={0.7}
+            accessibilityRole="button"
+            accessibilityLabel="Daha Fazla Yükle"
           >
             {loadingMore ? (
               <ActivityIndicator size="small" color={colors.primary} />

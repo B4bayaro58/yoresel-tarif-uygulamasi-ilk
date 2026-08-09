@@ -38,6 +38,11 @@ function StarRating({ value, onChange, size = 28, readonly = false }) {
           disabled={readonly}
           activeOpacity={readonly ? 1 : 0.7}
           hitSlop={{ top: 6, bottom: 6, left: 4, right: 4 }}
+          {...(!readonly ? {
+            accessibilityRole: 'button',
+            accessibilityLabel: `${star} yıldız`,
+            accessibilityState: { selected: star <= value },
+          } : {})}
         >
           <Star
             size={size}
@@ -240,6 +245,8 @@ export default function ReviewsSection({ recipe }) {
           onPress={handleSubmit}
           disabled={submitting}
           activeOpacity={0.7}
+          accessibilityRole="button"
+          accessibilityLabel={userReview ? translate('update') : 'Gönder'}
         >
           {submitting ? (
             <ActivityIndicator size="small" color="#fff" />
@@ -284,6 +291,8 @@ export default function ReviewsSection({ recipe }) {
                     disabled={alreadyReported}
                     hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
                     style={styles.reportButton}
+                    accessibilityRole="button"
+                    accessibilityLabel={alreadyReported ? translate('reported') : translate('reportReview')}
                   >
                     <Flag
                       size={16}

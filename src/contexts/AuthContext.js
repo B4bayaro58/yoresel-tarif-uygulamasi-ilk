@@ -35,31 +35,30 @@ export const AuthProvider = ({ children }) => {
   const [isGuest, setIsGuest] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       if (firebaseUser) {
         setUser(firebaseUser);
         setCurrentUserId(firebaseUser.uid);
+        // Resolve immediately from the hardcoded email so the app doesn't block
+        // startup on a Firestore round-trip; the real per-user flag (set via
+        // ManageUsersScreen's "promote to admin") arrives right after and only
+        // ever upgrades isAdmin to true, never downgrades it mid-session.
+        setIsAdmin(firebaseUser.email === ADMIN_EMAIL);
+        setLoading(false);
 
-        // Admin status: Firestore users/{uid}.isAdmin (set via ManageUsersScreen's
-        // "promote to admin") is the real source of truth, OR'd with the legacy
-        // hardcoded email so the original admin account never loses access even
-        // if its Firestore doc lacks the field. Without the Firestore check, a
-        // user promoted via ManageUsersScreen would pass firestore.rules'
-        // isAdmin() but never see the Admin Panel UI on mobile.
-        try {
-          const snap = await getDoc(doc(db, 'users', firebaseUser.uid));
-          const firestoreAdmin = snap.exists() && snap.data().isAdmin === true;
-          setIsAdmin(firestoreAdmin || firebaseUser.email === ADMIN_EMAIL);
-        } catch {
-          setIsAdmin(firebaseUser.email === ADMIN_EMAIL);
-        }
-
+        getDoc(doc(db, 'users', firebaseUser.uid))
+          .then((snap) => {
+            if (snap.exists() && snap.data().isAdmin === true) {
+              setIsAdmin(true);
+            }
+          })
+          .catch(() => {});
       } else {
         setUser(null);
         setIsAdmin(false);
         setCurrentUserId(null);
+        setLoading(false);
       }
-      setLoading(false);
     });
 
     return unsubscribe;

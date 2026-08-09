@@ -35,6 +35,8 @@ export default function BlogListScreen({ navigation }) {
           style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}
           onPress={() => navigation.navigate('BlogDetail', { slug: item.slug })}
           activeOpacity={0.85}
+          accessibilityRole="button"
+          accessibilityLabel={item.title}
         >
           {item.coverPhoto ? (
             <Image source={{ uri: item.coverPhoto }} style={styles.cardImg} contentFit="cover" cachePolicy="disk" transition={150} />

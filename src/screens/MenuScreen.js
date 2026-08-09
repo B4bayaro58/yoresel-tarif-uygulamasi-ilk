@@ -24,6 +24,8 @@ function DailyMenuCard({ item, onPress }) {
       style={styles.dailyCard}
       onPress={onPress}
       activeOpacity={0.85}
+      accessibilityRole="button"
+      accessibilityLabel={item.name}
     >
       <LinearGradient
         colors={item.gradient || ['#4A6CF7', '#3A5CE5']}
@@ -52,12 +54,14 @@ function DailyMenuCard({ item, onPress }) {
 }
 
 // Kendi menüm satır öğesi
-function MyMenuItem({ item, onRemove, onPress, colors }) {
+function MyMenuItem({ item, onRemove, onPress, colors, translate }) {
   return (
     <TouchableOpacity
       style={[styles.myMenuItem, { backgroundColor: colors.card, borderColor: colors.border }]}
       onPress={onPress}
       activeOpacity={0.8}
+      accessibilityRole="button"
+      accessibilityLabel={item.name}
     >
       <LinearGradient
         colors={item.gradient || ['#4A6CF7', '#3A5CE5']}
@@ -89,6 +93,8 @@ function MyMenuItem({ item, onRemove, onPress, colors }) {
         style={[styles.removeBtn, { backgroundColor: colors.error + '20' }]}
         onPress={onRemove}
         hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+        accessibilityRole="button"
+        accessibilityLabel={`${item.name} — ${translate('removeFromMyMenu')}`}
       >
         <X size={16} color={colors.error} />
       </TouchableOpacity>
@@ -120,7 +126,12 @@ function RecipePickerModal({ visible, onClose, colors, translate, recipes, perso
           <Text style={[styles.pickerTitle, { color: colors.text }]}>
             {translate('pickRecipe')}
           </Text>
-          <TouchableOpacity onPress={onClose} style={styles.pickerClose}>
+          <TouchableOpacity
+            onPress={onClose}
+            style={styles.pickerClose}
+            accessibilityRole="button"
+            accessibilityLabel={translate('close')}
+          >
             <X size={24} color={colors.text} />
           </TouchableOpacity>
         </View>
@@ -138,7 +149,11 @@ function RecipePickerModal({ visible, onClose, colors, translate, recipes, perso
             spellCheck={false}
           />
           {!!query && (
-            <TouchableOpacity onPress={() => setQuery('')}>
+            <TouchableOpacity
+              onPress={() => setQuery('')}
+              accessibilityRole="button"
+              accessibilityLabel="Aramayı temizle"
+            >
               <X size={16} color={colors.textTertiary} />
             </TouchableOpacity>
           )}
@@ -164,6 +179,9 @@ function RecipePickerModal({ visible, onClose, colors, translate, recipes, perso
                 ]}
                 onPress={() => togglePersonalMenu(canonicalId)}
                 activeOpacity={0.75}
+                accessibilityRole="checkbox"
+                accessibilityState={{ checked: isIn }}
+                accessibilityLabel={item.name}
               >
                 <LinearGradient
                   colors={item.gradient || ['#4A6CF7', '#3A5CE5']}
@@ -281,6 +299,7 @@ export default function MenuScreen({ navigation }) {
                   key={item.id}
                   item={item}
                   colors={colors}
+                  translate={translate}
                   onPress={() => handleRecipePress(item)}
                   onRemove={() => togglePersonalMenu(item.overridesStaticId ?? item.id)}
                 />
@@ -293,6 +312,8 @@ export default function MenuScreen({ navigation }) {
             style={[styles.addBtn, { backgroundColor: colors.primary }]}
             onPress={() => setPickerVisible(true)}
             activeOpacity={0.85}
+            accessibilityRole="button"
+            accessibilityLabel={translate('pickRecipe')}
           >
             <Plus size={20} color="#FFFFFF" />
             <Text style={styles.addBtnText}>{translate('pickRecipe')}</Text>

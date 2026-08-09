@@ -114,6 +114,9 @@ function RecipeCardNode({ node, recipes, colors, navigation, translate }) {
       activeOpacity={0.85}
       disabled={!recipe}
       onPress={() => recipe && navigation.navigate('RecipeDetail', { recipe })}
+      accessibilityRole="button"
+      accessibilityLabel={recipe?.name || translate('recipeUnavailable')}
+      accessibilityHint={translate('tapToViewRecipe')}
     >
       {recipe?.photo ? (
         <Image source={{ uri: recipe.photoThumb || recipe.photo }} style={styles.recipeCardImg} contentFit="cover" />

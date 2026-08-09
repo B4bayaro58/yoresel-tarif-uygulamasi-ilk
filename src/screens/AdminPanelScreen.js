@@ -227,6 +227,8 @@ export default function AdminPanelScreen({ navigation }) {
             ]}
             onPress={action.onPress}
             activeOpacity={0.7}
+            accessibilityRole="button"
+            accessibilityLabel={`${action.title}. ${action.subtitle}`}
           >
             <View style={[styles.actionIconContainer, { backgroundColor: action.color + '20' }]}>
               <action.icon size={24} color={action.color} />

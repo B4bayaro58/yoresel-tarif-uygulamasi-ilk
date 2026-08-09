@@ -75,6 +75,9 @@ export default function FeaturedRecipesScreen({ navigation }) {
         ]}
         onPress={() => toggle(canonicalId)}
         activeOpacity={0.7}
+        accessibilityRole="checkbox"
+        accessibilityState={{ checked: isSelected }}
+        accessibilityLabel={item.name}
       >
         <Text style={styles.emoji}>{item.emoji}</Text>
         <View style={styles.itemInfo}>
@@ -140,6 +143,8 @@ export default function FeaturedRecipesScreen({ navigation }) {
           onPress={handleSave}
           disabled={saving}
           activeOpacity={0.8}
+          accessibilityRole="button"
+          accessibilityLabel={translate('save')}
         >
           {saving
             ? <ActivityIndicator size="small" color="#FFFFFF" />

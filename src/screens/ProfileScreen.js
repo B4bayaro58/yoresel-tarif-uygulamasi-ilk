@@ -168,6 +168,8 @@ export default function ProfileScreen({ navigation }) {
           style={[styles.guestBanner, { backgroundColor: colors.primary }]}
           onPress={handleLogout}
           activeOpacity={0.85}
+          accessibilityRole="button"
+          accessibilityLabel={translate('signUpNow')}
         >
           <Text style={styles.guestBannerEmoji}>🌟</Text>
           <View style={styles.guestBannerText}>
@@ -187,6 +189,9 @@ export default function ProfileScreen({ navigation }) {
           onPress={handlePickProfilePhoto}
           activeOpacity={isGuest ? 1 : 0.8}
           disabled={isGuest}
+          accessibilityRole="button"
+          accessibilityLabel={translate('changeProfilePhoto')}
+          accessibilityState={{ disabled: isGuest }}
         >
           {user?.photoURL ? (
             <Image
@@ -407,6 +412,8 @@ export default function ProfileScreen({ navigation }) {
         <TouchableOpacity
           style={[styles.settingItem, { backgroundColor: colors.card, borderColor: colors.border }]}
           onPress={() => setShowThemeModal(true)}
+          accessibilityRole="button"
+          accessibilityLabel={translate('changeTheme')}
         >
           <View style={styles.settingLeft}>
             <View style={[styles.iconContainer, { backgroundColor: colors.primary + '20' }]}>
@@ -428,6 +435,8 @@ export default function ProfileScreen({ navigation }) {
         <TouchableOpacity
           style={[styles.settingItem, { backgroundColor: colors.card, borderColor: colors.border }]}
           onPress={() => showNotification(translate('comingSoon'))}
+          accessibilityRole="button"
+          accessibilityLabel={translate('otherSettings')}
         >
           <View style={styles.settingLeft}>
             <View style={[styles.iconContainer, { backgroundColor: colors.primary + '20' }]}>
@@ -449,6 +458,8 @@ export default function ProfileScreen({ navigation }) {
         <TouchableOpacity
           style={[styles.settingItem, { backgroundColor: colors.card, borderColor: colors.border }]}
           onPress={() => navigation.navigate('PrivacyPolicy')}
+          accessibilityRole="button"
+          accessibilityLabel={translate('privacyPolicy')}
         >
           <View style={styles.settingLeft}>
             <View style={[styles.iconContainer, { backgroundColor: colors.primary + '20' }]}>
@@ -465,6 +476,8 @@ export default function ProfileScreen({ navigation }) {
         <TouchableOpacity
           style={[styles.settingItem, { backgroundColor: colors.card, borderColor: colors.border }]}
           onPress={() => navigation.navigate('TermsOfService')}
+          accessibilityRole="button"
+          accessibilityLabel={translate('termsOfService')}
         >
           <View style={styles.settingLeft}>
             <View style={[styles.iconContainer, { backgroundColor: colors.primary + '20' }]}>
@@ -482,6 +495,8 @@ export default function ProfileScreen({ navigation }) {
           style={[styles.logoutButton, { backgroundColor: colors.primary, marginBottom: 12 }]}
           onPress={() => navigation.navigate('AddRecipe')}
           activeOpacity={0.7}
+          accessibilityRole="button"
+          accessibilityLabel={translate('suggestRecipe')}
         >
           <Text style={styles.logoutButtonText}>🍽️ {translate('suggestRecipe')}</Text>
         </TouchableOpacity>
@@ -490,6 +505,8 @@ export default function ProfileScreen({ navigation }) {
         <TouchableOpacity
           style={[styles.logoutButton, { backgroundColor: colors.error }]}
           onPress={handleLogout}
+          accessibilityRole="button"
+          accessibilityLabel={isGuest ? translate('loginButton') : translate('logout')}
         >
           <LogOut size={20} color="#FFFFFF" />
           <Text style={styles.logoutButtonText}>
@@ -502,6 +519,8 @@ export default function ProfileScreen({ navigation }) {
           <TouchableOpacity
             style={[styles.deleteAccountButton, { borderColor: colors.error }]}
             onPress={() => { setDeletePassword(''); setShowDeleteModal(true); }}
+            accessibilityRole="button"
+            accessibilityLabel={translate('deleteAccount')}
           >
             <Trash2 size={16} color={colors.error} />
             <Text style={[styles.deleteAccountText, { color: colors.error }]}>
@@ -544,6 +563,8 @@ export default function ProfileScreen({ navigation }) {
                 style={[styles.deleteModalBtn, { backgroundColor: colors.border }]}
                 onPress={() => setShowDeleteModal(false)}
                 disabled={deleteLoading}
+                accessibilityRole="button"
+                accessibilityLabel={translate('cancel')}
               >
                 <Text style={[styles.deleteModalBtnText, { color: colors.text }]}>
                   {translate('cancel')}
@@ -553,6 +574,8 @@ export default function ProfileScreen({ navigation }) {
                 style={[styles.deleteModalBtn, { backgroundColor: colors.error }, (!deletePassword || deleteLoading) && { opacity: 0.5 }]}
                 onPress={handleDeleteAccount}
                 disabled={!deletePassword || deleteLoading}
+                accessibilityRole="button"
+                accessibilityLabel={translate('confirm')}
               >
                 {deleteLoading
                   ? <ActivityIndicator size="small" color="#FFFFFF" />
@@ -585,6 +608,9 @@ export default function ProfileScreen({ navigation }) {
                   theme === themeOption.value && { backgroundColor: colors.primary + '20' },
                 ]}
                 onPress={() => handleThemeChange(themeOption.value)}
+                accessibilityRole="button"
+                accessibilityLabel={translate(themeOption.value === 'light' ? 'lightMode' : 'darkMode')}
+                accessibilityState={{ selected: theme === themeOption.value }}
               >
                 <Text style={[styles.modalItemText, { color: colors.text }]}>
                   {themeOption.icon} {translate(themeOption.value === 'light' ? 'lightMode' : 'darkMode')}
@@ -594,6 +620,8 @@ export default function ProfileScreen({ navigation }) {
             <TouchableOpacity
               style={[styles.modalCloseButton, { backgroundColor: colors.border }]}
               onPress={() => setShowThemeModal(false)}
+              accessibilityRole="button"
+              accessibilityLabel={translate('close')}
             >
               <Text style={[styles.modalCloseText, { color: colors.text }]}>
                 {translate('close')}

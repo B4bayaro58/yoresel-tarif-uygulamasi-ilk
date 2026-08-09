@@ -24,7 +24,6 @@ import { getLatestBlogPosts, formatBlogDate } from '../services/blogService';
 import { getGridPhotoUrl } from '../utils/imageResize';
 
 const { width } = Dimensions.get('window');
-const CAROUSEL_WIDTH = width - 32;
 const CARD_GAP = 12;
 const CONTINENT_CARD_WIDTH = (width - 48 - CARD_GAP) / 2;
 const CONTINENT_CARD_HEIGHT = CONTINENT_CARD_WIDTH * 0.72;
@@ -74,6 +73,9 @@ function DailyMenuSection({ colors, translate, dailyMenu, dailyMenuLoading, navi
                 style={styles.dailyMenuCard}
                 onPress={() => navigation.navigate('RecipeDetail', { recipe: item })}
                 activeOpacity={0.85}
+                accessibilityRole="button"
+                accessibilityLabel={`${item.name}, ${item.country}`}
+                accessibilityHint={translate('tapToViewRecipe')}
               >
                 <View style={styles.dailyMenuGradient}>
                   {photo ? (
@@ -138,6 +140,9 @@ function PopularRecipesSection({ colors, translate, popularRecipes, popularRecip
             style={styles.popularCard}
             onPress={() => navigation.navigate('RecipeDetail', { recipe: item })}
             activeOpacity={0.85}
+            accessibilityRole="button"
+            accessibilityLabel={`${item.name}, ${item.country}`}
+            accessibilityHint={translate('tapToViewRecipe')}
           >
             {item.photo ? (
               <Image
@@ -186,6 +191,8 @@ function CollectionsSection({ colors, translate, collections, navigation }) {
           style={styles.featuredCollectionCard}
           onPress={() => navigation.navigate('CollectionDetail', { collectionId: featured.id })}
           activeOpacity={0.9}
+          accessibilityRole="button"
+          accessibilityLabel={`${translate('weeklyCollectionTitle')}: ${featured.title}`}
         >
           {featured.coverPhoto ? (
             <Image source={{ uri: featured.coverPhoto }} style={StyleSheet.absoluteFillObject} contentFit="cover" />
@@ -224,6 +231,8 @@ function CollectionsSection({ colors, translate, collections, navigation }) {
                 style={styles.regionalCard}
                 onPress={() => navigation.navigate('CollectionDetail', { collectionId: c.id })}
                 activeOpacity={0.85}
+                accessibilityRole="button"
+                accessibilityLabel={`${c.title}, ${c.region}`}
               >
                 {c.coverPhoto ? (
                   <Image source={{ uri: c.coverPhoto }} style={StyleSheet.absoluteFillObject} contentFit="cover" />
@@ -258,7 +267,12 @@ function BlogSection({ colors, translate, latestPosts, navigation }) {
     <View style={styles.dailyMenuSection}>
       <View style={styles.blogHeaderRow}>
         <Text style={[styles.sectionTitle, { color: colors.text, marginBottom: 0 }]}>{translate('blogSectionTitle')}</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('BlogList')} activeOpacity={0.7}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('BlogList')}
+          activeOpacity={0.7}
+          accessibilityRole="button"
+          accessibilityLabel={translate('blogSeeAll')}
+        >
           <Text style={[styles.blogSeeAll, { color: colors.primary }]}>{translate('blogSeeAll')}</Text>
         </TouchableOpacity>
       </View>
@@ -269,6 +283,8 @@ function BlogSection({ colors, translate, latestPosts, navigation }) {
             style={styles.blogCard}
             onPress={() => navigation.navigate('BlogDetail', { slug: post.slug })}
             activeOpacity={0.85}
+            accessibilityRole="button"
+            accessibilityLabel={post.title}
           >
             {post.coverPhoto ? (
               <Image
@@ -301,7 +317,7 @@ const MemoBlogSection = React.memo(BlogSection);
 
 // Header ayri component -- stable referans icin HomeScreen disinda tanimlanir
 function HomeHeader({
-  colors, translate, featuredRecipes, navigation,
+  colors, translate, navigation,
   selectedContinent, selectedCategory,
   onContinentPress, onCategoryPress,
   selectedQuickFilter, onQuickFilterPress,
@@ -312,100 +328,18 @@ function HomeHeader({
   collections,
   latestPosts,
 }) {
-  const [carouselIndex, setCarouselIndex] = useState(0);
-  const carouselRef = useRef(null);
   const isDark = colors.background === '#121212';
-
-  useEffect(() => {
-    if (!featuredRecipes.length) return;
-    const interval = setInterval(() => {
-      setCarouselIndex(prev => {
-        const next = (prev + 1) % featuredRecipes.length;
-        carouselRef.current?.scrollToIndex({ index: next, animated: true });
-        return next;
-      });
-    }, 4000);
-    return () => clearInterval(interval);
-  }, [featuredRecipes.length]);
 
   return (
     <View>
-      {/* Hero Carousel */}
-      <View style={styles.carouselSection}>
-        <Text style={[styles.sectionTitle, { color: colors.text, paddingHorizontal: 16 }]}>
-          {translate('featuredRecipes')}
-        </Text>
-        <FlatList
-          ref={carouselRef}
-          data={featuredRecipes}
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={item => item.id}
-          snapToInterval={CAROUSEL_WIDTH + 16}
-          decelerationRate="fast"
-          onMomentumScrollEnd={event => {
-            const index = Math.round(
-              event.nativeEvent.contentOffset.x / (CAROUSEL_WIDTH + 16)
-            );
-            setCarouselIndex(index);
-          }}
-          contentContainerStyle={styles.carouselContent}
-          getItemLayout={(_, index) => ({
-            length: CAROUSEL_WIDTH + 16,
-            offset: (CAROUSEL_WIDTH + 16) * index,
-            index,
-          })}
-          onScrollToIndexFailed={info => {
-            setTimeout(() => {
-              carouselRef.current?.scrollToIndex({ index: info.index, animated: false });
-            }, 100);
-          }}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              style={styles.carouselItem}
-              onPress={() => navigation.navigate('RecipeDetail', { recipe: item })}
-              activeOpacity={0.9}
-            >
-              <LinearGradient
-                colors={item.gradient || ['#4A6CF7', '#3A5CE5']}
-                style={styles.carouselGradient}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-              >
-                <Text style={styles.carouselEmoji}>{item.emoji}</Text>
-                <View style={styles.carouselImage}>
-                  <Image
-                    source={item.photo ? { uri: item.photo } : require('../../assets/icon.png')}
-                    style={styles.carouselImageStyle}
-                    contentFit="cover"
-                    cachePolicy="disk"
-                    transition={150}
-                  />
-                  <View style={styles.carouselOverlay}>
-                    <Text style={styles.carouselName} numberOfLines={2}>{item.name}</Text>
-                    <Text style={styles.carouselCountry}>{item.country}</Text>
-                  </View>
-                </View>
-              </LinearGradient>
-            </TouchableOpacity>
-          )}
-        />
-        <View style={styles.dotsContainer}>
-          {featuredRecipes.map((_, index) => (
-            <View
-              key={index}
-              style={[
-                styles.dot,
-                {
-                  backgroundColor: index === carouselIndex ? colors.primary : colors.textTertiary,
-                  width: index === carouselIndex ? 24 : 8,
-                },
-              ]}
-            />
-          ))}
-        </View>
-      </View>
+      {/* Popüler Tarifler */}
+      <MemoPopularRecipesSection
+        colors={colors}
+        translate={translate}
+        popularRecipes={popularRecipes}
+        popularRecipesLoading={popularRecipesLoading}
+        navigation={navigation}
+      />
 
       {/* Continents Filter */}
       <View style={styles.section}>
@@ -520,15 +454,6 @@ function HomeHeader({
         navigation={navigation}
       />
 
-      {/* Popüler Tarifler */}
-      <MemoPopularRecipesSection
-        colors={colors}
-        translate={translate}
-        popularRecipes={popularRecipes}
-        popularRecipesLoading={popularRecipesLoading}
-        navigation={navigation}
-      />
-
       {/* Koleksiyonlar (Haftanın Özel Derlemesi + Yöresel Keşif) */}
       <MemoCollectionsSection
         colors={colors}
@@ -594,6 +519,8 @@ function HomeHeader({
             style={[styles.clearFiltersButton, { backgroundColor: colors.error }]}
             onPress={clearFilters}
             activeOpacity={0.8}
+            accessibilityRole="button"
+            accessibilityLabel={translate('clearFilters')}
           >
             <X size={18} color="#FFFFFF" />
             <Text style={styles.clearFiltersText}>{translate('clearFilters')}</Text>
@@ -653,7 +580,6 @@ export default function HomeScreen({ navigation }) {
     dailyMenuLoading,
     popularRecipes,
     popularRecipesLoading,
-    featuredRecipes,
   } = useApp();
 
   useEffect(() => {
@@ -754,7 +680,6 @@ export default function HomeScreen({ navigation }) {
             onLayout={headerOnLayout}
             colors={colors}
             translate={translate}
-            featuredRecipes={featuredRecipes}
             navigation={navigation}
             selectedContinent={selectedContinent}
             selectedCategory={selectedCategory}
@@ -802,49 +727,6 @@ const styles = StyleSheet.create({
   },
   countBadge: { paddingHorizontal: 12, paddingVertical: 4, borderRadius: 12 },
   countText: { color: '#FFFFFF', fontSize: 14, fontWeight: '700' },
-  carouselSection: { paddingTop: 16, marginBottom: 8 },
-  carouselContent: { paddingHorizontal: 16 },
-  carouselItem: {
-    width: CAROUSEL_WIDTH,
-    height: 220,
-    borderRadius: 20,
-    marginRight: 16,
-    overflow: 'hidden',
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-  },
-  carouselGradient: { flex: 1, position: 'relative' },
-  carouselEmoji: {
-    position: 'absolute',
-    fontSize: 100,
-    opacity: 0.2,
-    top: '50%',
-    left: '50%',
-    transform: [{ translateX: -50 }, { translateY: -50 }],
-    zIndex: 1,
-  },
-  carouselImage: { flex: 1, position: 'relative' },
-  carouselImageStyle: { ...StyleSheet.absoluteFillObject, opacity: 0.85 },
-  carouselOverlay: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    padding: 20,
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
-  },
-  carouselName: { fontSize: 24, fontWeight: '800', color: '#FFFFFF', marginBottom: 4 },
-  carouselCountry: { fontSize: 16, fontWeight: '600', color: '#FFFFFF', opacity: 0.9 },
-  dotsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 6,
-    marginTop: 16,
-    paddingHorizontal: 16,
-  },
-  dot: { height: 8, borderRadius: 4 },
   continentsGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: CARD_GAP },
   continentCard: {
     borderRadius: 20,

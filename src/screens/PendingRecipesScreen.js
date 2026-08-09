@@ -191,6 +191,8 @@ export default function PendingRecipesScreen({ navigation }) {
                   style={[styles.actionBtn, { backgroundColor: colors.primary + '20' }]}
                   onPress={() => navigation.navigate('RecipeDetail', { recipe: { ...recipe, isFirebase: true } })}
                   activeOpacity={0.7}
+                  accessibilityRole="button"
+                  accessibilityLabel={`Tarifi Görüntüle - ${recipe.name}`}
                 >
                   <Eye size={18} color={colors.primary} />
                 </TouchableOpacity>
@@ -198,6 +200,8 @@ export default function PendingRecipesScreen({ navigation }) {
                   style={[styles.actionBtn, { backgroundColor: '#22C55E20' }]}
                   onPress={() => handleApprove(recipe)}
                   activeOpacity={0.7}
+                  accessibilityRole="button"
+                  accessibilityLabel={`${translate('approveRecipe')} - ${recipe.name}`}
                 >
                   <CheckCircle2 size={18} color="#22C55E" />
                 </TouchableOpacity>
@@ -205,6 +209,8 @@ export default function PendingRecipesScreen({ navigation }) {
                   style={[styles.actionBtn, { backgroundColor: '#EF444420' }]}
                   onPress={() => handleReject(recipe)}
                   activeOpacity={0.7}
+                  accessibilityRole="button"
+                  accessibilityLabel={`${translate('rejectRecipe')} - ${recipe.name}`}
                 >
                   <XCircle size={18} color="#EF4444" />
                 </TouchableOpacity>
@@ -219,6 +225,8 @@ export default function PendingRecipesScreen({ navigation }) {
             onPress={loadMorePendingRecipes}
             disabled={loadingMore}
             activeOpacity={0.7}
+            accessibilityRole="button"
+            accessibilityLabel="Daha Fazla Yükle"
           >
             {loadingMore ? (
               <ActivityIndicator size="small" color={colors.primary} />

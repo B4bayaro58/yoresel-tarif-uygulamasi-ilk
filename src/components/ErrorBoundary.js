@@ -35,7 +35,13 @@ export default class ErrorBoundary extends React.Component {
               {this.state.error.toString()}
             </Text>
           )}
-          <TouchableOpacity style={styles.button} onPress={this.handleReset}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={this.handleReset}
+            accessibilityRole="button"
+            accessibilityLabel="Tekrar Dene"
+            accessibilityHint="Uygulamayı yeniden başlatmayı dener"
+          >
             <Text style={styles.buttonText}>Tekrar Dene</Text>
           </TouchableOpacity>
         </View>

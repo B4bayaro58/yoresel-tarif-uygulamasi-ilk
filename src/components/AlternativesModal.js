@@ -35,7 +35,11 @@ export default function AlternativesModal() {
             <Text style={[styles.title, { color: colors.text }]}>
               {translate('alternativesFor')} {selectedIngredient.name}
             </Text>
-            <TouchableOpacity onPress={closeAlternatives}>
+            <TouchableOpacity
+              onPress={closeAlternatives}
+              accessibilityRole="button"
+              accessibilityLabel={translate('close')}
+            >
               <X size={24} color={colors.textSecondary} />
             </TouchableOpacity>
           </View>
@@ -86,6 +90,8 @@ export default function AlternativesModal() {
           <TouchableOpacity
             style={[styles.closeButton, { backgroundColor: colors.primary }]}
             onPress={closeAlternatives}
+            accessibilityRole="button"
+            accessibilityLabel={translate('close')}
           >
             <Text style={styles.closeButtonText}>{translate('close')}</Text>
           </TouchableOpacity>
