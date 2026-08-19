@@ -11,8 +11,9 @@ import {
   Dimensions,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Star, Clock, Plus, X, Check, Search } from 'lucide-react-native';
+import { Star, Clock, Plus, X, Check, Search, Crown } from 'lucide-react-native';
 import { useApp } from '../contexts/AppContext';
+import { useSubscription } from '../contexts/SubscriptionContext';
 import RecipeCard from '../components/RecipeCard';
 
 const { width } = Dimensions.get('window');
@@ -225,12 +226,42 @@ export default function MenuScreen({ navigation }) {
     personalMenuIds,
     togglePersonalMenu,
   } = useApp();
+  const { isPremium } = useSubscription();
 
   const [pickerVisible, setPickerVisible] = useState(false);
 
   const handleRecipePress = useCallback((recipe) => {
     navigation.navigate('RecipeDetail', { recipe });
   }, [navigation]);
+
+  // Tab basışı zaten abone olmayanları Paywall'a yönlendiriyor (AppNavigator.js)
+  // ama abonelik ekran açıkken sona ererse (ör. arka planda) burada da bir
+  // savunma katmanı olsun.
+  if (!isPremium) {
+    return (
+      <View style={[styles.container, styles.lockedContainer, { backgroundColor: colors.background }]}>
+        <View style={[styles.lockedCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
+          <View style={[styles.lockedIconCircle, { backgroundColor: colors.primary + '20' }]}>
+            <Crown color={colors.primary} size={32} />
+          </View>
+          <Text style={[styles.lockedTitle, { color: colors.text }]}>
+            {translate('premium')}
+          </Text>
+          <Text style={[styles.lockedSubtitle, { color: colors.textSecondary }]}>
+            {translate('personalMenuFeature')}
+          </Text>
+          <TouchableOpacity
+            style={[styles.lockedButton, { backgroundColor: colors.primary }]}
+            onPress={() => navigation.navigate('Paywall')}
+            accessibilityRole="button"
+            accessibilityLabel={translate('goPremium')}
+          >
+            <Text style={styles.lockedButtonText}>{translate('goPremium')}</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  }
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -338,6 +369,27 @@ export default function MenuScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: { flex: 1 },
   scroll: { padding: 16, paddingBottom: 32 },
+
+  lockedContainer: { alignItems: 'center', justifyContent: 'center', padding: 24 },
+  lockedCard: {
+    width: '100%',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderRadius: 20,
+    padding: 28,
+  },
+  lockedIconCircle: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 16,
+  },
+  lockedTitle: { fontSize: 20, fontWeight: '800', marginBottom: 8 },
+  lockedSubtitle: { fontSize: 14, textAlign: 'center', marginBottom: 20 },
+  lockedButton: { paddingHorizontal: 24, paddingVertical: 14, borderRadius: 12 },
+  lockedButtonText: { color: '#FFFFFF', fontSize: 15, fontWeight: '700' },
 
   section: { marginBottom: 28 },
   sectionHeader: { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 14 },

@@ -12,6 +12,7 @@ import { CheckCircle2, XCircle, Eye } from 'lucide-react-native';
 import { collection, getDocs, getDoc, query, where, orderBy, limit, startAfter, documentId, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { useApp } from '../contexts/AppContext';
+import { deleteImageByUrl } from '../services/imageUploadService';
 
 // Onay bekleyen kuyruk kötüye kullanımla (spam gönderim) sınırsız büyüyebilir
 // -- limitsiz okumak hem maliyeti hem de ekranın yüklenme süresini büyütür.
@@ -132,6 +133,7 @@ export default function PendingRecipesScreen({ navigation }) {
           onPress: async () => {
             try {
               await deleteDoc(doc(db, 'recipes', recipe.id));
+              deleteImageByUrl(recipe.photo);
               setPendingRecipes(prev => prev.filter(r => r.id !== recipe.id));
               showNotification(translate('recipeRejected'));
             } catch (error) {

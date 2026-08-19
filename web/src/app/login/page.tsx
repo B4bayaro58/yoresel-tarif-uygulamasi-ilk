@@ -2,8 +2,10 @@
 
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Eye, EyeOff, Mail, Lock, LogIn } from 'lucide-react'
+import { Eye, EyeOff, Mail, Lock, LogIn, UserPlus, User, X } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
+import { useApp } from '@/contexts/AppContext'
+import GoogleIcon from '@/components/GoogleIcon'
 
 function mapFirebaseError(code: string): string {
   switch (code) {
@@ -35,24 +37,83 @@ const inputBase: React.CSSProperties = {
 
 export default function LoginPage() {
   const router = useRouter()
-  const { user, login } = useAuth()
+  const { user, login, register, loginWithGoogle, loginAsGuest, resetPassword } = useAuth()
+  const { t } = useApp()
 
+  const [isRegister, setIsRegister] = useState(false)
+  const [displayName, setDisplayName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [guestLoading, setGuestLoading] = useState(false)
+  const [googleLoading, setGoogleLoading] = useState(false)
+
+  const [showResetModal, setShowResetModal] = useState(false)
+  const [resetEmail, setResetEmail] = useState('')
+  const [resetError, setResetError] = useState('')
+  const [resetSent, setResetSent] = useState(false)
+  const [resetLoading, setResetLoading] = useState(false)
 
   useEffect(() => { if (user) router.push('/') }, [user, router])
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
-    if (!email || !password) { setError('E-posta ve şifre zorunludur.'); return }
+    if (!email || !password) { setError(t('fillAllFieldsLogin')); return }
+    if (isRegister && !displayName.trim()) { setError(t('enterName')); return }
     setLoading(true)
-    try { await login(email, password); router.push('/') }
+    try {
+      if (isRegister) await register(email, password, displayName.trim())
+      else await login(email, password)
+      router.push('/')
+    }
     catch (err: any) { setError(mapFirebaseError(err.code || '')) }
     finally { setLoading(false) }
+  }
+
+  const handleGuestLogin = async () => {
+    setError('')
+    setGuestLoading(true)
+    try { await loginAsGuest(); router.push('/') }
+    catch { setError('Bir hata oluştu. Lütfen tekrar deneyin.') }
+    finally { setGuestLoading(false) }
+  }
+
+  const handleGoogleSignIn = async () => {
+    setError('')
+    setGoogleLoading(true)
+    try { await loginWithGoogle(); router.push('/') }
+    catch (err: any) {
+      // Kullanıcı popup'ı kapatırsa hata gösterme, sadece gerçek hatalarda göster
+      if (err?.code !== 'auth/popup-closed-by-user' && err?.code !== 'auth/cancelled-popup-request') {
+        setError(t('googleSignInError'))
+      }
+    }
+    finally { setGoogleLoading(false) }
+  }
+
+  const openResetModal = () => {
+    setResetEmail(email)
+    setResetError('')
+    setResetSent(false)
+    setShowResetModal(true)
+  }
+
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!resetEmail.trim()) return
+    setResetLoading(true)
+    setResetError('')
+    try {
+      await resetPassword(resetEmail.trim())
+      setResetSent(true)
+    } catch {
+      setResetError(t('resetPasswordError'))
+    } finally {
+      setResetLoading(false)
+    }
   }
 
   return (
@@ -67,10 +128,10 @@ export default function LoginPage() {
             🍽️
           </div>
           <h1 className="font-display font-bold text-2xl mb-1" style={{ color: 'var(--text)' }}>
-            Yöresel Tarifler
+            Yöresel Tarif
           </h1>
           <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
-            Lezzet Atlası'na hoş geldiniz
+            {isRegister ? t('createAccount') : "Lezzet Atlası'na hoş geldiniz"}
           </p>
         </div>
 
@@ -94,7 +155,21 @@ export default function LoginPage() {
               </div>
             )}
 
-            <form onSubmit={handleLogin} className="space-y-3">
+            <form onSubmit={handleSubmit} className="space-y-3">
+              {isRegister && (
+                <div className="relative">
+                  <User size={15} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--text-muted)' }} />
+                  <input
+                    type="text"
+                    value={displayName}
+                    onChange={(e) => setDisplayName(e.target.value)}
+                    placeholder={t('fullName')}
+                    autoCorrect="off"
+                    spellCheck={false}
+                    style={inputBase}
+                  />
+                </div>
+              )}
               <div className="relative">
                 <Mail size={15} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--text-muted)' }} />
                 <input
@@ -113,7 +188,7 @@ export default function LoginPage() {
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Şifre"
+                  placeholder={t('password')}
                   style={{ ...inputBase, paddingRight: '2.5rem' }}
                 />
                 <button
@@ -125,22 +200,135 @@ export default function LoginPage() {
                   {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
                 </button>
               </div>
+              {!isRegister && (
+                <div className="flex justify-end">
+                  <button
+                    type="button"
+                    onClick={openResetModal}
+                    className="text-xs font-semibold hover:opacity-70 transition-opacity"
+                    style={{ color: 'var(--primary)' }}
+                  >
+                    {t('resetPassword')}
+                  </button>
+                </div>
+              )}
               <button
                 type="submit"
                 disabled={loading}
                 className="btn-primary w-full flex items-center justify-center gap-2 py-3 rounded-2xl font-semibold text-sm mt-2"
               >
-                <LogIn size={15} />
-                {loading ? 'Giriş yapılıyor...' : 'Giriş Yap'}
+                {isRegister ? <UserPlus size={15} /> : <LogIn size={15} />}
+                {loading
+                  ? (isRegister ? 'Kayıt olunuyor...' : 'Giriş yapılıyor...')
+                  : t(isRegister ? 'registerButton' : 'loginButton')}
               </button>
             </form>
+
+            <div className="flex items-center gap-3 mt-4">
+              <div className="flex-1 h-px" style={{ backgroundColor: 'var(--border)' }} />
+              <span className="text-xs font-semibold" style={{ color: 'var(--text-muted)' }}>{t('orDivider')}</span>
+              <div className="flex-1 h-px" style={{ backgroundColor: 'var(--border)' }} />
+            </div>
+
+            <button
+              type="button"
+              onClick={handleGoogleSignIn}
+              disabled={googleLoading}
+              className="w-full flex items-center justify-center gap-2.5 py-3 rounded-2xl text-sm font-semibold mt-4 transition-opacity hover:opacity-80 disabled:opacity-50"
+              style={{ backgroundColor: '#FFFFFF', border: '1px solid #DADCE0', color: '#3C4043' }}
+            >
+              <GoogleIcon size={18} />
+              {googleLoading ? '...' : t('continueWithGoogle')}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => { setIsRegister((v) => !v); setError('') }}
+              className="w-full text-center text-sm mt-4 hover:opacity-70 transition-opacity"
+              style={{ color: 'var(--text-muted)' }}
+            >
+              {t(isRegister ? 'hasAccount' : 'noAccount')}
+              <span className="font-semibold" style={{ color: 'var(--primary)' }}>
+                {t(isRegister ? 'loginButton' : 'registerButton')}
+              </span>
+            </button>
+
+            <button
+              type="button"
+              onClick={handleGuestLogin}
+              disabled={guestLoading}
+              className="w-full text-center text-sm mt-3 underline underline-offset-2 hover:opacity-70 transition-opacity disabled:opacity-50"
+              style={{ color: 'var(--text-muted)' }}
+            >
+              {t('continueAsGuest')}
+            </button>
           </div>
         </div>
-
-        <p className="text-center text-xs mt-6" style={{ color: 'var(--text-muted)' }}>
-          Sadece yetkili hesaplar giriş yapabilir.
-        </p>
       </div>
+
+      {/* ── Şifre sıfırlama modalı ─────────────────── */}
+      {showResetModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
+          onClick={(e) => { if (e.target === e.currentTarget) setShowResetModal(false) }}
+        >
+          <div className="w-full max-w-sm rounded-3xl p-6" style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)' }}>
+            <div className="flex items-center justify-between mb-5">
+              <h2 className="text-lg font-bold" style={{ color: 'var(--text)' }}>{t('resetPassword')}</h2>
+              <button
+                onClick={() => setShowResetModal(false)}
+                className="p-1.5 rounded-xl hover:opacity-70 transition-opacity"
+                style={{ color: 'var(--text-muted)' }}
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {resetSent ? (
+              <div className="text-center py-2">
+                <p className="text-sm mb-5" style={{ color: 'var(--text)' }}>{t('resetPasswordSent')}</p>
+                <button
+                  onClick={() => setShowResetModal(false)}
+                  className="btn-primary w-full py-2.5 rounded-2xl text-sm font-semibold"
+                >
+                  {t('confirm')}
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleResetPassword} className="space-y-3">
+                {resetError && (
+                  <div
+                    className="px-4 py-3 rounded-2xl text-sm"
+                    style={{ backgroundColor: 'rgba(196,89,58,0.1)', color: '#C4593A', border: '1px solid rgba(196,89,58,0.2)' }}
+                  >
+                    {resetError}
+                  </div>
+                )}
+                <div className="relative">
+                  <Mail size={15} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--text-muted)' }} />
+                  <input
+                    type="email"
+                    value={resetEmail}
+                    onChange={(e) => setResetEmail(e.target.value)}
+                    placeholder="E-posta adresi"
+                    autoCorrect="off"
+                    spellCheck={false}
+                    style={inputBase}
+                  />
+                </div>
+                <button
+                  type="submit"
+                  disabled={!resetEmail.trim() || resetLoading}
+                  className="btn-primary w-full py-2.5 rounded-2xl text-sm font-semibold disabled:opacity-50"
+                >
+                  {resetLoading ? '...' : t('confirm')}
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

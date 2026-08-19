@@ -1,11 +1,15 @@
 import type { Metadata } from 'next'
+import Script from 'next/script'
 import { Playfair_Display, Inter } from 'next/font/google'
 import './globals.css'
 import { AuthProvider } from '@/contexts/AuthContext'
 import { AppProvider } from '@/contexts/AppContext'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import AuthGuard from '@/components/AuthGuard'
+
+// Yayıncı ID'si tanımlıysa AdSense script'i yüklenir (bkz. AdSlot.tsx).
+// Tanımlı değilse script hiç eklenmez -- boşuna network isteği/CSP uyarısı yok.
+const ADSENSE_CLIENT_ID = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -24,23 +28,19 @@ const inter = Inter({
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://yoreseltarif.com'
 
-// Site şu an AuthGuard ile giriş zorunluluğu arkasında (tarif kalitesi henüz
-// istenen seviyeye gelmedi, bilinçli bir karar). Bu süre boyunca Google'ın
-// hiçbir zaman gerçek içerik göstermeyen bir yükleniyor ekranını indexleyip
-// crawl bütçesi harcamasını (ve marka aramalarında boş bir sonuç görünmesini)
-// önlemek için noindex. AuthGuard kaldırılıp site herkese açık hale gelince
-// bunu true yap -- tek değişiklik bu olacak, başka bir yerde dokunmaya gerek yok.
-const SITE_IS_PUBLIC = false
+// Site artık herkese açık (AuthGuard kaldırıldı, 2026-08-19) -- Google
+// indexleyebilir.
+const SITE_IS_PUBLIC = true
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: 'Yöresel Tarifler — Lezzet Atlası',
+  title: 'Yöresel Tarif — Lezzet Atlası',
   description:
     '1000\'den fazla yöresel tarif, dünyanın dört bir yanından özenle seçilmiş lezzetler. Favori tariflerinizi kaydedin, alışveriş listesi oluşturun.',
   keywords: 'tarif, yemek, dünya mutfağı, yöresel, recipe, lezzet atlası',
   robots: SITE_IS_PUBLIC ? undefined : { index: false, follow: false },
   openGraph: {
-    title: 'Yöresel Tarifler — Lezzet Atlası',
+    title: 'Yöresel Tarif — Lezzet Atlası',
     description: 'Dünyanın dört bir yanından 1000\'den fazla özgün yöresel tarif',
     type: 'website',
   },
@@ -59,19 +59,25 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://firebasestorage.googleapis.com" />
         <link rel="dns-prefetch" href="https://firebasestorage.googleapis.com" />
+        {ADSENSE_CLIENT_ID && (
+          <Script
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT_ID}`}
+            crossOrigin="anonymous"
+            strategy="afterInteractive"
+          />
+        )}
       </head>
       <body>
         <AuthProvider>
           <AppProvider>
-            <AuthGuard>
-              <div className="min-h-screen flex flex-col" style={{ backgroundColor: 'var(--bg)' }}>
-                <Header />
-                <main className="flex-1">
-                  {children}
-                </main>
-                <Footer />
-              </div>
-            </AuthGuard>
+            <div className="min-h-screen flex flex-col" style={{ backgroundColor: 'var(--bg)' }}>
+              <Header />
+              <main className="flex-1">
+                {children}
+              </main>
+              <Footer />
+            </div>
           </AppProvider>
         </AuthProvider>
       </body>

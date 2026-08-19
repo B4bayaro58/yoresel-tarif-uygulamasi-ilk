@@ -199,7 +199,7 @@ export default function AdminPage() {
             Admin Paneli
           </h1>
           <p className={clsx('text-sm', isDark ? 'text-dark-muted' : 'text-light-muted')}>
-            Yöresel Tarifler yönetim merkezi
+            Yöresel Tarif yönetim merkezi
           </p>
         </div>
       </div>

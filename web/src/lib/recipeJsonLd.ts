@@ -1,7 +1,7 @@
 import { Recipe } from '@/types'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://yoreseltarif.com'
-const SITE_NAME = 'Yöresel Tarifler'
+const SITE_NAME = 'Yöresel Tarif'
 
 // Dakika cinsinden bir süreyi schema.org'un beklediği ISO 8601 duration
 // formatına çevirir (ör. 45 -> "PT45M").

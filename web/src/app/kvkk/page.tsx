@@ -1,13 +1,13 @@
 import LegalPageLayout from '@/components/LegalPageLayout'
 
-export const metadata = { title: 'KVKK Aydınlatma Metni — Yöresel Tarifler' }
+export const metadata = { title: 'KVKK Aydınlatma Metni — Yöresel Tarif' }
 
 export default function KvkkPage() {
   return (
     <LegalPageLayout emoji="🛡️" title="KVKK Aydınlatma Metni" updatedAt="3 Temmuz 2026">
       <p>
         6698 sayılı Kişisel Verilerin Korunması Kanunu (&quot;<strong>KVKK</strong>&quot;) uyarınca, veri sorumlusu
-        sıfatıyla <strong>[Şirket/Şahıs Unvanı]</strong> (&quot;<strong>Yöresel Tarifler</strong>&quot;) olarak kişisel
+        sıfatıyla <strong>[Şirket/Şahıs Unvanı]</strong> (&quot;<strong>Yöresel Tarif</strong>&quot;) olarak kişisel
         verilerinizin işlenmesine ilişkin sizi bilgilendirmek isteriz.
       </p>
 

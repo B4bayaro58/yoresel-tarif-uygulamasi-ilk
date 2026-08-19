@@ -1,4 +1,4 @@
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import { storage } from '../config/firebase';
 
 let ImagePicker = null;
@@ -133,5 +133,19 @@ export const uploadRecipeImage = async (uri, recipeId) => {
   } catch (error) {
     console.error('Image upload error:', error);
     return { success: false, error: error.message };
+  }
+};
+
+// Hesap/tarif silindiğinde Storage'da yetim kalan fotoğrafları temizler
+// (bkz. mağaza inceleme denetimi 2026-08-09 — "ilişkili verileri sil"
+// politikası Firestore kaydını değil, yüklenen dosyayı da kapsıyor).
+// `url` bir Storage indirme linki değilse (ör. statik/varsayılan görsel)
+// deleteObject hata verir -- bu durum sessizce yutulur, işlemi bloklamamalı.
+export const deleteImageByUrl = async (url) => {
+  if (!url || !url.includes('firebasestorage')) return;
+  try {
+    await deleteObject(ref(storage, url));
+  } catch (error) {
+    console.warn('Image delete error:', error.message);
   }
 };

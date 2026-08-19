@@ -62,13 +62,13 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const recipe = await fetchRecipe(id)
 
   if (!recipe) {
-    return { title: 'Tarif Bulunamadı — Yöresel Tarifler' }
+    return { title: 'Tarif Bulunamadı — Yöresel Tarif' }
   }
 
-  const description = `${recipe.name} tarifi — ${recipe.country}${recipe.city ? `, ${recipe.city}` : ''}. ${recipe.prepTime} dakikada hazırlanır. Malzemeler, yapılış adımları ve daha fazlası Yöresel Tarifler'de.`
+  const description = `${recipe.name} tarifi — ${recipe.country}${recipe.city ? `, ${recipe.city}` : ''}. ${recipe.prepTime} dakikada hazırlanır. Malzemeler, yapılış adımları ve daha fazlası Yöresel Tarif'te.`
 
   return {
-    title: `${recipe.name} Tarifi — Yöresel Tarifler`,
+    title: `${recipe.name} Tarifi — Yöresel Tarif`,
     description,
     alternates: { canonical: `/recipes/${id}` },
     openGraph: {

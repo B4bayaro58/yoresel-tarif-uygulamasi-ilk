@@ -100,10 +100,13 @@ const formToRecipe = (f: FormState) => ({
   calories: Number(f.calories), rating: Number(f.rating),
   ingredients: f.ingredients
     .filter((i) => i.name.trim())
-    .map((i) => ({
-      name: i.name.trim(), amount: i.amount.trim(),
-      alternatives: i.alternatives ? i.alternatives.split(',').map((s) => s.trim()).filter(Boolean) : [],
-    })),
+    .map((i) => {
+      const alternatives = i.alternatives ? i.alternatives.split(',').map((s) => s.trim()).filter(Boolean) : []
+      return {
+        name: i.name.trim(), amount: i.amount.trim(),
+        ...(alternatives.length > 0 ? { alternatives } : {}),
+      }
+    }),
   equipment: f.equipment.filter((e) => e.trim()),
   steps: f.steps.filter((s) => s.trim()),
   tags: f.tags,

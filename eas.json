@@ -22,6 +22,14 @@
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        "ascAppId": "6801889814"
+      },
+      "android": {
+        "serviceAccountKeyPath": "C:/Users/FAZEON/Desktop/yoreselappleapıkey/yoresel-tarifler-dc95ffda2f6c.json",
+        "track": "internal"
+      }
+    }
   }
 }

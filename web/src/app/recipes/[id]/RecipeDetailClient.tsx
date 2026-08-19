@@ -27,6 +27,7 @@ import { db } from '@/config/firebase'
 import { useApp } from '@/contexts/AppContext'
 import { Recipe, ShoppingItem } from '@/types'
 import ReviewsSection from '@/components/ReviewsSection'
+import AdSlot from '@/components/AdSlot'
 import { isPreOptimized } from '@/lib/image'
 import { getOverrideRecipe } from '@/lib/overridePhoto'
 // @ts-ignore
@@ -292,6 +293,11 @@ export default function RecipeDetailClient({ initialRecipe }: RecipeDetailClient
         </button>
       </div>
 
+      {/* ── Reklam ─────────────────────────────── */}
+      <div className="mb-6">
+        <AdSlot slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_RECIPE_TOP} label="Tarif Reklamı" />
+      </div>
+
       {/* ── Ingredients ────────────────────────── */}
       <section className="mb-6">
         <h2 className="font-display font-bold text-lg mb-3 flex items-center gap-2" style={{ color: 'var(--text)' }}>
@@ -530,6 +536,11 @@ export default function RecipeDetailClient({ initialRecipe }: RecipeDetailClient
           </div>
         )}
       </section>
+
+      {/* ── Reklam ─────────────────────────────── */}
+      <div className="mb-6">
+        <AdSlot slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_RECIPE_BOTTOM} label="Tarif Alt Reklamı" />
+      </div>
 
       <ReviewsSection recipe={recipe} />
     </div>

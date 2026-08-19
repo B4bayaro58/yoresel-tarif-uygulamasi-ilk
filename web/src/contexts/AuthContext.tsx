@@ -12,9 +12,12 @@ import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
   signOut,
   signInAnonymously,
   updateProfile,
+  sendPasswordResetEmail,
 } from 'firebase/auth'
 import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore'
 import { auth, db } from '@/config/firebase'
@@ -25,8 +28,10 @@ interface AuthContextType {
   isAdmin: boolean
   login: (email: string, password: string) => Promise<void>
   register: (email: string, password: string, displayName: string) => Promise<void>
+  loginWithGoogle: () => Promise<void>
   logout: () => Promise<void>
   loginAsGuest: () => Promise<void>
+  resetPassword: (email: string) => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType | null>(null)
@@ -73,6 +78,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     })
   }
 
+  const loginWithGoogle = async () => {
+    const result = await signInWithPopup(auth, new GoogleAuthProvider())
+    const gUser = result.user
+
+    // Google ile ilk kez giriş yapan kullanıcı için register()'ın oluşturduğu
+    // şekille aynı users/{uid} dokümanını oluştur. Var olan dokümana asla
+    // dokunma -- isAdmin/favorites gibi alanlar korunmalı.
+    const userDocRef = doc(db, 'users', gUser.uid)
+    const snap = await getDoc(userDocRef)
+    if (!snap.exists()) {
+      await setDoc(userDocRef, {
+        uid: gUser.uid,
+        email: gUser.email,
+        displayName: gUser.displayName || '',
+        favorites: [],
+        createdAt: serverTimestamp(),
+      })
+    }
+  }
+
   const logout = async () => {
     await signOut(auth)
   }
@@ -81,8 +106,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await signInAnonymously(auth)
   }
 
+  const resetPassword = async (email: string) => {
+    await sendPasswordResetEmail(auth, email)
+  }
+
   return (
-    <AuthContext.Provider value={{ user, loading, isAdmin, login, register, logout, loginAsGuest }}>
+    <AuthContext.Provider value={{ user, loading, isAdmin, login, register, loginWithGoogle, logout, loginAsGuest, resetPassword }}>
       {children}
     </AuthContext.Provider>
   )

@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { ArrowLeft, Mail, MapPin, Instagram, Youtube, Twitter } from 'lucide-react'
 
-export const metadata = { title: 'İletişim — Yöresel Tarifler' }
+export const metadata = { title: 'İletişim — Yöresel Tarif' }
 
 const CHANNELS = [
   { icon: Mail, label: 'E-posta', value: 'info@yoreseltarif.com', href: 'mailto:info@yoreseltarif.com' },

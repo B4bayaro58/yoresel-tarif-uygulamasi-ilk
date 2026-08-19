@@ -1,12 +1,12 @@
 import LegalPageLayout from '@/components/LegalPageLayout'
 
-export const metadata = { title: 'Kullanım Koşulları — Yöresel Tarifler' }
+export const metadata = { title: 'Kullanım Koşulları — Yöresel Tarif' }
 
 export default function KullanimKosullariPage() {
   return (
     <LegalPageLayout emoji="📜" title="Kullanım Koşulları" updatedAt="3 Temmuz 2026">
       <p>
-        Yöresel Tarifler sitesini (&quot;<strong>Site</strong>&quot;) kullanarak aşağıdaki koşulları kabul etmiş
+        Yöresel Tarif sitesini (&quot;<strong>Site</strong>&quot;) kullanarak aşağıdaki koşulları kabul etmiş
         sayılırsınız. Lütfen siteyi kullanmadan önce bu koşulları dikkatlice okuyun.
       </p>
 

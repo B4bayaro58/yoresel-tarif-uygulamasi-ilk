@@ -44,11 +44,14 @@ export function captureError(error, context) {
   }
 }
 
+// Sadece uid gönderilir -- e-posta gibi PII crash raporlarına eklenmez
+// (bkz. mağaza inceleme denetimi 2026-08-09, Data Safety/App Privacy
+// beyanlarıyla uyumlu kalması için).
 export function setUser(user) {
   if (!Sentry || !SENTRY_DSN) return;
 
   if (user) {
-    Sentry.setUser({ id: user.uid, email: user.email });
+    Sentry.setUser({ id: user.uid });
   } else {
     Sentry.setUser(null);
   }

@@ -7,7 +7,7 @@ import clsx from 'clsx'
 
 const FAQ = [
   {
-    q: 'Yöresel Tarifler ücretsiz mi?',
+    q: 'Yöresel Tarif ücretsiz mi?',
     a: 'Evet, sitedeki tüm tarifleri görüntülemek, favorilere eklemek ve alışveriş listesi oluşturmak tamamen ücretsizdir.',
   },
   {

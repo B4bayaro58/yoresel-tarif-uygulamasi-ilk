@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, useContext, useMemo, useCallback } from 'react';
+import React, { createContext, useState, useEffect, useContext, useMemo, useCallback, useRef } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { collection, getDocs, query, where, limit, addDoc, updateDoc, deleteDoc, doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../config/firebase';
@@ -17,7 +17,10 @@ import { COUNTRY_I18N, RECIPE_I18N } from '../constants/recipeI18n';
 import { INGREDIENT_I18N, STEPS_I18N } from '../constants/recipeTranslationsI18n';
 import { getRank, getNextRank } from '../constants/ranks';
 import { getEarnedBadges } from '../constants/badges';
+import { DEFAULT_GROCERY_CATEGORY } from '../constants/groceryCategories';
+import { categorizeIngredient } from '../utils/groceryCategorizer';
 import { logFavoriteToggle, logShoppingAdd, logSearch, logRecipeComplete } from '../services/analyticsService';
+import { deleteImageByUrl } from '../services/imageUploadService';
 import { Alert, Linking, Platform } from 'react-native';
 
 const AppContext = createContext();
@@ -52,9 +55,15 @@ async function loadCachedRecipesChunked() {
     const keys = Array.from({ length: chunkCount }, (_, i) => `${RECIPE_CACHE_KEY_PREFIX}${i}`);
     const pairs = await AsyncStorage.multiGet(keys);
     const all = [];
+    // Her JSON.parse tek bir senkron adım -- 900+ tarifi tek seferde arka
+    // arkaya parse etmek JS thread'i bir kaç yüz ms boyunca kilitleyip
+    // uygulamanın "donmuş" hissettirmesine sebep oluyordu (dokunuşlar
+    // işlenmiyor). Parçalar arasına bir tick bırakmak toplam süreyi
+    // değiştirmiyor ama UI thread'inin nefes almasına izin veriyor.
     for (const [, value] of pairs) {
       if (!value) return null; // eksik parça varsa tüm cache güvenilmez sayılır
       all.push(...JSON.parse(value));
+      await new Promise(resolve => setTimeout(resolve, 0));
     }
     return all;
   } catch {
@@ -150,7 +159,11 @@ export const AppProvider = ({ children }) => {
     loadDailyMenu();
     loadPopularRecipes();
     loadFeaturedRecipes();
-    initNotifications();
+    // Bildirim izni istemi (native sistem popup'ı) ilk render'la aynı ana denk
+    // gelirse ekran "donmuş" gibi hissettiriyordu -- ana sayfa oturduktan
+    // sonra sorulacak şekilde erteleniyor.
+    const notifTimer = setTimeout(initNotifications, 2000);
+    return () => clearTimeout(notifTimer);
   }, []);
 
   const initNotifications = async () => {
@@ -390,8 +403,10 @@ export const AppProvider = ({ children }) => {
 
   const deleteRecipe = async (recipeId) => {
     try {
+      const photoUrl = recipes.find(r => r.id === recipeId)?.photo;
       await deleteDoc(doc(db, 'recipes', recipeId));
       setFirebaseRecipes(prev => prev.filter(r => r.id !== recipeId));
+      deleteImageByUrl(photoUrl);
       return { success: true };
     } catch (error) {
       console.error('Error deleting recipe:', error);
@@ -484,7 +499,18 @@ export const AppProvider = ({ children }) => {
     const visibleFirebase = firebaseRecipes.filter(
       r => !r.status || r.status === 'approved' || r.status === 'published'
     );
-    return [...filteredStatic, ...visibleFirebase];
+    // Statik katalog (~1100 tarif) her zaman Firebase'den önce eklendiği için
+    // anasayfada hep aynı statik tarifler en üstte çıkıyordu, yeni eklenen
+    // Firebase tarifleri hiç görünmüyordu -- iki listeyi karıştırıyoruz.
+    // Fisher-Yates: recipes yalnızca [language, firebaseRecipes] değişince
+    // yeniden hesaplanıyor, yani sıra filtre/scroll etkileşimleri sırasında
+    // sabit kalıyor, sadece tarif listesi gerçekten değişince yeniden karışıyor.
+    const combined = [...filteredStatic, ...visibleFirebase];
+    for (let i = combined.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [combined[i], combined[j]] = [combined[j], combined[i]];
+    }
+    return combined;
   }, [language, firebaseRecipes]);
 
   // Override edilmiş statik tarifler `recipes`'te artık kendi Firebase ID'siyle
@@ -569,6 +595,13 @@ export const AppProvider = ({ children }) => {
       id: Date.now().toString(),
       name: item.name,
       amount: item.amount,
+      // category/recipeId/recipeName her zaman kaydedilir (tier'dan bağımsız) --
+      // sadece gruplu görünüm/tarif etiketi Premium'a özel, veri kaybı olmasın
+      // diye ücretsiz kullanıcıdan da bu bilgiler saklanır.
+      // Elle kategori verilmemişse malzeme adından otomatik tahmin edilir.
+      category: item.category || categorizeIngredient(item.name) || DEFAULT_GROCERY_CATEGORY,
+      recipeId: item.recipeId,
+      recipeName: item.recipeName,
       checked: false,
     };
     setShoppingList(prev => {
@@ -579,6 +612,37 @@ export const AppProvider = ({ children }) => {
     showNotification(t('addToShoppingList', language));
     logShoppingAdd(item.name);
   }, [currentUserId, language, showNotification]);
+
+  const addMultipleToShoppingList = useCallback((items) => {
+    if (!items || items.length === 0) return;
+    const now = Date.now();
+    const newItems = items.map((item, index) => ({
+      id: `${now}-${index}`,
+      name: item.name,
+      amount: item.amount,
+      category: item.category || categorizeIngredient(item.name) || DEFAULT_GROCERY_CATEGORY,
+      recipeId: item.recipeId,
+      recipeName: item.recipeName,
+      checked: false,
+    }));
+    setShoppingList(prev => {
+      const updated = [...prev, ...newItems];
+      if (currentUserId) saveShoppingListToFirebase(currentUserId, updated);
+      return updated;
+    });
+    showNotification(t('allIngredientsAdded', language));
+    items.forEach(item => logShoppingAdd(item.name));
+  }, [currentUserId, language, showNotification]);
+
+  const updateShoppingItemCategory = useCallback((itemId, category) => {
+    setShoppingList(prev => {
+      const updated = prev.map(item =>
+        item.id === itemId ? { ...item, category } : item
+      );
+      if (currentUserId) saveShoppingListToFirebase(currentUserId, updated);
+      return updated;
+    });
+  }, [currentUserId]);
 
   const toggleShoppingItem = useCallback((itemId) => {
     setShoppingList(prev => {
@@ -834,6 +898,17 @@ export const AppProvider = ({ children }) => {
     }
   }, [timerActive]);
 
+  // Header logo'ya basınca anasayfayı en üste kaydırmak için: HomeScreen kendi
+  // scroll fonksiyonunu mount olduğunda bu ref'e yazar, header (AppNavigator
+  // içinde, HomeScreen'den ayrı bir component) bunu çağırır.
+  const homeScrollToTopRef = useRef(null);
+  const registerHomeScrollToTop = useCallback((fn) => {
+    homeScrollToTopRef.current = fn;
+  }, []);
+  const scrollHomeToTop = useCallback(() => {
+    homeScrollToTopRef.current?.();
+  }, []);
+
   // Alternatives Modal
   const openAlternatives = useCallback((ingredient) => {
     setSelectedIngredient(ingredient);
@@ -898,7 +973,9 @@ export const AppProvider = ({ children }) => {
 
     // Shopping List
     addToShoppingList,
+    addMultipleToShoppingList,
     toggleShoppingItem,
+    updateShoppingItemCategory,
     deleteShoppingItem,
     deleteSelectedShoppingItems,
     clearShoppingList,
@@ -930,6 +1007,10 @@ export const AppProvider = ({ children }) => {
     // Search
     showSearch,
     setShowSearch,
+
+    // Home scroll-to-top (header logo)
+    registerHomeScrollToTop,
+    scrollHomeToTop,
 
     // Alternatives
     showAlternatives,

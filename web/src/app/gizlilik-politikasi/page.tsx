@@ -1,12 +1,12 @@
 import LegalPageLayout from '@/components/LegalPageLayout'
 
-export const metadata = { title: 'Gizlilik Politikası — Yöresel Tarifler' }
+export const metadata = { title: 'Gizlilik Politikası — Yöresel Tarif' }
 
 export default function GizlilikPolitikasiPage() {
   return (
     <LegalPageLayout emoji="🔒" title="Gizlilik Politikası" updatedAt="3 Temmuz 2026">
       <p>
-        Yöresel Tarifler (&quot;<strong>Site</strong>&quot;) olarak kullanıcılarımızın gizliliğine önem veriyoruz.
+        Yöresel Tarif (&quot;<strong>Site</strong>&quot;) olarak kullanıcılarımızın gizliliğine önem veriyoruz.
         Bu Gizlilik Politikası, siteyi kullanırken hangi kişisel verilerin toplandığını, nasıl kullanıldığını
         ve nasıl korunduğunu açıklar.
       </p>

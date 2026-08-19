@@ -2,6 +2,8 @@ import React, { createContext, useState, useEffect, useContext } from 'react';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signInWithCredential,
+  GoogleAuthProvider,
   signOut,
   onAuthStateChanged,
   updateProfile,
@@ -13,6 +15,9 @@ import {
 import { doc, getDoc, setDoc, deleteDoc, collection, query, where, getDocs, writeBatch } from 'firebase/firestore';
 import { auth, db } from '../config/firebase';
 import { useApp } from './AppContext';
+import { deleteImageByUrl } from '../services/imageUploadService';
+import { setUser as setSentryUser } from '../services/sentryService';
+import { signInWithGoogle, isGoogleSignInAvailable } from '../services/googleAuthService';
 
 const AuthContext = createContext();
 
@@ -39,6 +44,7 @@ export const AuthProvider = ({ children }) => {
       if (firebaseUser) {
         setUser(firebaseUser);
         setCurrentUserId(firebaseUser.uid);
+        setSentryUser(firebaseUser);
         // Resolve immediately from the hardcoded email so the app doesn't block
         // startup on a Firestore round-trip; the real per-user flag (set via
         // ManageUsersScreen's "promote to admin") arrives right after and only
@@ -57,6 +63,7 @@ export const AuthProvider = ({ children }) => {
         setUser(null);
         setIsAdmin(false);
         setCurrentUserId(null);
+        setSentryUser(null);
         setLoading(false);
       }
     });
@@ -105,6 +112,37 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const loginWithGoogle = async () => {
+    try {
+      const idToken = await signInWithGoogle();
+      if (!idToken) return { success: false, error: null }; // kullanıcı vazgeçti, hata değil
+
+      const credential = GoogleAuthProvider.credential(idToken);
+      const result = await signInWithCredential(auth, credential);
+      const fUser = result.user;
+
+      // Google ile ilk kez giriş yapan kullanıcı için register()'ın
+      // oluşturduğu şekille aynı users/{uid} dokümanını oluştur. Var olan
+      // dokümana asla dokunma -- isAdmin/favorites gibi alanlar korunmalı.
+      const userDocRef = doc(db, 'users', fUser.uid);
+      const snap = await getDoc(userDocRef);
+      if (!snap.exists()) {
+        await setDoc(userDocRef, {
+          uid: fUser.uid,
+          email: fUser.email,
+          displayName: fUser.displayName || '',
+          createdAt: new Date().toISOString(),
+          favorites: [],
+          createdRecipes: [],
+        });
+      }
+
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: translate('googleSignInError') };
+    }
+  };
+
   const resetPassword = async (email) => {
     try {
       await sendPasswordResetEmail(auth, email.trim());
@@ -124,6 +162,7 @@ export const AuthProvider = ({ children }) => {
       await reauthenticateWithCredential(currentUser, credential);
 
       const uid = currentUser.uid;
+      const avatarUrl = currentUser.photoURL;
       const batch = writeBatch(db);
 
       // Delete user's Firestore document
@@ -139,9 +178,16 @@ export const AuthProvider = ({ children }) => {
       const recipesSnap = await getDocs(
         query(collection(db, 'recipes'), where('submittedBy', '==', uid))
       );
+      const recipePhotoUrls = recipesSnap.docs.map(d => d.data().photo).filter(Boolean);
       recipesSnap.forEach(d => batch.delete(d.ref));
 
       await batch.commit();
+
+      // Firestore kayıtları silindikten sonra Storage'daki yetim dosyaları
+      // temizle (profil fotoğrafı + gönderilen tariflerin fotoğrafları) --
+      // hesap silme politikasının "ilişkili tüm veriler" şartı Storage'ı da
+      // kapsıyor (bkz. mağaza inceleme denetimi 2026-08-09).
+      await Promise.all([avatarUrl, ...recipePhotoUrls].map(deleteImageByUrl));
 
       // Delete Firebase Auth user last
       await deleteUser(currentUser);
@@ -179,6 +225,8 @@ export const AuthProvider = ({ children }) => {
     loading,
     register,
     login,
+    loginWithGoogle,
+    isGoogleSignInAvailable: isGoogleSignInAvailable(),
     logout,
     resetPassword,
     deleteAccount,

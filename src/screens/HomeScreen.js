@@ -11,12 +11,17 @@ import {
 } from 'react-native';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Search, X, Check, Clock, Star } from 'lucide-react-native';
+import {
+  Search, X, Clock, Star, SlidersHorizontal,
+  UtensilsCrossed, Flame, Compass, Newspaper, LayoutGrid, LogIn,
+} from 'lucide-react-native';
 import { useApp } from '../contexts/AppContext';
+import { useAuth } from '../contexts/AuthContext';
 import { CONTINENTS } from '../constants/continents';
 import { CATEGORIES } from '../constants/categories';
 import { QUICK_FILTERS } from '../constants/recipeTags';
 import RecipeCard from '../components/RecipeCard';
+import AdBanner from '../components/AdBanner';
 import SearchModal from '../components/SearchModal';
 import { RecipeGridSkeleton } from '../components/SkeletonLoader';
 import { getCollections } from '../services/collectionsService';
@@ -24,27 +29,236 @@ import { getLatestBlogPosts, formatBlogDate } from '../services/blogService';
 import { getGridPhotoUrl } from '../utils/imageResize';
 
 const { width } = Dimensions.get('window');
-const CARD_GAP = 12;
-const CONTINENT_CARD_WIDTH = (width - 48 - CARD_GAP) / 2;
-const CONTINENT_CARD_HEIGHT = CONTINENT_CARD_WIDTH * 0.72;
 
-const CONTINENT_CARD_COLORS = {
-  europe: { bg: ['#EDF2FF', '#DBE4FF'], bgDark: ['#1A2744', '#243B6A'], accent: '#4A6CF7', accentLight: ['#DBE4FF', '#C5D0FF'] },
-  asia: { bg: ['#FFF4E6', '#FFE8CC'], bgDark: ['#2D1A00', '#4A2E08'], accent: '#E8590C', accentLight: ['#FFE8CC', '#FFD4A8'] },
-  africa: { bg: ['#EBFBEE', '#D3F9D8'], bgDark: ['#0A2E12', '#144A22'], accent: '#2B8A3E', accentLight: ['#D3F9D8', '#B5F5C4'] },
-  'north-america': { bg: ['#E7F5FF', '#D0EBFF'], bgDark: ['#0A1F38', '#132F54'], accent: '#1864AB', accentLight: ['#D0EBFF', '#A5D8FF'] },
-  'south-america': { bg: ['#F3F0FF', '#E5DBFF'], bgDark: ['#1A1040', '#2B1A6A'], accent: '#7048E8', accentLight: ['#E5DBFF', '#D0BFFF'] },
-  'central-america': { bg: ['#E6FCF5', '#C3FAE8'], bgDark: ['#0A2E22', '#0E4A38'], accent: '#087F5B', accentLight: ['#C3FAE8', '#96F2D7'] },
-  oceania: { bg: ['#FFF5F5', '#FFE3E3'], bgDark: ['#2E0A0A', '#4A1414'], accent: '#C92A2A', accentLight: ['#FFE3E3', '#FFC9C9'] },
-  'turkish-cuisine': { bg: ['#FFF0F0', '#FFD6D6'], bgDark: ['#2E0A0A', '#4A1A1A'], accent: '#C0392B', accentLight: ['#FFD6D6', '#FFBDBD'] },
-};
+// Kıta/kategori çiplerinin seçili hali, Koleksiyon/Blog fallback'leri ve
+// misafir CTA banner'ı için tek, tutarlı marka gradyanı -- web sitesiyle
+// aynı amber/turuncu (bkz. web/src/app/HomeClient.tsx). Hızlı filtreler
+// kendi (çeşitlilik katan) gradyanını korur.
+const PRIMARY_GRADIENT = ['#B97A1A', '#D99520'];
+// Filtreler kartının çevresini saran ince çizgi için PRIMARY_GRADIENT'in
+// açık/pastel tonu.
+const PRIMARY_GRADIENT_LIGHT = ['#F5DDA8', '#F0C874'];
+// Bölüm başlıklarının arka planı için açık gümüş gri (koyu temada karşılığı).
+const SILVER_LIGHT = '#EEF0F3';
+const SILVER_DARK = '#2C2F36';
+
+// Anasayfadaki her bölüm başlığı kendi ikon rozeti + gradyanıyla ayrışıyor
+// ki "Günün Menüsü", "Popüler Tarifler" vb. göz gezdirirken birbirinden
+// belirgin şekilde ayırt edilsin (bkz. SectionHeader bileşeni).
+const AMBER_GRADIENT = ['#F6A93B', '#DB8A1A'];
+const ROSE_GRADIENT = ['#FB6F92', '#E23F63'];
+const TEAL_GRADIENT = ['#2DD4BF', '#0D9488'];
+const INDIGO_GRADIENT = ['#818CF8', '#5457D8'];
+
+// Kıta ve kategori filtreleri birebir aynı görsel yapıyı paylaşıyor --
+// tekrar etmemek için ortak bir çip bileşeni (seçiliyken gradyan dolgu +
+// renkli "glow" gölge, seçili değilken ince kenarlıklı düz yüzey).
+function FilterChip({ emoji, label, isSelected, onPress, colors, accessibilityLabel }) {
+  if (isSelected) {
+    // Gölge (shadow) ve gradyanın kendi köşe kırpması (overflow:hidden) aynı
+    // view'de çakışınca iOS'ta gölge tamamen kayboluyor -- gölgeyi dıştaki
+    // düz TouchableOpacity'de, yuvarlatılmış gradyan dolgusunu iç view'de
+    // tutuyoruz.
+    return (
+      <TouchableOpacity
+        style={[styles.chipTouchable, { shadowColor: PRIMARY_GRADIENT[1] }]}
+        onPress={onPress}
+        activeOpacity={0.85}
+        accessibilityRole="button"
+        accessibilityLabel={accessibilityLabel}
+        accessibilityState={{ selected: true }}
+      >
+        <LinearGradient
+          colors={PRIMARY_GRADIENT}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={[styles.categoryChip, styles.categoryChipSelected]}
+        >
+          <Text style={styles.categoryIcon}>{emoji}</Text>
+          <Text style={[styles.categoryText, styles.categoryTextSelected]}>{label}</Text>
+        </LinearGradient>
+      </TouchableOpacity>
+    );
+  }
+  return (
+    <TouchableOpacity
+      style={[
+        styles.categoryChip,
+        styles.chipSpacing,
+        { backgroundColor: colors.background, borderColor: colors.border },
+      ]}
+      onPress={onPress}
+      activeOpacity={0.7}
+      accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel}
+      accessibilityState={{ selected: false }}
+    >
+      <Text style={styles.categoryIcon}>{emoji}</Text>
+      <Text style={[styles.categoryText, { color: colors.text }]}>{label}</Text>
+    </TouchableOpacity>
+  );
+}
+
+// Anasayfadaki büyük bölüm başlıkları (Günün Menüsü, Popüler Tarifler, Tüm
+// Tarifler vb.) hepsi düz metindi, göz gezdirirken birbirinden ayrışmıyordu.
+// Her bölüm artık kendi renkli gradyan ikon rozetiyle görsel olarak belirgin.
+function SectionHeader({ icon: Icon, gradient, title, colors, right, style }) {
+  const isDark = colors.background === '#121212';
+  return (
+    <View style={[styles.sectionHeaderRow, style]}>
+      <View style={styles.sectionHeaderLeft}>
+        <LinearGradient
+          colors={gradient}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.sectionIconBadge}
+        >
+          <Icon size={15} color="#FFFFFF" strokeWidth={2.5} />
+        </LinearGradient>
+        <View style={[styles.sectionHeaderTitleBadge, { backgroundColor: isDark ? SILVER_DARK : SILVER_LIGHT }]}>
+          <Text style={[styles.sectionHeaderTitle, { color: colors.text }]} numberOfLines={1}>
+            {title}
+          </Text>
+        </View>
+      </View>
+      {right}
+    </View>
+  );
+}
+
+// Web'deki ana sayfanın saat bazlı selamlama eşikleriyle birebir aynı.
+function getGreetingKey(hour) {
+  if (hour < 11) return 'greetingMorning';
+  if (hour < 15) return 'greetingNoon';
+  if (hour < 19) return 'greetingAfternoon';
+  return 'greetingEvening';
+}
+
+// "Dünyanın {Lezzetleri}" gibi bir başlık metnini düz/vurgulu iki parçaya
+// ayırır -- {...} içindeki kısım marka gradyanının rengiyle vurgulanır
+// (bkz. translations.js homeHeroHeading, her dilde vurgulanan kelime farklı
+// yerde olabildiği için düz string birleştirme yerine bu ayraç kullanılıyor).
+function parseAccentHeading(text) {
+  const match = text.match(/^(.*?)\{(.+)\}(.*)$/);
+  if (!match) return { before: text, accent: '', after: '' };
+  return { before: match[1], accent: match[2], after: match[3] };
+}
+
+// === Hero (selamlama + arama) ================================================
+function HeroSection({ colors, translate, onSearchPress }) {
+  const greetingKey = useMemo(() => getGreetingKey(new Date().getHours()), []);
+  const heading = useMemo(() => parseAccentHeading(translate('homeHeroHeading')), [translate]);
+
+  return (
+    <View style={styles.heroSection}>
+      <View style={[styles.heroEyebrow, { backgroundColor: colors.card, borderColor: colors.border }]}>
+        <Text style={[styles.heroEyebrowText, { color: colors.primary }]}>
+          ✦ {translate('homeHeroEyebrow')}
+        </Text>
+      </View>
+      <Text style={[styles.heroHeading, { color: colors.text }]}>
+        {heading.before}
+        <Text style={[styles.heroHeadingAccent, { color: colors.primary }]}>{heading.accent}</Text>
+        {heading.after}
+      </Text>
+      <Text style={[styles.heroGreeting, { color: colors.textSecondary }]}>
+        {translate(greetingKey)}
+      </Text>
+      <TouchableOpacity
+        style={[styles.heroSearchBar, { backgroundColor: colors.card, borderColor: colors.border }]}
+        onPress={onSearchPress}
+        activeOpacity={0.8}
+        accessibilityRole="button"
+        accessibilityLabel={translate('search')}
+      >
+        <Search size={18} color={colors.textSecondary} />
+        <Text style={[styles.heroSearchPlaceholder, { color: colors.textTertiary }]} numberOfLines={1}>
+          {translate('homeHeroSearchPlaceholder')}
+        </Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+const MemoHeroSection = React.memo(HeroSection);
+
+// === Hızlı Filtreler (hero'nun altında, web ile aynı konumda) ===============
+// Not: bu çip listesi Filtreler kartında TEKRARLANMIYOR -- web de aynı
+// şekilde hızlı filtreleri yalnızca burada gösteriyor, ayrı bir kontrol
+// olarak tekrar sunmuyor.
+function QuickFilterRow({ selectedQuickFilter, onQuickFilterPress, colors, translate }) {
+  return (
+    <View style={styles.quickFilterSection}>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.quickFilterScroll}
+      >
+        {QUICK_FILTERS.map(qf => {
+          const isSelected = selectedQuickFilter === qf.key;
+          if (isSelected) {
+            return (
+              <TouchableOpacity
+                key={qf.key}
+                style={[styles.chipTouchable, { shadowColor: qf.gradient[1] }]}
+                onPress={() => onQuickFilterPress(qf.key)}
+                activeOpacity={0.85}
+                accessibilityRole="button"
+                accessibilityLabel={translate(qf.labelKey)}
+                accessibilityState={{ selected: true }}
+              >
+                <LinearGradient
+                  colors={qf.gradient}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={[styles.quickFilterChip, styles.categoryChipSelected]}
+                >
+                  <View style={[styles.quickFilterBadge, { backgroundColor: 'rgba(255,255,255,0.28)' }]}>
+                    <Text style={styles.quickFilterBadgeEmoji}>{qf.emoji}</Text>
+                  </View>
+                  <Text style={[styles.categoryText, styles.categoryTextSelected]}>
+                    {translate(qf.labelKey)}
+                  </Text>
+                </LinearGradient>
+              </TouchableOpacity>
+            );
+          }
+          return (
+            <TouchableOpacity
+              key={qf.key}
+              style={[
+                styles.quickFilterChip,
+                styles.chipSpacing,
+                { backgroundColor: colors.card, borderColor: colors.border },
+              ]}
+              onPress={() => onQuickFilterPress(qf.key)}
+              activeOpacity={0.7}
+              accessibilityRole="button"
+              accessibilityLabel={translate(qf.labelKey)}
+              accessibilityState={{ selected: false }}
+            >
+              <View style={[styles.quickFilterBadge, { backgroundColor: qf.gradient[0] + '26' }]}>
+                <Text style={styles.quickFilterBadgeEmoji}>{qf.emoji}</Text>
+              </View>
+              <Text style={[styles.categoryText, { color: colors.text }]}>
+                {translate(qf.labelKey)}
+              </Text>
+            </TouchableOpacity>
+          );
+        })}
+      </ScrollView>
+    </View>
+  );
+}
+
+const MemoQuickFilterRow = React.memo(QuickFilterRow);
 
 // === Gunun Menusu ============================================================
 function DailyMenuSection({ colors, translate, dailyMenu, dailyMenuLoading, navigation }) {
   if (dailyMenuLoading) {
     return (
       <View style={styles.dailyMenuSection}>
-        <Text style={[styles.sectionTitle, { color: colors.text }]}>{translate('dailyMenu')}</Text>
+        <SectionHeader icon={UtensilsCrossed} gradient={AMBER_GRADIENT} title={translate('dailyMenu')} colors={colors} />
         <ActivityIndicator size="small" color={colors.primary} style={{ marginTop: 8 }} />
       </View>
     );
@@ -52,7 +266,7 @@ function DailyMenuSection({ colors, translate, dailyMenu, dailyMenuLoading, navi
 
   return (
     <View style={styles.dailyMenuSection}>
-      <Text style={[styles.sectionTitle, { color: colors.text }]}>{translate('dailyMenu')}</Text>
+      <SectionHeader icon={UtensilsCrossed} gradient={AMBER_GRADIENT} title={translate('dailyMenu')} colors={colors} />
       {dailyMenu.length === 0 ? (
         <View style={[styles.dailyMenuEmpty, { backgroundColor: colors.card, borderColor: colors.border }]}>
           <Text style={[styles.dailyMenuEmptyText, { color: colors.textSecondary }]}>
@@ -132,7 +346,7 @@ function PopularRecipesSection({ colors, translate, popularRecipes, popularRecip
 
   return (
     <View style={styles.dailyMenuSection}>
-      <Text style={[styles.sectionTitle, { color: colors.text }]}>{translate('popularRecipesTitle')}</Text>
+      <SectionHeader icon={Flame} gradient={ROSE_GRADIENT} title={translate('popularRecipesTitle')} colors={colors} />
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.dailyMenuScroll}>
         {popularRecipes.map(item => (
           <TouchableOpacity
@@ -164,10 +378,13 @@ function PopularRecipesSection({ colors, translate, popularRecipes, popularRecip
               <Star size={10} color="#FFFFFF" fill="#FFFFFF" />
               <Text style={styles.popularRatingText}>{item.rating}</Text>
             </View>
-            <View style={styles.popularCardOverlay}>
+            <LinearGradient
+              colors={['transparent', 'rgba(0,0,0,0.75)']}
+              style={styles.popularCardOverlay}
+            >
               <Text style={styles.popularCardName} numberOfLines={2}>{item.name}</Text>
               <Text style={styles.popularCardCountry} numberOfLines={1}>{item.country}</Text>
-            </View>
+            </LinearGradient>
           </TouchableOpacity>
         ))}
       </ScrollView>
@@ -198,7 +415,7 @@ function CollectionsSection({ colors, translate, collections, navigation }) {
             <Image source={{ uri: featured.coverPhoto }} style={StyleSheet.absoluteFillObject} contentFit="cover" />
           ) : (
             <LinearGradient
-              colors={['#B97A1A', '#D99520']}
+              colors={PRIMARY_GRADIENT}
               style={StyleSheet.absoluteFillObject}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
@@ -221,9 +438,7 @@ function CollectionsSection({ colors, translate, collections, navigation }) {
 
       {regional.length > 0 && (
         <View style={{ marginTop: 16 }}>
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>
-            {translate('regionalDiscoveryTitle')}
-          </Text>
+          <SectionHeader icon={Compass} gradient={TEAL_GRADIENT} title={translate('regionalDiscoveryTitle')} colors={colors} />
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.dailyMenuScroll}>
             {regional.map(c => (
               <TouchableOpacity
@@ -265,17 +480,23 @@ function BlogSection({ colors, translate, latestPosts, navigation }) {
 
   return (
     <View style={styles.dailyMenuSection}>
-      <View style={styles.blogHeaderRow}>
-        <Text style={[styles.sectionTitle, { color: colors.text, marginBottom: 0 }]}>{translate('blogSectionTitle')}</Text>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('BlogList')}
-          activeOpacity={0.7}
-          accessibilityRole="button"
-          accessibilityLabel={translate('blogSeeAll')}
-        >
-          <Text style={[styles.blogSeeAll, { color: colors.primary }]}>{translate('blogSeeAll')}</Text>
-        </TouchableOpacity>
-      </View>
+      <SectionHeader
+        icon={Newspaper}
+        gradient={INDIGO_GRADIENT}
+        title={translate('blogSectionTitle')}
+        colors={colors}
+        style={styles.sectionHeaderNoMargin}
+        right={
+          <TouchableOpacity
+            onPress={() => navigation.navigate('BlogList')}
+            activeOpacity={0.7}
+            accessibilityRole="button"
+            accessibilityLabel={translate('blogSeeAll')}
+          >
+            <Text style={[styles.blogSeeAll, { color: colors.primary }]}>{translate('blogSeeAll')}</Text>
+          </TouchableOpacity>
+        }
+      />
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.dailyMenuScroll}>
         {latestPosts.map(post => (
           <TouchableOpacity
@@ -296,7 +517,7 @@ function BlogSection({ colors, translate, latestPosts, navigation }) {
               />
             ) : (
               <LinearGradient
-                colors={['#B97A1A', '#D99520']}
+                colors={PRIMARY_GRADIENT}
                 style={StyleSheet.absoluteFillObject}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
@@ -315,135 +536,63 @@ function BlogSection({ colors, translate, latestPosts, navigation }) {
 
 const MemoBlogSection = React.memo(BlogSection);
 
+// === Misafir/anonim giriş çağrısı (grid'in altında, yalnızca oturum
+// açılmamışken -- web'deki anonim kullanıcı CTA banner'ının karşılığı) ====
+function GuestCTABanner({ colors, translate, onPress }) {
+  return (
+    <LinearGradient
+      colors={PRIMARY_GRADIENT}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={styles.guestCta}
+    >
+      <View style={{ flex: 1 }}>
+        <Text style={styles.guestCtaTitle}>{translate('ecosystemSyncBannerTitle')}</Text>
+        <Text style={styles.guestCtaDesc}>{translate('ecosystemSyncBannerDesc')}</Text>
+      </View>
+      <TouchableOpacity
+        style={styles.guestCtaButton}
+        onPress={onPress}
+        activeOpacity={0.85}
+        accessibilityRole="button"
+        accessibilityLabel={translate('loginButton')}
+      >
+        <LogIn size={15} color={PRIMARY_GRADIENT[1]} strokeWidth={2.5} />
+        <Text style={[styles.guestCtaButtonText, { color: PRIMARY_GRADIENT[1] }]}>
+          {translate('loginButton')}
+        </Text>
+      </TouchableOpacity>
+    </LinearGradient>
+  );
+}
+
 // Header ayri component -- stable referans icin HomeScreen disinda tanimlanir
 function HomeHeader({
   colors, translate, navigation,
+  onSearchPress,
   selectedContinent, selectedCategory,
   onContinentPress, onCategoryPress,
   selectedQuickFilter, onQuickFilterPress,
   activeFilters, clearFilters,
-  filteredCount, recipesLoading,
+  recipesLoading,
   dailyMenu, dailyMenuLoading,
   popularRecipes, popularRecipesLoading,
   collections,
   latestPosts,
 }) {
-  const isDark = colors.background === '#121212';
-
+  // Bölüm sırası web ana sayfasıyla birebir eşleşiyor: Hero -> Hızlı
+  // Filtreler -> Günün Menüsü -> Popüler -> Koleksiyonlar -> Blog ->
+  // Filtreler kartı (artık yalnızca Kıta/Kategori) -> Tüm Tarifler.
   return (
     <View>
-      {/* Popüler Tarifler */}
-      <MemoPopularRecipesSection
+      <MemoHeroSection colors={colors} translate={translate} onSearchPress={onSearchPress} />
+
+      <MemoQuickFilterRow
         colors={colors}
         translate={translate}
-        popularRecipes={popularRecipes}
-        popularRecipesLoading={popularRecipesLoading}
-        navigation={navigation}
+        selectedQuickFilter={selectedQuickFilter}
+        onQuickFilterPress={onQuickFilterPress}
       />
-
-      {/* Continents Filter */}
-      <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: colors.text }]}>
-          {translate('continentFilter')}
-        </Text>
-        <View style={styles.continentsGrid}>
-          {CONTINENTS.map(continent => {
-            const isSelected = selectedContinent === continent.id;
-            const cardColors = CONTINENT_CARD_COLORS[continent.id];
-            const gradientBg = isDark ? cardColors.bgDark : cardColors.bg;
-            return (
-              <TouchableOpacity
-                key={continent.id}
-                style={[
-                  styles.continentCard,
-                  { width: CONTINENT_CARD_WIDTH, height: CONTINENT_CARD_HEIGHT },
-                  isSelected && styles.continentCardSelected,
-                ]}
-                onPress={() => onContinentPress(continent.id)}
-                activeOpacity={0.8}
-                accessibilityRole="button"
-                accessibilityLabel={translate('continent-' + continent.id)}
-                accessibilityState={{ selected: isSelected }}
-              >
-                <LinearGradient
-                  colors={isSelected ? cardColors.accentLight : gradientBg}
-                  style={styles.continentCardGradient}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
-                >
-                  {isSelected && (
-                    <View style={[styles.selectionBadge, { backgroundColor: cardColors.accent }]}>
-                      <Check size={12} color="#FFFFFF" strokeWidth={3} />
-                    </View>
-                  )}
-                  <View style={styles.chefEmojiContainer}>
-                    <Text style={styles.chefEmoji}>{continent.chef}</Text>
-                    <Text style={styles.foodEmoji}>{continent.food}</Text>
-                  </View>
-                  <View style={styles.continentLabelContainer}>
-                    <Text
-                      style={[
-                        styles.continentName,
-                        { color: isSelected ? cardColors.accent : colors.text },
-                        isSelected && styles.continentNameSelected,
-                      ]}
-                      numberOfLines={1}
-                      adjustsFontSizeToFit
-                      minimumFontScale={0.7}
-                    >
-                      {translate('continent-' + continent.id)}
-                    </Text>
-                  </View>
-                </LinearGradient>
-                {isSelected && (
-                  <View
-                    style={[styles.continentSelectedBorder, { borderColor: cardColors.accent }]}
-                    pointerEvents="none"
-                  />
-                )}
-              </TouchableOpacity>
-            );
-          })}
-        </View>
-      </View>
-
-      {/* Quick Filters */}
-      <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: colors.text }]}>
-          {translate('quickFiltersTitle')}
-        </Text>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.categoriesContainer}
-        >
-          {QUICK_FILTERS.map(qf => {
-            const isSelected = selectedQuickFilter === qf.key;
-            return (
-              <TouchableOpacity
-                key={qf.key}
-                style={[
-                  styles.quickFilterChip,
-                  { backgroundColor: colors.card, borderColor: colors.border },
-                  isSelected && { backgroundColor: colors.primary, borderColor: colors.primary },
-                ]}
-                onPress={() => onQuickFilterPress(qf.key)}
-                activeOpacity={0.7}
-                accessibilityRole="button"
-                accessibilityLabel={translate(qf.labelKey)}
-                accessibilityState={{ selected: isSelected }}
-              >
-                <View style={[styles.quickFilterBadge, { backgroundColor: isSelected ? '#FFFFFF' : qf.gradient[0] + '26' }]}>
-                  <Text style={styles.quickFilterBadgeEmoji}>{qf.emoji}</Text>
-                </View>
-                <Text style={[styles.categoryText, { color: colors.text }, isSelected && { color: '#FFFFFF' }]}>
-                  {translate(qf.labelKey)}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
-        </ScrollView>
-      </View>
 
       {/* Daily Menu */}
       <MemoDailyMenuSection
@@ -451,6 +600,15 @@ function HomeHeader({
         translate={translate}
         dailyMenu={dailyMenu}
         dailyMenuLoading={dailyMenuLoading}
+        navigation={navigation}
+      />
+
+      {/* Popüler Tarifler */}
+      <MemoPopularRecipesSection
+        colors={colors}
+        translate={translate}
+        popularRecipes={popularRecipes}
+        popularRecipesLoading={popularRecipesLoading}
         navigation={navigation}
       />
 
@@ -462,6 +620,10 @@ function HomeHeader({
         navigation={navigation}
       />
 
+      <View style={styles.adRow}>
+        <AdBanner size="banner" />
+      </View>
+
       {/* Blog */}
       <MemoBlogSection
         colors={colors}
@@ -470,46 +632,90 @@ function HomeHeader({
         navigation={navigation}
       />
 
-      {/* Categories Filter */}
-      <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: colors.text }]}>
-          {translate('categoryFilter')}
-        </Text>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.categoriesContainer}
+      {/* Filtreler -- Kıta / Kategori tek bir premium kart içinde. Hızlı
+          filtreler artık burada tekrarlanmıyor, hero'nun hemen altında
+          (web'deki gibi) -- aynı kontrolü iki yerde göstermemek için.
+          Çevresini saran ince gradyan çizgi için üç katman: gölgeyi taşıyan
+          düz dış kabuk + gradyan "çerçeve" + kartın gerçek arka planını
+          taşıyan iç yüzey (gölge ve yuvarlatılmış gradyan aynı view'de
+          olursa iOS'ta gölge kayboluyor, bkz. FilterChip'teki aynı çözüm). */}
+      <View style={[styles.filtersCardOuter, { shadowColor: colors.shadow }]}>
+        <LinearGradient
+          colors={PRIMARY_GRADIENT_LIGHT}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.filtersCardBorder}
         >
-          {CATEGORIES.map(category => (
-            <TouchableOpacity
-              key={category.id}
-              style={[
-                styles.categoryChip,
-                { backgroundColor: colors.card, borderColor: colors.border },
-                selectedCategory === category.id && {
-                  backgroundColor: colors.primary,
-                  borderColor: colors.primary,
-                },
-              ]}
-              onPress={() => onCategoryPress(category.id)}
-              activeOpacity={0.7}
-              accessibilityRole="button"
-              accessibilityLabel={translate('category-' + category.id)}
-              accessibilityState={{ selected: selectedCategory === category.id }}
-            >
-              <Text style={styles.categoryIcon}>{category.icon}</Text>
-              <Text
-                style={[
-                  styles.categoryText,
-                  { color: colors.text },
-                  selectedCategory === category.id && { color: '#FFFFFF' },
-                ]}
+          <View style={[styles.filtersCard, { backgroundColor: colors.card }]}>
+            <View style={styles.filtersCardHeader}>
+              <LinearGradient
+                colors={PRIMARY_GRADIENT}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.filtersIconBadge}
               >
-                {translate('category-' + category.id)}
+                <SlidersHorizontal size={15} color="#FFFFFF" strokeWidth={2.5} />
+              </LinearGradient>
+              <Text style={[styles.filtersCardTitle, { color: colors.text }]}>
+                {translate('filtersTitle')}
               </Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
+            </View>
+
+            <View style={styles.filterRow}>
+              <View style={styles.filterRowLabelRow}>
+                <View style={[styles.filterRowLabelAccent, { backgroundColor: colors.primary }]} />
+                <Text style={[styles.filterRowLabel, { color: colors.textSecondary }]}>
+                  {translate('continentFilter')}
+                </Text>
+              </View>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.categoriesContainer}
+              >
+                {CONTINENTS.map(continent => (
+                  <FilterChip
+                    key={continent.id}
+                    emoji={continent.emoji}
+                    label={translate('continent-' + continent.id)}
+                    isSelected={selectedContinent === continent.id}
+                    onPress={() => onContinentPress(continent.id)}
+                    colors={colors}
+                    accessibilityLabel={translate('continent-' + continent.id)}
+                  />
+                ))}
+              </ScrollView>
+            </View>
+
+            <View style={[styles.filterDivider, { backgroundColor: colors.border }]} />
+
+            <View style={[styles.filterRow, styles.filterRowLast]}>
+              <View style={styles.filterRowLabelRow}>
+                <View style={[styles.filterRowLabelAccent, { backgroundColor: colors.primary }]} />
+                <Text style={[styles.filterRowLabel, { color: colors.textSecondary }]}>
+                  {translate('categoryFilter')}
+                </Text>
+              </View>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.categoriesContainer}
+              >
+                {CATEGORIES.map(category => (
+                  <FilterChip
+                    key={category.id}
+                    emoji={category.icon}
+                    label={translate('category-' + category.id)}
+                    isSelected={selectedCategory === category.id}
+                    onPress={() => onCategoryPress(category.id)}
+                    colors={colors}
+                    accessibilityLabel={translate('category-' + category.id)}
+                  />
+                ))}
+              </ScrollView>
+            </View>
+          </View>
+        </LinearGradient>
       </View>
 
       {/* Clear Filters */}
@@ -529,14 +735,13 @@ function HomeHeader({
       )}
 
       {/* Recipe section header */}
-      <View style={styles.recipeHeaderRow}>
-        <Text style={[styles.sectionTitle, { color: colors.text, marginBottom: 0 }]}>
-          {translate('allRecipes')}
-        </Text>
-        <View style={[styles.countBadge, { backgroundColor: colors.primary }]}>
-          <Text style={styles.countText}>{filteredCount}</Text>
-        </View>
-      </View>
+      <SectionHeader
+        icon={LayoutGrid}
+        gradient={PRIMARY_GRADIENT}
+        title={translate('allRecipes')}
+        colors={colors}
+        style={styles.recipeHeaderRow}
+      />
 
       {recipesLoading && (
         <View style={styles.skeletonWrapper}>
@@ -580,7 +785,9 @@ export default function HomeScreen({ navigation }) {
     dailyMenuLoading,
     popularRecipes,
     popularRecipesLoading,
+    registerHomeScrollToTop,
   } = useApp();
+  const { user, loading: authLoading, logout } = useAuth();
 
   useEffect(() => {
     navigation.setOptions({
@@ -614,6 +821,13 @@ export default function HomeScreen({ navigation }) {
 
   const flatListRef = useRef(null);
   const headerHeight = useRef(0);
+
+  useEffect(() => {
+    registerHomeScrollToTop(() => {
+      flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
+    });
+    return () => registerHomeScrollToTop(null);
+  }, [registerHomeScrollToTop]);
 
   const handleContinentPress = useCallback(
     id => setSelectedContinent(id === selectedContinent ? null : id),
@@ -667,6 +881,25 @@ export default function HomeScreen({ navigation }) {
     [recipesLoading, colors, translate]
   );
 
+  // Misafir "Giriş Yap" CTA'sı guest oturumundan çıkar -- AppNavigator zaten
+  // (user || isGuest) false olunca AuthStack'e geçiyor (bkz. ProfileScreen'in
+  // aynı deseni kullanan çıkış butonu).
+  const handleGuestLoginPress = useCallback(() => {
+    logout();
+  }, [logout]);
+
+  const renderFooter = useCallback(
+    () => (
+      <View>
+        {!authLoading && !user && (
+          <GuestCTABanner colors={colors} translate={translate} onPress={handleGuestLoginPress} />
+        )}
+        <View style={{ height: 20 }} />
+      </View>
+    ),
+    [authLoading, user, colors, translate, handleGuestLoginPress]
+  );
+
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <FlatList
@@ -681,6 +914,7 @@ export default function HomeScreen({ navigation }) {
             colors={colors}
             translate={translate}
             navigation={navigation}
+            onSearchPress={() => setShowSearch(true)}
             selectedContinent={selectedContinent}
             selectedCategory={selectedCategory}
             onContinentPress={handleContinentPress}
@@ -689,7 +923,6 @@ export default function HomeScreen({ navigation }) {
             onQuickFilterPress={handleQuickFilterPress}
             activeFilters={activeFilters}
             clearFilters={clearFilters}
-            filteredCount={filteredRecipes.length}
             recipesLoading={recipesLoading}
             dailyMenu={dailyMenu}
             dailyMenuLoading={dailyMenuLoading}
@@ -700,7 +933,7 @@ export default function HomeScreen({ navigation }) {
           />
         }
         ListEmptyComponent={renderEmpty}
-        ListFooterComponent={<View style={{ height: 20 }} />}
+        ListFooterComponent={renderFooter}
         columnWrapperStyle={styles.recipesRow}
         showsVerticalScrollIndicator={false}
         windowSize={5}
@@ -716,110 +949,180 @@ export default function HomeScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: { flex: 1 },
   headerSearchButton: { marginRight: 16, padding: 8 },
-  section: { paddingHorizontal: 16, marginBottom: 24 },
-  sectionTitle: { fontSize: 20, fontWeight: '700', marginBottom: 16 },
-  recipeHeaderRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
+  adRow: { alignItems: 'center', marginBottom: 24 },
+
+  // Hero
+  heroSection: { paddingHorizontal: 16, paddingTop: 4, marginBottom: 4 },
+  heroEyebrow: {
+    alignSelf: 'flex-start',
+    borderWidth: 1,
+    borderRadius: 999,
+    paddingVertical: 5,
+    paddingHorizontal: 12,
     marginBottom: 12,
-    paddingHorizontal: 16,
   },
-  countBadge: { paddingHorizontal: 12, paddingVertical: 4, borderRadius: 12 },
-  countText: { color: '#FFFFFF', fontSize: 14, fontWeight: '700' },
-  continentsGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: CARD_GAP },
-  continentCard: {
-    borderRadius: 20,
-    overflow: 'hidden',
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.12,
-    shadowRadius: 8,
-  },
-  continentCardSelected: {
-    elevation: 8,
-    shadowOpacity: 0.2,
-    shadowRadius: 12,
-    shadowOffset: { width: 0, height: 4 },
-  },
-  continentCardGradient: {
-    flex: 1,
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 8,
-  },
-  selectionBadge: {
-    position: 'absolute',
-    top: 8,
-    right: 8,
-    width: 22,
-    height: 22,
-    borderRadius: 11,
-    alignItems: 'center',
-    justifyContent: 'center',
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-  },
-  chefEmojiContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+  heroEyebrowText: { fontSize: 11, fontWeight: '800', letterSpacing: 0.6, textTransform: 'uppercase' },
+  heroHeading: { fontSize: 26, fontWeight: '800', letterSpacing: -0.2, lineHeight: 32, marginBottom: 6 },
+  heroHeadingAccent: { fontWeight: '800' },
+  heroGreeting: { fontSize: 14, marginBottom: 16 },
+  heroSearchBar: {
     flexDirection: 'row',
-    gap: 2,
+    alignItems: 'center',
+    gap: 10,
+    borderWidth: 1,
+    borderRadius: 16,
+    paddingVertical: 13,
+    paddingHorizontal: 16,
+    marginBottom: 20,
   },
-  chefEmoji: { fontSize: 36 },
-  foodEmoji: { fontSize: 20, position: 'absolute', bottom: 0, right: -6 },
-  continentLabelContainer: { alignItems: 'center', paddingTop: 4, paddingHorizontal: 4 },
-  continentName: { fontSize: 11, fontWeight: '600', textAlign: 'center', letterSpacing: 0.2 },
-  continentNameSelected: { fontWeight: '800', letterSpacing: 0.4 },
-  continentSelectedBorder: { ...StyleSheet.absoluteFillObject, borderRadius: 20, borderWidth: 2.5 },
-  categoriesContainer: { paddingRight: 16 },
+  heroSearchPlaceholder: { fontSize: 14, flexShrink: 1 },
+
+  // Hızlı Filtreler (hero'nun altında)
+  quickFilterSection: { marginBottom: 24 },
+  quickFilterScroll: { paddingHorizontal: 16, paddingRight: 8 },
+
+  // Misafir giriş CTA'sı
+  guestCta: {
+    marginHorizontal: 16,
+    marginTop: 4,
+    borderRadius: 18,
+    padding: 18,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 14,
+  },
+  guestCtaTitle: { color: '#FFF9EE', fontSize: 15, fontWeight: '800', lineHeight: 20, marginBottom: 4 },
+  guestCtaDesc: { color: 'rgba(255,249,238,0.9)', fontSize: 12, lineHeight: 17 },
+  guestCtaButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: '#FFF9EE',
+    borderRadius: 12,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+  },
+  guestCtaButtonText: { fontSize: 12.5, fontWeight: '800' },
+  // paddingHorizontal yok -- bu satır her zaman zaten 16px yatay boşluklu bir
+  // sarmalayıcının (dailyMenuSection vb.) içinde kullanılıyor, tek istisna
+  // (recipeHeaderRow, "Tüm Tarifler") kendi paddingHorizontal'ını ekliyor.
+  sectionHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 16,
+  },
+  sectionHeaderNoMargin: { marginBottom: 12 },
+  sectionHeaderLeft: { flexDirection: 'row', alignItems: 'center', gap: 10, flexShrink: 1 },
+  sectionIconBadge: {
+    width: 30,
+    height: 30,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  sectionHeaderTitleBadge: {
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 12,
+    flexShrink: 1,
+  },
+  sectionHeaderTitle: { fontSize: 17, fontWeight: '800', letterSpacing: 0.1, flexShrink: 1 },
+  recipeHeaderRow: { marginBottom: 12, paddingHorizontal: 16 },
+  filtersCardOuter: {
+    marginHorizontal: 16,
+    marginBottom: 24,
+    borderRadius: 24,
+    elevation: 4,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 1,
+    shadowRadius: 20,
+  },
+  // Gradyanın kendisi "çerçeve" -- padding kadarlık kısmı çerçeve kalınlığı
+  // olarak görünür kalıyor, geri kalanını içteki düz renkli View kaplıyor.
+  filtersCardBorder: {
+    borderRadius: 24,
+    padding: 1.5,
+    overflow: 'hidden',
+  },
+  filtersCard: {
+    borderRadius: 22.5,
+    paddingTop: 21,
+    paddingBottom: 18,
+    paddingHorizontal: 18,
+  },
+  filtersCardHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginBottom: 16,
+  },
+  filtersIconBadge: {
+    width: 30,
+    height: 30,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  filtersCardTitle: { fontSize: 17, fontWeight: '800', letterSpacing: 0.2 },
+  filterRow: { marginBottom: 16 },
+  filterRowLast: { marginBottom: 0 },
+  filterRowLabelRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 12,
+  },
+  filterRowLabelAccent: { width: 3, height: 12, borderRadius: 2 },
+  filterRowLabel: {
+    fontSize: 12,
+    fontWeight: '700',
+    letterSpacing: 0.8,
+    textTransform: 'uppercase',
+  },
+  filterDivider: { height: 1, opacity: 0.6, marginBottom: 16 },
+  categoriesContainer: { paddingRight: 8 },
+  chipSpacing: { marginRight: 10 },
+  // Seçili çip: gölgeyi taşıyan düz dış kabuk (bkz. FilterChip yorumu --
+  // gradyanın kendi köşe kırpmasıyla aynı view'de olursa iOS'ta gölge kayboluyor).
+  chipTouchable: {
+    marginRight: 10,
+    borderRadius: 20,
+    elevation: 6,
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.32,
+    shadowRadius: 9,
+  },
   categoryChip: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderRadius: 24,
-    borderWidth: 2,
-    marginRight: 12,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 20,
+    borderWidth: 1.5,
   },
-  categoryIcon: { fontSize: 18 },
-  categoryText: { fontSize: 14, fontWeight: '600' },
+  categoryChipSelected: { borderWidth: 0 },
+  categoryIcon: { fontSize: 16 },
+  categoryText: { fontSize: 13.5, fontWeight: '600', letterSpacing: 0.1 },
+  categoryTextSelected: { color: '#FFFFFF', fontWeight: '700' },
   quickFilterChip: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
-    paddingVertical: 9,
-    paddingHorizontal: 14,
-    borderRadius: 26,
-    borderWidth: 2,
-    marginRight: 12,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    gap: 9,
+    paddingVertical: 7,
+    paddingHorizontal: 13,
+    borderRadius: 22,
+    borderWidth: 1.5,
   },
   quickFilterBadge: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
+    width: 26,
+    height: 26,
+    borderRadius: 13,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  quickFilterBadgeEmoji: { fontSize: 15 },
+  quickFilterBadgeEmoji: { fontSize: 14 },
   clearFiltersContainer: { paddingHorizontal: 16, marginBottom: 16 },
   clearFiltersButton: {
     flexDirection: 'row',
@@ -904,7 +1207,7 @@ const styles = StyleSheet.create({
   popularCard: {
     width: 150,
     height: 190,
-    borderRadius: 16,
+    borderRadius: 18,
     marginRight: 12,
     overflow: 'hidden',
     elevation: 4,
@@ -932,19 +1235,17 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     padding: 10,
-    paddingTop: 24,
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    paddingTop: 32,
   },
   popularCardName: { color: '#FFFFFF', fontSize: 13, fontWeight: '800', lineHeight: 17 },
   popularCardCountry: { color: 'rgba(255,255,255,0.75)', fontSize: 11, marginTop: 2 },
 
   // Blog
-  blogHeaderRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 },
   blogSeeAll: { fontSize: 13, fontWeight: '700' },
   blogCard: {
     width: 200,
     height: 150,
-    borderRadius: 16,
+    borderRadius: 18,
     marginRight: 12,
     overflow: 'hidden',
     elevation: 4,
@@ -968,7 +1269,7 @@ const styles = StyleSheet.create({
   collectionsSection: { paddingHorizontal: 16, marginBottom: 24 },
   featuredCollectionCard: {
     height: 160,
-    borderRadius: 20,
+    borderRadius: 18,
     overflow: 'hidden',
     elevation: 4,
     shadowColor: '#000',
@@ -1002,7 +1303,7 @@ const styles = StyleSheet.create({
   regionalCard: {
     width: 180,
     height: 120,
-    borderRadius: 16,
+    borderRadius: 18,
     overflow: 'hidden',
     marginRight: 12,
     elevation: 3,

@@ -2,15 +2,13 @@
 
 import React, { useMemo } from 'react'
 import Link from 'next/link'
-import { Heart, LogIn } from 'lucide-react'
+import { Heart } from 'lucide-react'
 import { useApp } from '@/contexts/AppContext'
-import { useAuth } from '@/contexts/AuthContext'
 import RecipeCard from '@/components/RecipeCard'
 import { useAllRecipes } from '@/hooks/useAllRecipes'
 
 export default function FavoritesPage() {
   const { favorites, toggleFavorite, t } = useApp()
-  const { user } = useAuth()
   // Sadece statik katalogda değil, Firebase-native/override edilmiş tarifler
   // arasında da arıyor — önceden yalnızca statik kataloğa bakıldığı için
   // Firebase'de yaşayan tarifleri favorileyenler favoriler sayfasında hiçbir
@@ -21,32 +19,6 @@ export default function FavoritesPage() {
     () => allRecipes.filter((r) => favorites.includes(String(r.id))),
     [allRecipes, favorites]
   )
-
-  if (!user) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[70vh] px-4">
-        <div
-          className="w-20 h-20 rounded-3xl flex items-center justify-center text-4xl mb-5"
-          style={{ backgroundColor: 'var(--primary-dim)' }}
-        >
-          ❤️
-        </div>
-        <h2 className="font-display font-bold text-2xl mb-2" style={{ color: 'var(--text)' }}>
-          Favorilerinizi Görüntüleyin
-        </h2>
-        <p className="text-sm text-center mb-6 max-w-xs" style={{ color: 'var(--text-muted)' }}>
-          Favori tariflerinizi kaydetmek ve görüntülemek için giriş yapın.
-        </p>
-        <Link
-          href="/login"
-          className="btn-primary flex items-center gap-2 px-6 py-3 rounded-2xl font-semibold text-sm"
-        >
-          <LogIn size={15} />
-          Giriş Yap
-        </Link>
-      </div>
-    )
-  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">

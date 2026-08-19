@@ -15,6 +15,7 @@ import { isPreOptimized } from '@/lib/image'
 import { getCollections, EditorialCollection } from '@/lib/collections'
 import { getLatestBlogPosts } from '@/lib/blog'
 import { BlogPost } from '@/types'
+import AdSlot from '@/components/AdSlot'
 // @ts-ignore
 import { QUICK_FILTERS, getRecipeTags } from '@shared/recipeTags'
 
@@ -467,6 +468,11 @@ export default function HomeClient({ recipes, dailyMenuRecipes, popularRecipes }
             </div>
           </div>
         )}
+
+        {/* ── Reklam ────────────────────────────────────── */}
+        <div className="mb-8">
+          <AdSlot slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_HOME} label="Ana Sayfa Reklamı" />
+        </div>
 
         {/* ── En Güncel Yazılar ────────────────────────── */}
         {latestPosts.length > 0 && (

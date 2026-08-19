@@ -5,7 +5,7 @@ limitleri her platformun kendi kuralı; yapıştırmadan önce kontrol et.
 
 ## Google Play Console
 
-**Uygulama adı** (30 karakter): Yöresel Tarifler
+**Uygulama adı** (30 karakter): Yöresel Tarif
 
 **Kısa açıklama** (80 karakter sınırı):
 ```
@@ -15,7 +15,7 @@ Dünyanın 1000+ yöresel tarifi: adım adım pişir, listeni oluştur, rozet ka
 
 **Tam açıklama** (4000 karakter sınırı):
 ```
-Yöresel Tarifler ile dünyanın dört bir yanındaki mutfak kültürünü kaşifin
+Yöresel Tarif ile dünyanın dört bir yanındaki mutfak kültürünü kaşifin
 mutfağına taşı. 1000'den fazla yöresel tarif — her birinin arkasındaki
 hikayeyle birlikte.
 
@@ -33,16 +33,16 @@ hikayeyle birlikte.
 • Türkçe, İngilizce, Fransızca ve İtalyanca dil desteği
 • Karanlık/Aydınlık tema
 
-Yöresel Tarifler, hem yeni başlayanlar hem deneyimli aşçılar için: net
+Yöresel Tarif, hem yeni başlayanlar hem deneyimli aşçılar için: net
 adımlar, doğru porsiyon hesaplama ve keşfedilecek onlarca mutfak kültürüyle
 mutfakta kaybolmadan pişirmeni sağlar.
 ```
 
 **Kategori:** Yemek ve İçecek (Food & Drink)
 
-**Grafik varlıklar (henüz yok, hazırlanmalı):**
+**Grafik varlıklar:**
 - Uygulama ikonu 512×512 PNG (mevcut `assets/icon.png` 1024×1024 — Play Console'a yüklerken kontrol et)
-- Feature graphic 1024×500 PNG/JPG — **yok, oluşturulmalı**
+- Feature graphic 1024×500 PNG — **hazır: `store-listing/feature-graphic-1024x500.png`**
 - Telefon ekran görüntüleri: en az 2, önerilen 4-8 adet (16:9 veya 9:16) — **yok, gerçek cihaz/emulator'dan alınmalı**
 - (Opsiyonel ama önerilir) 7" ve 10" tablet ekran görüntüleri
 
@@ -54,7 +54,7 @@ mutfakta kaybolmadan pişirmeni sağlar.
 
 ## Apple App Store Connect
 
-**Uygulama adı** (30 karakter): Yöresel Tarifler
+**Uygulama adı** (30 karakter): Yöresel Tarif
 
 **Alt başlık / Subtitle** (30 karakter sınırı):
 ```
@@ -94,7 +94,8 @@ tarif,yemek,mutfak,pişirme,yöresel,dünya mutfağı,alışveriş listesi,tarif
 
 ## Genel eksik listesi (bu taslağın kapsamadığı, hâlâ elle yapılması gereken)
 
-1. Telefon + tablet/iPad ekran görüntüleri — gerçek cihaz veya simulator'dan alınmalı, sonra store boyutlarına göre kırpılmalı/kadraj yapılmalı.
-2. Play Store feature graphic (1024×500) — basit bir tasarım (uygulama adı + birkaç yemek emojisi/fotoğrafı) yeterli olur.
-3. Apple Developer Program ve Google Play Console hesap kayıtları (kullanıcı tarafından, dış işlem).
-4. İlk gerçek `eas submit` denemesi — hesaplar hazır olduğunda.
+1. Telefon + tablet/iPad ekran görüntüleri — gerçek cihaz veya simulator'dan alınmalı, sonra store boyutlarına göre kırpılmalı/kadraj yapılmalı. (2026-08-15: bu ortamda Android emulator çalıştırılamadı — nested virtualization desteklenmiyor, `CPUID.01H:ECX.avx/xsave` hataları. Kullanıcının kendi makinesinde alması gerekiyor.)
+2. ~~Play Store feature graphic (1024×500)~~ — **tamam**, `feature-graphic-1024x500.png` (2026-08-15, sharp ile SVG'den render edildi).
+3. ~~Apple Developer Program ve Google Play Console hesap kayıtları~~ — **tamam** (2026-08-15, kullanıcı onayladı).
+4. Play Console'da uygulama kaydı + mağaza listesi formu, App Store Connect'te app record — kullanıcının kendi hesabından yapması gerekiyor, bu oturumda erişilemez.
+5. İlk gerçek `eas submit` denemesi — hesaplar hazır, sıradaki adım.

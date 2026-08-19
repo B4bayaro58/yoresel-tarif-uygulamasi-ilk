@@ -10,14 +10,16 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { Image } from 'expo-image';
-import { Globe, Palette, Settings, LogOut, User as UserIcon, ChevronRight, Trash2, Shield, Camera } from 'lucide-react-native';
+import { Globe, Palette, Settings, LogOut, User as UserIcon, ChevronRight, Trash2, Shield, Camera, Crown } from 'lucide-react-native';
 import { useApp } from '../contexts/AppContext';
 import { useAuth } from '../contexts/AuthContext';
+import { useSubscription } from '../contexts/SubscriptionContext';
 import { getRank, getNextRank, RANKS } from '../constants/ranks';
 import { TRAVEL_BADGES, getEarnedBadges, getNextBadge } from '../constants/badges';
 import { pickAvatarImage, uploadRecipeImage } from '../services/imageUploadService';
 import { updateProfile } from 'firebase/auth';
 import { auth } from '../config/firebase';
+import LockedFeature from '../components/LockedFeature';
 
 const THEMES = [
   { value: 'light', icon: '☀️' },
@@ -99,6 +101,7 @@ const stampStyles = StyleSheet.create({
 export default function ProfileScreen({ navigation }) {
   const { colors, translate, theme, setTheme, showNotification, completedRecipesCount, completedCountries, language } = useApp();
   const { user, isAdmin, isGuest, logout, deleteAccount } = useAuth();
+  const { isPremium } = useSubscription();
   const [showThemeModal, setShowThemeModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deletePassword, setDeletePassword] = useState('');
@@ -298,91 +301,120 @@ export default function ProfileScreen({ navigation }) {
           </View>
         </View>
 
-        {completedCountries.size === 0 ? (
-          <View style={styles.passportEmpty}>
-            <Text style={styles.passportEmptyEmoji}>🗺️</Text>
-            <Text style={[styles.passportEmptyText, { color: colors.textSecondary }]}>
-              Bir tarifteki tüm adımları tamamla{'\n'}ve damganı kazan!
-            </Text>
-          </View>
+        {isGuest ? (
+          <LockedFeature message={translate('passportLoginRequired')} compact />
         ) : (
-          <View style={styles.stampsGrid}>
-            {Array.from(completedCountries.entries()).map(([country, continent]) => (
-              <PassportStamp key={country} country={country} continent={continent} />
-            ))}
-          </View>
-        )}
+          <>
+            {completedCountries.size === 0 ? (
+              <View style={styles.passportEmpty}>
+                <Text style={styles.passportEmptyEmoji}>🗺️</Text>
+                <Text style={[styles.passportEmptyText, { color: colors.textSecondary }]}>
+                  Bir tarifteki tüm adımları tamamla{'\n'}ve damganı kazan!
+                </Text>
+              </View>
+            ) : (
+              <View style={styles.stampsGrid}>
+                {Array.from(completedCountries.entries()).map(([country, continent]) => (
+                  <PassportStamp key={country} country={country} continent={continent} />
+                ))}
+              </View>
+            )}
 
-        {/* Travel Badges */}
-        <View style={[styles.badgesDivider, { backgroundColor: colors.border }]} />
-        <Text style={[styles.badgesSectionTitle, { color: colors.textSecondary }]}>
-          SEYAHAT ROZETLERİ
-        </Text>
-        <View style={styles.badgesList}>
-          {TRAVEL_BADGES.map(badge => {
-            const earned = completedCountries.size >= badge.requiredCountries;
-            const nextBadge = getNextBadge(completedCountries.size);
-            const isNext = nextBadge?.id === badge.id;
-            return (
-              <View
-                key={badge.id}
-                style={[
-                  styles.badgeRow,
-                  { borderColor: earned ? badge.color + '40' : colors.border },
-                  earned && { backgroundColor: badge.color + '12' },
-                ]}
-              >
-                <View style={[
-                  styles.badgeEmojiContainer,
-                  { backgroundColor: earned ? badge.color + '25' : colors.border + '80' },
-                  !earned && styles.badgeLocked,
-                ]}>
-                  <Text style={[styles.badgeEmoji, !earned && styles.badgeEmojiLocked]}>
-                    {earned ? badge.emoji : '🔒'}
-                  </Text>
-                </View>
-                <View style={styles.badgeTextBlock}>
-                  <Text style={[
-                    styles.badgeName,
-                    { color: earned ? badge.color : colors.textSecondary },
-                  ]}>
-                    {badge.title}
-                  </Text>
-                  <Text style={[styles.badgeDesc, { color: colors.textSecondary }]}>
-                    {badge.description}
-                  </Text>
-                  {!earned && isNext && (
-                    <View style={styles.badgeProgressRow}>
-                      <View style={[styles.badgeProgressBar, { backgroundColor: colors.border }]}>
-                        <View style={[
-                          styles.badgeProgressFill,
-                          {
-                            width: `${Math.min((completedCountries.size / badge.requiredCountries) * 100, 100)}%`,
-                            backgroundColor: badge.color,
-                          },
-                        ]} />
-                      </View>
-                      <Text style={[styles.badgeProgressLabel, { color: colors.textSecondary }]}>
-                        {completedCountries.size}/{badge.requiredCountries}
+            {/* Travel Badges */}
+            <View style={[styles.badgesDivider, { backgroundColor: colors.border }]} />
+            <Text style={[styles.badgesSectionTitle, { color: colors.textSecondary }]}>
+              SEYAHAT ROZETLERİ
+            </Text>
+            <View style={styles.badgesList}>
+              {TRAVEL_BADGES.map(badge => {
+                const earned = completedCountries.size >= badge.requiredCountries;
+                const nextBadge = getNextBadge(completedCountries.size);
+                const isNext = nextBadge?.id === badge.id;
+                return (
+                  <View
+                    key={badge.id}
+                    style={[
+                      styles.badgeRow,
+                      { borderColor: earned ? badge.color + '40' : colors.border },
+                      earned && { backgroundColor: badge.color + '12' },
+                    ]}
+                  >
+                    <View style={[
+                      styles.badgeEmojiContainer,
+                      { backgroundColor: earned ? badge.color + '25' : colors.border + '80' },
+                      !earned && styles.badgeLocked,
+                    ]}>
+                      <Text style={[styles.badgeEmoji, !earned && styles.badgeEmojiLocked]}>
+                        {earned ? badge.emoji : '🔒'}
                       </Text>
                     </View>
-                  )}
-                </View>
-                {earned && (
-                  <View style={[styles.earnedBadge, { backgroundColor: badge.color }]}>
-                    <Text style={styles.earnedBadgeText}>✓</Text>
+                    <View style={styles.badgeTextBlock}>
+                      <Text style={[
+                        styles.badgeName,
+                        { color: earned ? badge.color : colors.textSecondary },
+                      ]}>
+                        {badge.title}
+                      </Text>
+                      <Text style={[styles.badgeDesc, { color: colors.textSecondary }]}>
+                        {badge.description}
+                      </Text>
+                      {!earned && isNext && (
+                        <View style={styles.badgeProgressRow}>
+                          <View style={[styles.badgeProgressBar, { backgroundColor: colors.border }]}>
+                            <View style={[
+                              styles.badgeProgressFill,
+                              {
+                                width: `${Math.min((completedCountries.size / badge.requiredCountries) * 100, 100)}%`,
+                                backgroundColor: badge.color,
+                              },
+                            ]} />
+                          </View>
+                          <Text style={[styles.badgeProgressLabel, { color: colors.textSecondary }]}>
+                            {completedCountries.size}/{badge.requiredCountries}
+                          </Text>
+                        </View>
+                      )}
+                    </View>
+                    {earned && (
+                      <View style={[styles.earnedBadge, { backgroundColor: badge.color }]}>
+                        <Text style={styles.earnedBadgeText}>✓</Text>
+                      </View>
+                    )}
                   </View>
-                )}
-              </View>
-            );
-          })}
-        </View>
+                );
+              })}
+            </View>
+          </>
+        )}
       </View>
 
       <View style={styles.section}>
         <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>
           {translate('settings')}
         </Text>
+
+        {/* Premium / Abonelik */}
+        <TouchableOpacity
+          style={[styles.settingItem, { backgroundColor: colors.card, borderColor: colors.border }]}
+          onPress={() => navigation.navigate('Paywall')}
+          accessibilityRole="button"
+          accessibilityLabel={translate('premium')}
+        >
+          <View style={styles.settingLeft}>
+            <View style={[styles.iconContainer, { backgroundColor: colors.primary + '20' }]}>
+              <Crown color={colors.primary} size={20} />
+            </View>
+            <View>
+              <Text style={[styles.settingTitle, { color: colors.text }]}>
+                {translate('premium')}
+              </Text>
+              <Text style={[styles.settingSubtitle, { color: colors.textSecondary }]}>
+                {translate(isPremium ? 'premiumActive' : 'goPremium')}
+              </Text>
+            </View>
+          </View>
+          <ChevronRight color={colors.textSecondary} size={20} />
+        </TouchableOpacity>
 
         {/* Language Setting — Coming Soon */}
         <View

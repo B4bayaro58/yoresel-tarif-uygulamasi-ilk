@@ -1,12 +1,12 @@
 import LegalPageLayout from '@/components/LegalPageLayout'
 
-export const metadata = { title: 'Hakkımızda — Yöresel Tarifler' }
+export const metadata = { title: 'Hakkımızda — Yöresel Tarif' }
 
 export default function HakkimizdaPage() {
   return (
     <LegalPageLayout emoji="🍽️" title="Hakkımızda" updatedAt="3 Temmuz 2026">
       <p>
-        Yöresel Tarifler, dünyanın dört bir yanından ve Türkiye&apos;nin her köşesinden derlenen
+        Yöresel Tarif, dünyanın dört bir yanından ve Türkiye&apos;nin her köşesinden derlenen
         yöresel lezzetleri tek bir platformda buluşturmak amacıyla kuruldu. Amacımız, geleneksel
         tarifleri kaybolmadan gelecek nesillere aktarmak ve mutfağınıza yeni lezzetler kazandırmak.
       </p>

@@ -1,12 +1,12 @@
 import LegalPageLayout from '@/components/LegalPageLayout'
 
-export const metadata = { title: 'Çerez Politikası — Yöresel Tarifler' }
+export const metadata = { title: 'Çerez Politikası — Yöresel Tarif' }
 
 export default function CerezPolitikasiPage() {
   return (
     <LegalPageLayout emoji="🍪" title="Çerez Politikası" updatedAt="3 Temmuz 2026">
       <p>
-        Bu sayfa, Yöresel Tarifler sitesinde kullanılan çerezleri (cookie) ve benzeri teknolojileri
+        Bu sayfa, Yöresel Tarif sitesinde kullanılan çerezleri (cookie) ve benzeri teknolojileri
         (yerel depolama / localStorage) açıklar.
       </p>
 

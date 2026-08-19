@@ -32,11 +32,15 @@ import {
   LayoutGrid,
   ChevronLeft,
   ChevronRight,
+  UtensilsCrossed,
 } from 'lucide-react-native';
 import { useApp } from '../contexts/AppContext';
+import { useSubscription } from '../contexts/SubscriptionContext';
 import ReviewsSection from '../components/ReviewsSection';
 import RecipeCard from '../components/RecipeCard';
+import AdBanner from '../components/AdBanner';
 import { logRecipeView, logShare } from '../services/analyticsService';
+import { maybeShowInterstitial } from '../services/interstitialAdService';
 
 const { width } = Dimensions.get('window');
 
@@ -56,6 +60,9 @@ function RecipeDetailContent({ recipe, navigation }) {
     isFavorite,
     toggleFavorite,
     addToShoppingList,
+    addMultipleToShoppingList,
+    togglePersonalMenu,
+    isInPersonalMenu,
     toggleStep,
     isStepCompleted,
     getRecipeProgress,
@@ -67,10 +74,12 @@ function RecipeDetailContent({ recipe, navigation }) {
     stopTimer,
     openAlternatives,
   } = useApp();
+  const { isPremium } = useSubscription();
 
   // Sayfa açılınca görüntüleme logu
   React.useEffect(() => {
     logRecipeView(recipe.id, recipe.name, recipe.continent);
+    maybeShowInterstitial(isPremium);
   }, [recipe.id]);
 
   const similarRecipes = useMemo(() => {
@@ -95,7 +104,7 @@ function RecipeDetailContent({ recipe, navigation }) {
           `📍 ${recipe.city ? `${recipe.country}, ${recipe.city}` : recipe.country} • ⭐ ${recipe.rating} • ⏱️ ${recipe.prepTime} dk\n\n` +
           `📋 Malzemeler:\n${ingredientList}\n\n` +
           `👨‍🍳 Hazırlanışı:\n${stepList}\n\n` +
-          `Yöresel Tarifler uygulamasından paylaşıldı.\n` +
+          `Yöresel Tarif uygulamasından paylaşıldı.\n` +
           `yoreseltarif://recipe/${recipe.id}`,
       });
     } catch (error) {
@@ -154,6 +163,17 @@ function RecipeDetailContent({ recipe, navigation }) {
       return formatNumber(parseFloat(numMatch[1]) * scaleRatio) + numMatch[2];
     }
     return amount;
+  };
+
+  const handleAddAllIngredients = () => {
+    addMultipleToShoppingList(
+      ingredients.map(ingredient => ({
+        ...ingredient,
+        amount: scaleAmount(ingredient.amount),
+        recipeId: recipe.id,
+        recipeName: recipe.name,
+      }))
+    );
   };
 
   // Format timer display
@@ -221,6 +241,18 @@ function RecipeDetailContent({ recipe, navigation }) {
                       fill={isFav ? '#FFFFFF' : 'transparent'}
                     />
                   </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[
+                      styles.actionButton,
+                      { backgroundColor: isInPersonalMenu(recipe.id) ? colors.primary : 'rgba(0, 0, 0, 0.6)' },
+                    ]}
+                    onPress={() => (isPremium ? togglePersonalMenu(recipe.id) : navigation.navigate('Paywall'))}
+                    accessibilityRole="button"
+                    accessibilityLabel={translate('addToMenu')}
+                    accessibilityState={{ selected: isInPersonalMenu(recipe.id) }}
+                  >
+                    <UtensilsCrossed size={22} color="#FFFFFF" />
+                  </TouchableOpacity>
                 </View>
               </View>
             </View>
@@ -260,23 +292,23 @@ function RecipeDetailContent({ recipe, navigation }) {
               <Users size={20} color={colors.primary} />
               <View style={styles.servingsRow}>
                 <TouchableOpacity
-                  onPress={() => setScaledServings(s => Math.max(1, s - 1))}
+                  onPress={() => (isPremium ? setScaledServings(s => Math.max(1, s - 1)) : navigation.navigate('Paywall'))}
                   hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
                   accessibilityRole="button"
                   accessibilityLabel={`${translate('servings')} -1`}
                 >
-                  <Text style={[styles.servingsBtn, { color: colors.primary }]}>−</Text>
+                  <Text style={[styles.servingsBtn, { color: colors.primary }, !isPremium && { opacity: 0.4 }]}>−</Text>
                 </TouchableOpacity>
                 <Text style={[styles.metaValue, { color: colors.text }]}>
                   {scaledServings}
                 </Text>
                 <TouchableOpacity
-                  onPress={() => setScaledServings(s => s + 1)}
+                  onPress={() => (isPremium ? setScaledServings(s => s + 1) : navigation.navigate('Paywall'))}
                   hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
                   accessibilityRole="button"
                   accessibilityLabel={`${translate('servings')} +1`}
                 >
-                  <Text style={[styles.servingsBtn, { color: colors.primary }]}>+</Text>
+                  <Text style={[styles.servingsBtn, { color: colors.primary }, !isPremium && { opacity: 0.4 }]}>+</Text>
                 </TouchableOpacity>
               </View>
               <Text style={[styles.metaLabel, { color: colors.textSecondary }]}>
@@ -345,11 +377,28 @@ function RecipeDetailContent({ recipe, navigation }) {
             </Text>
           </View>
 
+          <View style={styles.adContainer}>
+            <AdBanner size="rectangle" />
+          </View>
+
           {/* Ingredients */}
           <View style={styles.section}>
-            <Text style={[styles.sectionTitle, { color: colors.text }]}>
-              {translate('ingredients')}
-            </Text>
+            <View style={styles.sectionTitleRow}>
+              <Text style={[styles.sectionTitle, { color: colors.text, marginBottom: 0 }]}>
+                {translate('ingredients')}
+              </Text>
+              {ingredients.length > 0 && (
+                <TouchableOpacity
+                  style={[styles.addAllButton, { backgroundColor: colors.primary }]}
+                  onPress={handleAddAllIngredients}
+                  accessibilityRole="button"
+                  accessibilityLabel={translate('addAllToShoppingList')}
+                >
+                  <ShoppingCart size={15} color="#FFFFFF" />
+                  <Text style={styles.addAllButtonText}>{translate('addAllToShoppingList')}</Text>
+                </TouchableOpacity>
+              )}
+            </View>
             {ingredients.map((ingredient, index) => (
               <View
                 key={index}
@@ -370,7 +419,7 @@ function RecipeDetailContent({ recipe, navigation }) {
                   </Text>
                 </View>
                 <View style={styles.ingredientActions}>
-                  {ingredient.alternatives && (
+                  {ingredient.alternatives && ingredient.alternatives.length > 0 && (
                     <TouchableOpacity
                       style={[styles.alternativeButton, { borderColor: colors.primary }]}
                       onPress={() => openAlternatives(ingredient)}
@@ -384,7 +433,7 @@ function RecipeDetailContent({ recipe, navigation }) {
                   )}
                   <TouchableOpacity
                     style={[styles.shoppingButton, { backgroundColor: colors.primary }]}
-                    onPress={() => addToShoppingList({ ...ingredient, amount: scaleAmount(ingredient.amount) })}
+                    onPress={() => addToShoppingList({ ...ingredient, amount: scaleAmount(ingredient.amount), recipeId: recipe.id, recipeName: recipe.name })}
                     accessibilityRole="button"
                     accessibilityLabel={`${ingredient.name} ${translate('addToShoppingList')}`}
                   >
@@ -692,6 +741,10 @@ function RecipeDetailContent({ recipe, navigation }) {
             )}
           </View>
 
+          <View style={styles.adContainer}>
+            <AdBanner size="banner" />
+          </View>
+
           {/* Similar Recipes */}
           {similarRecipes.length > 0 && (
             <View style={styles.section}>
@@ -754,6 +807,10 @@ export default function RecipeDetailScreen({ route, navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  adContainer: {
+    alignItems: 'center',
+    marginBottom: 24,
   },
   centeredState: {
     alignItems: 'center',
@@ -892,6 +949,26 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: '700',
     marginBottom: 16,
+  },
+  sectionTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 16,
+    gap: 10,
+  },
+  addAllButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 10,
+  },
+  addAllButtonText: {
+    color: '#FFFFFF',
+    fontSize: 12,
+    fontWeight: '700',
   },
   ingredientItem: {
     flexDirection: 'row',

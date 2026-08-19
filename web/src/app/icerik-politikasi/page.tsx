@@ -1,12 +1,12 @@
 import LegalPageLayout from '@/components/LegalPageLayout'
 
-export const metadata = { title: 'İçerik Politikası — Yöresel Tarifler' }
+export const metadata = { title: 'İçerik Politikası — Yöresel Tarif' }
 
 export default function IcerikPolitikasiPage() {
   return (
     <LegalPageLayout emoji="📋" title="İçerik Politikası" updatedAt="3 Temmuz 2026">
       <p>
-        Bu politika, Yöresel Tarifler sitesindeki tariflerin ve kullanıcı tarafından önerilen
+        Bu politika, Yöresel Tarif sitesindeki tariflerin ve kullanıcı tarafından önerilen
         içeriklerin hangi kurallara göre yayınlandığını açıklar.
       </p>
 

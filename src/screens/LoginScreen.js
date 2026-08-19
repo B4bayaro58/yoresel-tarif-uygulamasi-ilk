@@ -15,9 +15,10 @@ import { LogIn, Mail, Lock, User } from 'lucide-react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useAuth } from '../contexts/AuthContext';
 import { useApp } from '../contexts/AppContext';
+import GoogleIcon from '../components/GoogleIcon';
 
 export default function LoginScreen() {
-  const { login, register, continueAsGuest, resetPassword } = useAuth();
+  const { login, register, loginWithGoogle, isGoogleSignInAvailable, continueAsGuest, resetPassword } = useAuth();
   const { colors, translate, showNotification } = useApp();
   const navigation = useNavigation();
 
@@ -26,6 +27,7 @@ export default function LoginScreen() {
   const [password, setPassword] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const [showResetModal, setShowResetModal] = useState(false);
   const [resetEmail, setResetEmail] = useState('');
   const [resetLoading, setResetLoading] = useState(false);
@@ -60,6 +62,18 @@ export default function LoginScreen() {
     }
 
     setLoading(false);
+  };
+
+  const handleGoogleSignIn = async () => {
+    setGoogleLoading(true);
+    const result = await loginWithGoogle();
+    setGoogleLoading(false);
+    if (result.success) {
+      showNotification(translate('loginSuccess'));
+    } else if (result.error) {
+      // result.error === null -> kullanıcı vazgeçti, bildirim gösterme
+      showNotification(result.error);
+    }
   };
 
   const handleResetPassword = async () => {
@@ -157,6 +171,35 @@ export default function LoginScreen() {
                 </>
               )}
             </TouchableOpacity>
+
+            {/* Google ile Devam Et — webClientId yapılandırılmadıysa hiç gösterilmez */}
+            {isGoogleSignInAvailable && (
+              <>
+                <View style={styles.dividerRow}>
+                  <View style={styles.dividerLine} />
+                  <Text style={styles.dividerText}>{translate('orDivider')}</Text>
+                  <View style={styles.dividerLine} />
+                </View>
+                <TouchableOpacity
+                  style={styles.googleButton}
+                  onPress={handleGoogleSignIn}
+                  disabled={googleLoading}
+                  accessibilityRole="button"
+                  accessibilityLabel={translate('continueWithGoogle')}
+                >
+                  {googleLoading ? (
+                    <ActivityIndicator color="#5F6368" />
+                  ) : (
+                    <>
+                      <GoogleIcon size={18} />
+                      <Text style={styles.googleButtonText}>
+                        {translate('continueWithGoogle')}
+                      </Text>
+                    </>
+                  )}
+                </TouchableOpacity>
+              </>
+            )}
 
             {/* Şifremi Unuttum — sadece login modunda */}
             {isLogin && (
@@ -347,6 +390,39 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 16,
     fontWeight: '700',
+  },
+  dividerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 16,
+    gap: 10,
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: '#E5E5E5',
+  },
+  dividerText: {
+    fontSize: 12,
+    color: '#999',
+    fontWeight: '600',
+  },
+  googleButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+    marginTop: 14,
+    paddingVertical: 14,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#DADCE0',
+    backgroundColor: '#FFFFFF',
+  },
+  googleButtonText: {
+    color: '#3C4043',
+    fontSize: 15,
+    fontWeight: '600',
   },
   toggleButton: {
     marginTop: 20,

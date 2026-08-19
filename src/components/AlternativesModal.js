@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -6,9 +6,13 @@ import {
   Modal,
   TouchableOpacity,
   ScrollView,
+  ActivityIndicator,
 } from 'react-native';
-import { X } from 'lucide-react-native';
+import { X, PlayCircle } from 'lucide-react-native';
+import { useRewardedAd } from 'react-native-google-mobile-ads';
 import { useApp } from '../contexts/AppContext';
+import { useSubscription } from '../contexts/SubscriptionContext';
+import { REWARDED_AD_UNIT_ID } from '../constants/adUnits';
 
 export default function AlternativesModal() {
   const {
@@ -18,8 +22,37 @@ export default function AlternativesModal() {
     closeAlternatives,
     selectedIngredient,
   } = useApp();
+  const { isPremium } = useSubscription();
+
+  // Bir kez reklam izleyince, oturum boyunca (uygulama kapanana kadar) tüm
+  // malzeme alternatifleri açık kalır -- her seferinde yeniden reklam istemek
+  // yerine tek seferlik bir "kilit açma" deneyimi.
+  const [unlockedByAd, setUnlockedByAd] = useState(false);
+  const { isLoaded, isEarnedReward, isClosed, load, show } = useRewardedAd(REWARDED_AD_UNIT_ID);
+  const wasClosed = useRef(false);
+
+  useEffect(() => {
+    if (!isPremium) load();
+  }, [load, isPremium]);
+
+  useEffect(() => {
+    if (isEarnedReward) {
+      setUnlockedByAd(true);
+    }
+  }, [isEarnedReward]);
+
+  useEffect(() => {
+    if (isClosed && !wasClosed.current) {
+      wasClosed.current = true;
+      load(); // bir sonraki gösterim için hemen yeniden yükle
+    } else if (!isClosed) {
+      wasClosed.current = false;
+    }
+  }, [isClosed, load]);
 
   if (!selectedIngredient) return null;
+
+  const canViewAlternatives = isPremium || unlockedByAd;
 
   return (
     <Modal
@@ -66,22 +99,44 @@ export default function AlternativesModal() {
                 <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>
                   {translate('alternatives')}
                 </Text>
-                {selectedIngredient.alternatives.map((alt, index) => (
-                  <View
-                    key={index}
-                    style={[
-                      styles.alternativeCard,
-                      { backgroundColor: colors.background, borderColor: colors.border },
-                    ]}
-                  >
-                    <View style={[styles.alternativeNumber, { backgroundColor: colors.primary }]}>
-                      <Text style={styles.alternativeNumberText}>{index + 1}</Text>
+                {canViewAlternatives ? (
+                  selectedIngredient.alternatives.map((alt, index) => (
+                    <View
+                      key={index}
+                      style={[
+                        styles.alternativeCard,
+                        { backgroundColor: colors.background, borderColor: colors.border },
+                      ]}
+                    >
+                      <View style={[styles.alternativeNumber, { backgroundColor: colors.primary }]}>
+                        <Text style={styles.alternativeNumberText}>{index + 1}</Text>
+                      </View>
+                      <Text style={[styles.alternativeName, { color: colors.text }]}>
+                        {alt}
+                      </Text>
                     </View>
-                    <Text style={[styles.alternativeName, { color: colors.text }]}>
-                      {alt}
+                  ))
+                ) : (
+                  <View style={[styles.lockedBox, { backgroundColor: colors.background, borderColor: colors.border }]}>
+                    <Text style={[styles.lockedMessage, { color: colors.textSecondary }]}>
+                      {translate('alternativesLockedMessage')}
                     </Text>
+                    <TouchableOpacity
+                      style={[styles.watchAdButton, { backgroundColor: colors.primary, opacity: isLoaded ? 1 : 0.6 }]}
+                      onPress={() => (isLoaded ? show() : null)}
+                      disabled={!isLoaded}
+                      accessibilityRole="button"
+                      accessibilityLabel={translate('watchAdToUnlock')}
+                    >
+                      {isLoaded ? (
+                        <PlayCircle size={18} color="#FFFFFF" />
+                      ) : (
+                        <ActivityIndicator size="small" color="#FFFFFF" />
+                      )}
+                      <Text style={styles.watchAdButtonText}>{translate('watchAdToUnlock')}</Text>
+                    </TouchableOpacity>
                   </View>
-                ))}
+                )}
               </View>
             )}
           </ScrollView>
@@ -173,6 +228,31 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     flex: 1,
+  },
+  lockedBox: {
+    padding: 16,
+    borderRadius: 12,
+    borderWidth: 1,
+    alignItems: 'center',
+    gap: 12,
+  },
+  lockedMessage: {
+    fontSize: 14,
+    textAlign: 'center',
+    lineHeight: 20,
+  },
+  watchAdButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+  },
+  watchAdButtonText: {
+    color: '#FFFFFF',
+    fontSize: 15,
+    fontWeight: '700',
   },
   closeButton: {
     margin: 20,

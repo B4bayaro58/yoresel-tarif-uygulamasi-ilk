@@ -2,10 +2,10 @@
 export const TRANSLATIONS = {
   // App Title
   appTitle: {
-    tr: 'Yöresel Tarifler',
-    en: 'Regional Recipes',
-    fr: 'Recettes Régionales',
-    it: 'Ricette Regionali',
+    tr: 'Yöresel Tarif',
+    en: 'Regional Recipe',
+    fr: 'Recette Régionale',
+    it: 'Ricetta Regionale',
   },
 
   // Navigation
@@ -287,6 +287,18 @@ export const TRANSLATIONS = {
     fr: 'Ajouter à la liste',
     it: 'Aggiungi alla lista',
   },
+  addAllToShoppingList: {
+    tr: 'Tümünü Sepete Ekle',
+    en: 'Add All to List',
+    fr: 'Tout ajouter à la liste',
+    it: 'Aggiungi tutto alla lista',
+  },
+  allIngredientsAdded: {
+    tr: 'Tüm malzemeler listeye eklendi',
+    en: 'All ingredients added to list',
+    fr: 'Tous les ingrédients ont été ajoutés',
+    it: 'Tutti gli ingredienti sono stati aggiunti',
+  },
   startTimer: {
     tr: 'Zamanlayıcıyı Başlat',
     en: 'Start Timer',
@@ -336,6 +348,24 @@ export const TRANSLATIONS = {
     en: 'Original',
     fr: 'Original',
     it: 'Originale',
+  },
+  alternativesLockedMessage: {
+    tr: 'Malzeme alternatifleri abonelere özeldir. Kısa bir reklam izleyerek bu tarif için ücretsiz açabilirsiniz.',
+    en: 'Ingredient alternatives are for subscribers. Watch a short ad to unlock them for free on this recipe.',
+    fr: "Les alternatives d'ingrédients sont réservées aux abonnés. Regardez une courte publicité pour les débloquer gratuitement pour cette recette.",
+    it: 'Le alternative agli ingredienti sono riservate agli abbonati. Guarda un breve video per sbloccarle gratuitamente per questa ricetta.',
+  },
+  watchAdToUnlock: {
+    tr: 'Reklam İzleyerek Aç',
+    en: 'Watch Ad to Unlock',
+    fr: 'Regarder une pub pour débloquer',
+    it: 'Guarda il video per sbloccare',
+  },
+  adLoadingWait: {
+    tr: 'Reklam hazırlanıyor, birazdan tekrar deneyin',
+    en: 'Ad is loading, try again shortly',
+    fr: "La publicité se charge, réessayez dans un instant",
+    it: 'Video in caricamento, riprova a breve',
   },
 
   // Timer
@@ -428,6 +458,12 @@ export const TRANSLATIONS = {
     en: 'Clear Filters',
     fr: 'Effacer les filtres',
     it: 'Cancella filtri',
+  },
+  filtersTitle: {
+    tr: 'Filtrele',
+    en: 'Filter',
+    fr: 'Filtrer',
+    it: 'Filtra',
   },
   featuredRecipes: {
     tr: 'Öne Çıkanlar',
@@ -1323,6 +1359,24 @@ export const TRANSLATIONS = {
     fr: 'S\'inscrire',
     it: 'Registrati',
   },
+  continueWithGoogle: {
+    tr: 'Google ile Devam Et',
+    en: 'Continue with Google',
+    fr: 'Continuer avec Google',
+    it: 'Continua con Google',
+  },
+  orDivider: {
+    tr: 'veya',
+    en: 'or',
+    fr: 'ou',
+    it: 'o',
+  },
+  googleSignInError: {
+    tr: 'Google ile giriş yapılamadı. Lütfen tekrar deneyin.',
+    en: 'Could not sign in with Google. Please try again.',
+    fr: 'Impossible de se connecter avec Google. Veuillez réessayer.',
+    it: 'Impossibile accedere con Google. Riprova.',
+  },
   noAccount: {
     tr: 'Hesabınız yok mu? ',
     en: 'Don\'t have an account? ',
@@ -1645,6 +1699,24 @@ export const TRANSLATIONS = {
     fr: 'S\'inscrire',
     it: 'Registrati',
   },
+  loginRequiredTitle: {
+    tr: 'Giriş Yapmanız Gerekiyor',
+    en: 'You Need to Sign In',
+    fr: 'Vous devez vous connecter',
+    it: 'Devi accedere',
+  },
+  shoppingListLoginRequired: {
+    tr: 'Alışveriş listenizi oluşturup cihazlar arasında senkronlamak için giriş yapmanız gerekmektedir.',
+    en: 'Sign in to create your shopping list and sync it across devices.',
+    fr: 'Connectez-vous pour créer votre liste de courses et la synchroniser sur vos appareils.',
+    it: 'Accedi per creare la tua lista della spesa e sincronizzarla su più dispositivi.',
+  },
+  passportLoginRequired: {
+    tr: 'Pasaportunuzu doldurup rozet kazanmak için giriş yapmanız gerekmektedir.',
+    en: 'Sign in to fill your passport and earn badges.',
+    fr: 'Connectez-vous pour remplir votre passeport et gagner des badges.',
+    it: 'Accedi per completare il tuo passaporto e guadagnare badge.',
+  },
 
   // In-app Review
   reviewTitle: {
@@ -1698,6 +1770,51 @@ export const TRANSLATIONS = {
     en: 'Find in Store',
     fr: 'Trouver en Magasin',
     it: 'Trova in Negozio',
+  },
+
+  // Home Hero
+  homeHeroEyebrow: {
+    tr: 'Lezzet Atlası',
+    en: 'Flavor Atlas',
+    fr: 'Atlas des Saveurs',
+    it: 'Atlante dei Sapori',
+  },
+  // {...} içindeki kısım vurgulu (accent) renkte render edilir -- bkz. HomeScreen.js parseAccentHeading
+  homeHeroHeading: {
+    tr: 'Dünyanın {Lezzetleri}',
+    en: "World's {Flavors}",
+    fr: 'Les {Saveurs} du Monde',
+    it: 'I {Sapori} del Mondo',
+  },
+  homeHeroSearchPlaceholder: {
+    tr: 'Tarif, malzeme veya ülke ara…',
+    en: 'Search recipe, ingredient or country…',
+    fr: 'Rechercher une recette, un ingrédient…',
+    it: 'Cerca ricetta, ingrediente o paese…',
+  },
+  greetingMorning: {
+    tr: 'Güne güzel bir kahvaltıyla başla',
+    en: 'Start your day with a good breakfast',
+    fr: 'Commencez la journée par un bon petit-déjeuner',
+    it: 'Inizia la giornata con una buona colazione',
+  },
+  greetingNoon: {
+    tr: 'Bugün öğle yemeğine ne dersin?',
+    en: 'How about lunch today?',
+    fr: 'Un bon déjeuner aujourd\'hui ?',
+    it: 'Che ne dici di pranzare?',
+  },
+  greetingAfternoon: {
+    tr: 'Akşama doğru hafif bir şeyler mi?',
+    en: 'Something light for the evening?',
+    fr: 'Une envie légère pour ce soir ?',
+    it: 'Qualcosa di leggero per stasera?',
+  },
+  greetingEvening: {
+    tr: 'Hızlı bir akşam yemeğine ne dersin?',
+    en: 'Craving a quick dinner tonight?',
+    fr: 'Un dîner rapide ce soir ?',
+    it: 'Una cena veloce stasera?',
   },
 
   // Daily Menu
@@ -1806,10 +1923,10 @@ export const TRANSLATIONS = {
     it: 'Ultimo aggiornamento: Marzo 2026',
   },
   ppIntro: {
-    tr: 'Yöresel Tarifler uygulaması ("Uygulama") kullanıcı gizliliğine önem verir. Bu politika, hangi verileri topladığımızı, nasıl kullandığımızı ve haklarınızı açıklar.',
-    en: 'The Yöresel Tarifler app ("App") values user privacy. This policy explains what data we collect, how we use it, and your rights.',
-    fr: 'L\'application Yöresel Tarifler ("App") respecte la vie privée des utilisateurs. Cette politique explique quelles données nous collectons, comment nous les utilisons et vos droits.',
-    it: 'L\'app Yöresel Tarifler ("App") rispetta la privacy degli utenti. Questa policy spiega quali dati raccogliamo, come li utilizziamo e i tuoi diritti.',
+    tr: 'Yöresel Tarif uygulaması ("Uygulama") kullanıcı gizliliğine önem verir. Bu politika, hangi verileri topladığımızı, nasıl kullandığımızı ve haklarınızı açıklar.',
+    en: 'The Yöresel Tarif app ("App") values user privacy. This policy explains what data we collect, how we use it, and your rights.',
+    fr: 'L\'application Yöresel Tarif ("App") respecte la vie privée des utilisateurs. Cette politique explique quelles données nous collectons, comment nous les utilisons et vos droits.',
+    it: 'L\'app Yöresel Tarif ("App") rispetta la privacy degli utenti. Questa policy spiega quali dati raccogliamo, come li utilizziamo e i tuoi diritti.',
   },
   ppCollectedData: {
     tr: '1. Topladığımız Veriler',
@@ -1908,10 +2025,10 @@ export const TRANSLATIONS = {
     it: 'Ultimo aggiornamento: Marzo 2026',
   },
   tosIntro: {
-    tr: 'Yöresel Tarifler uygulamasını kullanarak aşağıdaki kullanım koşullarını kabul etmiş sayılırsınız. Lütfen dikkatlice okuyun.',
-    en: 'By using the Yöresel Tarifler app, you agree to the following terms. Please read them carefully.',
-    fr: 'En utilisant l\'application Yöresel Tarifler, vous acceptez les conditions suivantes. Veuillez les lire attentivement.',
-    it: 'Utilizzando l\'app Yöresel Tarifler, accetti i seguenti termini. Si prega di leggerli attentamente.',
+    tr: 'Yöresel Tarif uygulamasını kullanarak aşağıdaki kullanım koşullarını kabul etmiş sayılırsınız. Lütfen dikkatlice okuyun.',
+    en: 'By using the Yöresel Tarif app, you agree to the following terms. Please read them carefully.',
+    fr: 'En utilisant l\'application Yöresel Tarif, vous acceptez les conditions suivantes. Veuillez les lire attentivement.',
+    it: 'Utilizzando l\'app Yöresel Tarif, accetti i seguenti termini. Si prega di leggerli attentamente.',
   },
   tosSection1Title: {
     tr: '1. Hizmet Tanımı',
@@ -1920,10 +2037,10 @@ export const TRANSLATIONS = {
     it: '1. Descrizione del Servizio',
   },
   tosSection1Body: {
-    tr: 'Yöresel Tarifler, dünyanın dört bir yanından yöresel tarifleri keşfetmenizi, favorilere eklemenizi ve yöresel tarif önerisi sunmanıza olanak tanıyan bir mobil uygulamadır.',
-    en: 'Yöresel Tarifler is a mobile app that allows you to discover local recipes from around the world, save favorites, and submit recipe suggestions.',
-    fr: 'Yöresel Tarifler est une application mobile qui vous permet de découvrir des recettes locales du monde entier, de sauvegarder des favoris et de soumettre des suggestions de recettes.',
-    it: 'Yöresel Tarifler è un\'app mobile che ti consente di scoprire ricette locali da tutto il mondo, salvare i preferiti e inviare suggerimenti di ricette.',
+    tr: 'Yöresel Tarif, dünyanın dört bir yanından yöresel tarifleri keşfetmenizi, favorilere eklemenizi ve yöresel tarif önerisi sunmanıza olanak tanıyan bir mobil uygulamadır.',
+    en: 'Yöresel Tarif is a mobile app that allows you to discover local recipes from around the world, save favorites, and submit recipe suggestions.',
+    fr: 'Yöresel Tarif est une application mobile qui vous permet de découvrir des recettes locales du monde entier, de sauvegarder des favoris et de soumettre des suggestions de recettes.',
+    it: 'Yöresel Tarif è un\'app mobile che ti consente di scoprire ricette locali da tutto il mondo, salvare i preferiti e inviare suggerimenti di ricette.',
   },
   tosSection2Title: {
     tr: '2. Hesap Kullanımı',
@@ -2080,6 +2197,18 @@ export const TRANSLATIONS = {
     fr: 'Moins de 30 Min',
     it: 'Sotto i 30 Min',
   },
+  quickFilterVegan: {
+    tr: 'Vegan',
+    en: 'Vegan',
+    fr: 'Végan',
+    it: 'Vegano',
+  },
+  quickFilterFit: {
+    tr: 'Fit Tarifler',
+    en: 'Low-Calorie',
+    fr: 'Faible en Calories',
+    it: 'Basso Contenuto Calorico',
+  },
   quickFilterHighProtein: {
     tr: 'Yüksek Protein',
     en: 'High Protein',
@@ -2201,6 +2330,262 @@ export const TRANSLATIONS = {
     en: 'Recipe',
     fr: 'Recette',
     it: 'Ricetta',
+  },
+
+  // Premium / Abonelik (RevenueCat)
+  premium: {
+    tr: 'Premium',
+    en: 'Premium',
+    fr: 'Premium',
+    it: 'Premium',
+  },
+  goPremium: {
+    tr: "Premium'a geç",
+    en: 'Go Premium',
+    fr: 'Passer à Premium',
+    it: 'Passa a Premium',
+  },
+  premiumActive: {
+    tr: 'Premium aktif',
+    en: 'Premium active',
+    fr: 'Premium actif',
+    it: 'Premium attivo',
+  },
+  paywallTitle: {
+    tr: "Premium'a Geç",
+    en: 'Go Premium',
+    fr: 'Passer à Premium',
+    it: 'Passa a Premium',
+  },
+  paywallSubtitle: {
+    tr: 'Reklamsız bir deneyimin keyfini çıkarın.',
+    en: 'Enjoy an ad-free experience.',
+    fr: 'Profitez d\'une expérience sans publicité.',
+    it: "Goditi un'esperienza senza pubblicità.",
+  },
+  adFreeExperience: {
+    tr: 'Reklamsız kullanım',
+    en: 'Ad-free experience',
+    fr: 'Expérience sans publicité',
+    it: 'Esperienza senza pubblicità',
+  },
+  subscribeMonthly: {
+    tr: 'Aylık',
+    en: 'Monthly',
+    fr: 'Mensuel',
+    it: 'Mensile',
+  },
+  subscribeYearly: {
+    tr: 'Yıllık',
+    en: 'Yearly',
+    fr: 'Annuel',
+    it: 'Annuale',
+  },
+  restorePurchases: {
+    tr: 'Satın Alımları Geri Yükle',
+    en: 'Restore Purchases',
+    fr: 'Restaurer les achats',
+    it: 'Ripristina gli acquisti',
+  },
+  restoreSuccess: {
+    tr: 'Aboneliğiniz geri yüklendi.',
+    en: 'Your subscription was restored.',
+    fr: 'Votre abonnement a été restauré.',
+    it: 'Il tuo abbonamento è stato ripristinato.',
+  },
+  restoreNoneFound: {
+    tr: 'Geri yüklenecek bir abonelik bulunamadı.',
+    en: 'No subscription found to restore.',
+    fr: 'Aucun abonnement trouvé à restaurer.',
+    it: 'Nessun abbonamento trovato da ripristinare.',
+  },
+  paywallUnavailable: {
+    tr: 'Abonelik seçenekleri şu anda yüklenemedi. Lütfen daha sonra tekrar deneyin.',
+    en: 'Subscription options could not be loaded right now. Please try again later.',
+    fr: "Les options d'abonnement n'ont pas pu être chargées. Veuillez réessayer plus tard.",
+    it: "Le opzioni di abbonamento non sono disponibili al momento. Riprova più tardi.",
+  },
+  purchaseSuccess: {
+    tr: 'Aboneliğiniz başarıyla etkinleştirildi. Teşekkürler!',
+    en: 'Your subscription is now active. Thank you!',
+    fr: 'Votre abonnement est maintenant actif. Merci !',
+    it: 'Il tuo abbonamento è ora attivo. Grazie!',
+  },
+  purchaseError: {
+    tr: 'Satın alma sırasında bir sorun oluştu. Lütfen tekrar deneyin.',
+    en: 'Something went wrong with the purchase. Please try again.',
+    fr: "Une erreur s'est produite lors de l'achat. Veuillez réessayer.",
+    it: "Si è verificato un problema con l'acquisto. Riprova.",
+  },
+
+  // Alışveriş listesi kategorileri (Premium)
+  groceryKasap: {
+    tr: 'Kasap',
+    en: 'Butcher',
+    fr: 'Boucherie',
+    it: 'Macelleria',
+  },
+  groceryManav: {
+    tr: 'Manav',
+    en: 'Produce',
+    fr: 'Primeur',
+    it: 'Fruttivendolo',
+  },
+  grocerySarkuteri: {
+    tr: 'Şarküteri',
+    en: 'Deli',
+    fr: 'Charcuterie',
+    it: 'Salumeria',
+  },
+  groceryFirin: {
+    tr: 'Fırın',
+    en: 'Bakery',
+    fr: 'Boulangerie',
+    it: 'Panetteria',
+  },
+  grocerySutUrunleri: {
+    tr: 'Süt Ürünleri',
+    en: 'Dairy',
+    fr: 'Produits laitiers',
+    it: 'Latticini',
+  },
+  groceryKuruBakliyat: {
+    tr: 'Kuru Bakliyat',
+    en: 'Dry Goods',
+    fr: 'Épicerie sèche',
+    it: 'Generi alimentari',
+  },
+  groceryBaharat: {
+    tr: 'Baharat',
+    en: 'Spices',
+    fr: 'Épices',
+    it: 'Spezie',
+  },
+  groceryTemizlik: {
+    tr: 'Temizlik',
+    en: 'Cleaning',
+    fr: 'Nettoyage',
+    it: 'Pulizia',
+  },
+  groceryDiger: {
+    tr: 'Diğer',
+    en: 'Other',
+    fr: 'Autre',
+    it: 'Altro',
+  },
+  groupByCategory: {
+    tr: 'Kategorilere Ayır',
+    en: 'Group by Category',
+    fr: 'Grouper par catégorie',
+    it: 'Raggruppa per categoria',
+  },
+  groupByRecipe: {
+    tr: 'Tarife Göre Ayır',
+    en: 'Group by Recipe',
+    fr: 'Grouper par recette',
+    it: 'Raggruppa per ricetta',
+  },
+  manualItems: {
+    tr: 'Elle Eklenenler',
+    en: 'Manually Added',
+    fr: 'Ajoutés manuellement',
+    it: 'Aggiunti manualmente',
+  },
+  forRecipe: {
+    tr: '{recipe} için',
+    en: 'For {recipe}',
+    fr: 'Pour {recipe}',
+    it: 'Per {recipe}',
+  },
+  addToMenu: {
+    tr: 'Menüme Ekle',
+    en: 'Add to My Menu',
+    fr: 'Ajouter à mon menu',
+    it: 'Aggiungi al mio menu',
+  },
+  shoppingCategoriesFeature: {
+    tr: 'Alışveriş listesini bölümlere ayırma',
+    en: 'Grouped shopping list categories',
+    fr: 'Liste de courses par rayons',
+    it: 'Lista della spesa per reparti',
+  },
+  portionScalingFeature: {
+    tr: 'Porsiyon ayarlama',
+    en: 'Portion scaling',
+    fr: 'Ajustement des portions',
+    it: 'Regolazione delle porzioni',
+  },
+  personalMenuFeature: {
+    tr: 'Kişisel menü listesi',
+    en: 'Personal menu list',
+    fr: 'Liste de menu personnelle',
+    it: 'Lista menu personale',
+  },
+  adFreeExperienceDesc: {
+    tr: 'Banner ve geçiş reklamları tamamen kaybolsun, tariflere kesintisiz odaklan.',
+    en: 'Banner and interstitial ads disappear completely — focus on recipes without interruption.',
+    fr: "Les publicités bannières et interstitielles disparaissent — concentrez-vous sur les recettes sans interruption.",
+    it: 'Gli annunci banner e interstitial spariscono del tutto: concentrati sulle ricette senza interruzioni.',
+  },
+  shoppingCategoriesFeatureDesc: {
+    tr: 'Kasap, manav, şarküteri... Marketten tek tek gezmeden, bölüm bölüm topla.',
+    en: 'Butcher, produce, deli... Shop department by department, not item by item.',
+    fr: 'Boucherie, primeur, charcuterie... Faites vos courses rayon par rayon.',
+    it: 'Macelleria, fruttivendolo, salumeria... Fai la spesa reparto per reparto.',
+  },
+  portionScalingFeatureDesc: {
+    tr: '2 kişilik tarifi 6 kişiye çıkar, malzeme miktarları otomatik hesaplansın.',
+    en: 'Scale a 2-person recipe up to 6 — ingredient amounts adjust automatically.',
+    fr: 'Adaptez une recette pour 2 personnes à 6 — les quantités s\'ajustent automatiquement.',
+    it: 'Adatta una ricetta per 2 persone a 6 — le quantità si aggiornano automaticamente.',
+  },
+  personalMenuFeatureDesc: {
+    tr: 'Beğendiğin tarifleri kendi menüne ekle, tek dokunuşla tekrar bul.',
+    en: 'Save your favorite recipes to your own menu and find them again in one tap.',
+    fr: 'Enregistrez vos recettes préférées dans votre menu et retrouvez-les en un instant.',
+    it: 'Salva le tue ricette preferite nel tuo menu e ritrovale in un tocco.',
+  },
+  bestValueBadge: {
+    tr: 'EN AVANTAJLI',
+    en: 'BEST VALUE',
+    fr: 'MEILLEUR PRIX',
+    it: 'MIGLIOR VALORE',
+  },
+  saveBadge: {
+    tr: '%{percent} tasarruf',
+    en: 'Save {percent}%',
+    fr: 'Économisez {percent}%',
+    it: 'Risparmia il {percent}%',
+  },
+  cancelAnytime: {
+    tr: 'İstediğin zaman iptal et',
+    en: 'Cancel anytime',
+    fr: 'Annulez à tout moment',
+    it: 'Annulla quando vuoi',
+  },
+  securePayment: {
+    tr: 'Google Play ile güvenli ödeme',
+    en: 'Secure payment via Google Play',
+    fr: 'Paiement sécurisé via Google Play',
+    it: 'Pagamento sicuro tramite Google Play',
+  },
+  securePaymentIOS: {
+    tr: 'App Store ile güvenli ödeme',
+    en: 'Secure payment via App Store',
+    fr: 'Paiement sécurisé via App Store',
+    it: 'Pagamento sicuro tramite App Store',
+  },
+  notNow: {
+    tr: 'Şimdi değil',
+    en: 'Not now',
+    fr: 'Pas maintenant',
+    it: 'Non ora',
+  },
+  paywallCta: {
+    tr: "Premium'a Başla",
+    en: 'Start Premium',
+    fr: 'Commencer Premium',
+    it: 'Inizia Premium',
   },
 };
 

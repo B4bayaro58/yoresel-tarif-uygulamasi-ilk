@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, Text, Image, ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -7,6 +7,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { Home, Heart, ShoppingCart, User, Shield, UtensilsCrossed } from 'lucide-react-native';
 import { useApp } from '../contexts/AppContext';
 import { useAuth } from '../contexts/AuthContext';
+import { useSubscription } from '../contexts/SubscriptionContext';
 
 import HomeScreen from '../screens/HomeScreen';
 import FavoritesScreen from '../screens/FavoritesScreen';
@@ -32,6 +33,7 @@ import PopularRecipesScreen from '../screens/PopularRecipesScreen';
 import FeaturedRecipesScreen from '../screens/FeaturedRecipesScreen';
 import BlogListScreen from '../screens/BlogListScreen';
 import BlogDetailScreen from '../screens/BlogDetailScreen';
+import PaywallScreen from '../screens/PaywallScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -55,20 +57,29 @@ const linking = {
 };
 
 function ModernHeaderTitle() {
+  const { scrollHomeToTop, translate } = useApp();
+
   return (
-    <View style={headerStyles.titleContainer}>
+    <TouchableOpacity
+      style={headerStyles.titleContainer}
+      onPress={scrollHomeToTop}
+      activeOpacity={0.7}
+      accessibilityRole="button"
+      accessibilityLabel={translate('home')}
+    >
       <Image
         source={require('../../assets/logo.png')}
         style={headerStyles.logo}
         resizeMode="contain"
       />
-    </View>
+    </TouchableOpacity>
   );
 }
 
 function HomeTabs() {
-  const { colors, translate } = useApp();
+  const { colors, translate, scrollHomeToTop } = useApp();
   const { isAdmin } = useAuth();
+  const { isPremium } = useSubscription();
 
   return (
     <Tab.Navigator
@@ -98,7 +109,10 @@ function HomeTabs() {
           elevation: 0,
           shadowOpacity: 0,
           borderBottomWidth: 0,
-          height: 84,
+          // 84 -- logo (58px) + safe-area/status bar payı için yeterli değildi,
+          // bazı cihazlarda logo üstten/alttan kırpılıyordu. 104 hala az geldi,
+          // logo banner'a sığmıyormuş gibi duruyordu -- 120'ye çıkarıldı.
+          height: 120,
         },
         headerTintColor: colors.text,
         headerTitleStyle: {
@@ -119,6 +133,13 @@ function HomeTabs() {
             <Home color={color} size={size} />
           ),
         }}
+        listeners={({ navigation }) => ({
+          tabPress: () => {
+            if (navigation.isFocused()) {
+              scrollHomeToTop();
+            }
+          },
+        })}
       />
       <Tab.Screen
         name="FavoritesTab"
@@ -142,7 +163,7 @@ function HomeTabs() {
           ),
         }}
       />
-      {/* Menu Tab - Only visible for non-admins */}
+      {/* Menu Tab - Only visible for non-admins, Premium'a özel */}
       {!isAdmin && (
         <Tab.Screen
           name="MenuTab"
@@ -154,6 +175,14 @@ function HomeTabs() {
               <UtensilsCrossed color={color} size={size} />
             ),
           }}
+          listeners={({ navigation }) => ({
+            tabPress: (e) => {
+              if (!isPremium) {
+                e.preventDefault();
+                navigation.getParent()?.navigate('Paywall');
+              }
+            },
+          })}
         />
       )}
 
@@ -238,6 +267,11 @@ function MainStack() {
         name="Main"
         component={HomeTabs}
         options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Paywall"
+        component={PaywallScreen}
+        options={{ presentation: 'modal', headerShown: false }}
       />
       <Stack.Screen
         name="RecipeDetail"
@@ -414,7 +448,11 @@ export default function AppNavigator() {
 const headerStyles = StyleSheet.create({
   titleContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
+    // 'center' yerine 'flex-end': banner büyüdükçe logo üstte havada kalmasın,
+    // banner'ın bittiği yerin çok az altında bitsin (paddingBottom ile).
+    alignItems: 'flex-end',
+    height: '100%',
+    paddingBottom: 10,
   },
   // logo.png web'deki üst banner logosuyla aynı dosya (yoreseltarif.com
   // yazısı görselin içinde) -- 749x566 orijinal orana sabit piksel ölçüsüyle
