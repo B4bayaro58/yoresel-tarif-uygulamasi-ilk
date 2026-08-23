@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.cagatay58.yoreseltarifuygulamasi",
+      "sha256_cert_fingerprints": [
+        "19:2E:9D:75:DC:17:FF:BC:FB:FE:45:87:C5:88:1D:55:68:2B:B1:8B:EC:5D:47:03:A4:20:D4:4F:A5:BB:73:0F"
+      ]
+    }
+  }
+]
