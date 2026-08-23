@@ -21,6 +21,9 @@ export default ({ config }) => ({
   ios: {
     supportsTablet: true,
     bundleIdentifier: 'com.cagatay58.yoreseltarifuygulamasi',
+    // expo-apple-authentication'ın prebuild'de "Sign In with Apple"
+    // capability + entitlement'ını otomatik eklemesi için gerekli.
+    usesAppleSignIn: true,
     privacyManifests: {
       NSPrivacyAccessedAPITypes: [],
     },

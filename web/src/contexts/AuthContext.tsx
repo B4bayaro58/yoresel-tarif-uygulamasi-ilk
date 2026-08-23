@@ -14,6 +14,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
+  OAuthProvider,
   signOut,
   signInAnonymously,
   updateProfile,
@@ -29,6 +30,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>
   register: (email: string, password: string, displayName: string) => Promise<void>
   loginWithGoogle: () => Promise<void>
+  loginWithApple: () => Promise<void>
   logout: () => Promise<void>
   loginAsGuest: () => Promise<void>
   resetPassword: (email: string) => Promise<void>
@@ -98,6 +100,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  const loginWithApple = async () => {
+    const result = await signInWithPopup(auth, new OAuthProvider('apple.com'))
+    const aUser = result.user
+
+    // Apple ile ilk kez giriş yapan kullanıcı için register()'ın oluşturduğu
+    // şekille aynı users/{uid} dokümanını oluştur. Var olan dokümana asla
+    // dokunma -- isAdmin/favorites gibi alanlar korunmalı.
+    const userDocRef = doc(db, 'users', aUser.uid)
+    const snap = await getDoc(userDocRef)
+    if (!snap.exists()) {
+      await setDoc(userDocRef, {
+        uid: aUser.uid,
+        email: aUser.email,
+        displayName: aUser.displayName || '',
+        favorites: [],
+        createdAt: serverTimestamp(),
+      })
+    }
+  }
+
   const logout = async () => {
     await signOut(auth)
   }
@@ -111,7 +133,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading, isAdmin, login, register, loginWithGoogle, logout, loginAsGuest, resetPassword }}>
+    <AuthContext.Provider value={{ user, loading, isAdmin, login, register, loginWithGoogle, loginWithApple, logout, loginAsGuest, resetPassword }}>
       {children}
     </AuthContext.Provider>
   )

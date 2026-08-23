@@ -6,6 +6,7 @@ import { Eye, EyeOff, Mail, Lock, LogIn, UserPlus, User, X } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useApp } from '@/contexts/AppContext'
 import GoogleIcon from '@/components/GoogleIcon'
+import AppleIcon from '@/components/AppleIcon'
 
 function mapFirebaseError(code: string): string {
   switch (code) {
@@ -37,7 +38,7 @@ const inputBase: React.CSSProperties = {
 
 export default function LoginPage() {
   const router = useRouter()
-  const { user, login, register, loginWithGoogle, loginAsGuest, resetPassword } = useAuth()
+  const { user, login, register, loginWithGoogle, loginWithApple, loginAsGuest, resetPassword } = useAuth()
   const { t } = useApp()
 
   const [isRegister, setIsRegister] = useState(false)
@@ -49,6 +50,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false)
   const [guestLoading, setGuestLoading] = useState(false)
   const [googleLoading, setGoogleLoading] = useState(false)
+  const [appleLoading, setAppleLoading] = useState(false)
 
   const [showResetModal, setShowResetModal] = useState(false)
   const [resetEmail, setResetEmail] = useState('')
@@ -92,6 +94,19 @@ export default function LoginPage() {
       }
     }
     finally { setGoogleLoading(false) }
+  }
+
+  const handleAppleSignIn = async () => {
+    setError('')
+    setAppleLoading(true)
+    try { await loginWithApple(); router.push('/') }
+    catch (err: any) {
+      // Kullanıcı popup'ı kapatırsa hata gösterme, sadece gerçek hatalarda göster
+      if (err?.code !== 'auth/popup-closed-by-user' && err?.code !== 'auth/cancelled-popup-request') {
+        setError(t('appleSignInError'))
+      }
+    }
+    finally { setAppleLoading(false) }
   }
 
   const openResetModal = () => {
@@ -239,6 +254,17 @@ export default function LoginPage() {
             >
               <GoogleIcon size={18} />
               {googleLoading ? '...' : t('continueWithGoogle')}
+            </button>
+
+            <button
+              type="button"
+              onClick={handleAppleSignIn}
+              disabled={appleLoading}
+              className="w-full flex items-center justify-center gap-2.5 py-3 rounded-2xl text-sm font-semibold mt-3 transition-opacity hover:opacity-80 disabled:opacity-50"
+              style={{ backgroundColor: '#000000', border: '1px solid #000000', color: '#FFFFFF' }}
+            >
+              <AppleIcon size={18} />
+              {appleLoading ? '...' : t('continueWithApple')}
             </button>
 
             <button

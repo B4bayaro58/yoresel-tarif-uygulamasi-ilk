@@ -4,6 +4,7 @@ import {
   signInWithEmailAndPassword,
   signInWithCredential,
   GoogleAuthProvider,
+  OAuthProvider,
   signOut,
   onAuthStateChanged,
   updateProfile,
@@ -18,6 +19,7 @@ import { useApp } from './AppContext';
 import { deleteImageByUrl } from '../services/imageUploadService';
 import { setUser as setSentryUser } from '../services/sentryService';
 import { signInWithGoogle, isGoogleSignInAvailable } from '../services/googleAuthService';
+import { signInWithApple, isAppleSignInAvailable } from '../services/appleAuthService';
 
 const AuthContext = createContext();
 
@@ -38,6 +40,11 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isGuest, setIsGuest] = useState(false);
+  const [appleSignInAvailable, setAppleSignInAvailable] = useState(false);
+
+  useEffect(() => {
+    isAppleSignInAvailable().then(setAppleSignInAvailable);
+  }, []);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
@@ -143,6 +150,51 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const loginWithApple = async () => {
+    try {
+      const appleResult = await signInWithApple();
+      if (!appleResult) return { success: false, error: null }; // kullanıcı vazgeçti, hata değil
+
+      const provider = new OAuthProvider('apple.com');
+      const credential = provider.credential({
+        idToken: appleResult.identityToken,
+        rawNonce: appleResult.rawNonce,
+      });
+      const result = await signInWithCredential(auth, credential);
+      const fUser = result.user;
+
+      // Apple sadece ilk girişte fullName döner (sonraki girişlerde null) --
+      // bu yüzden Firebase Auth profiline hemen yazılmalı, yoksa bir daha
+      // hiç elde edilemez.
+      const appleFullName = appleResult.fullName;
+      const displayName = fUser.displayName ||
+        [appleFullName?.givenName, appleFullName?.familyName].filter(Boolean).join(' ');
+      if (displayName && !fUser.displayName) {
+        await updateProfile(fUser, { displayName });
+      }
+
+      // Apple ile ilk kez giriş yapan kullanıcı için register()'ın
+      // oluşturduğu şekille aynı users/{uid} dokümanını oluştur. Var olan
+      // dokümana asla dokunma -- isAdmin/favorites gibi alanlar korunmalı.
+      const userDocRef = doc(db, 'users', fUser.uid);
+      const snap = await getDoc(userDocRef);
+      if (!snap.exists()) {
+        await setDoc(userDocRef, {
+          uid: fUser.uid,
+          email: fUser.email,
+          displayName: displayName || '',
+          createdAt: new Date().toISOString(),
+          favorites: [],
+          createdRecipes: [],
+        });
+      }
+
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: translate('appleSignInError') };
+    }
+  };
+
   const resetPassword = async (email) => {
     try {
       await sendPasswordResetEmail(auth, email.trim());
@@ -227,6 +279,8 @@ export const AuthProvider = ({ children }) => {
     login,
     loginWithGoogle,
     isGoogleSignInAvailable: isGoogleSignInAvailable(),
+    loginWithApple,
+    isAppleSignInAvailable: appleSignInAvailable,
     logout,
     resetPassword,
     deleteAccount,

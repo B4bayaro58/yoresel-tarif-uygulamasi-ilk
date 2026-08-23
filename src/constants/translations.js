@@ -1377,6 +1377,18 @@ export const TRANSLATIONS = {
     fr: 'Impossible de se connecter avec Google. Veuillez réessayer.',
     it: 'Impossibile accedere con Google. Riprova.',
   },
+  continueWithApple: {
+    tr: 'Apple ile Devam Et',
+    en: 'Continue with Apple',
+    fr: 'Continuer avec Apple',
+    it: 'Continua con Apple',
+  },
+  appleSignInError: {
+    tr: 'Apple ile giriş yapılamadı. Lütfen tekrar deneyin.',
+    en: 'Could not sign in with Apple. Please try again.',
+    fr: 'Impossible de se connecter avec Apple. Veuillez réessayer.',
+    it: 'Impossibile accedere con Apple. Riprova.',
+  },
   noAccount: {
     tr: 'Hesabınız yok mu? ',
     en: 'Don\'t have an account? ',

@@ -12,13 +12,27 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { LogIn, Mail, Lock, User } from 'lucide-react-native';
+import {
+  AppleAuthenticationButton,
+  AppleAuthenticationButtonType,
+  AppleAuthenticationButtonStyle,
+} from 'expo-apple-authentication';
 import { useNavigation } from '@react-navigation/native';
 import { useAuth } from '../contexts/AuthContext';
 import { useApp } from '../contexts/AppContext';
 import GoogleIcon from '../components/GoogleIcon';
 
 export default function LoginScreen() {
-  const { login, register, loginWithGoogle, isGoogleSignInAvailable, continueAsGuest, resetPassword } = useAuth();
+  const {
+    login,
+    register,
+    loginWithGoogle,
+    isGoogleSignInAvailable,
+    loginWithApple,
+    isAppleSignInAvailable,
+    continueAsGuest,
+    resetPassword,
+  } = useAuth();
   const { colors, translate, showNotification } = useApp();
   const navigation = useNavigation();
 
@@ -28,6 +42,7 @@ export default function LoginScreen() {
   const [displayName, setDisplayName] = useState('');
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+  const [appleLoading, setAppleLoading] = useState(false);
   const [showResetModal, setShowResetModal] = useState(false);
   const [resetEmail, setResetEmail] = useState('');
   const [resetLoading, setResetLoading] = useState(false);
@@ -68,6 +83,19 @@ export default function LoginScreen() {
     setGoogleLoading(true);
     const result = await loginWithGoogle();
     setGoogleLoading(false);
+    if (result.success) {
+      showNotification(translate('loginSuccess'));
+    } else if (result.error) {
+      // result.error === null -> kullanıcı vazgeçti, bildirim gösterme
+      showNotification(result.error);
+    }
+  };
+
+  const handleAppleSignIn = async () => {
+    if (appleLoading) return;
+    setAppleLoading(true);
+    const result = await loginWithApple();
+    setAppleLoading(false);
     if (result.success) {
       showNotification(translate('loginSuccess'));
     } else if (result.error) {
@@ -172,32 +200,44 @@ export default function LoginScreen() {
               )}
             </TouchableOpacity>
 
-            {/* Google ile Devam Et — webClientId yapılandırılmadıysa hiç gösterilmez */}
-            {isGoogleSignInAvailable && (
+            {/* Google/Apple ile Devam Et — yapılandırılmadıysa (Google) veya
+                platform desteklemiyorsa (Apple, sadece iOS) hiç gösterilmez */}
+            {(isGoogleSignInAvailable || isAppleSignInAvailable) && (
               <>
                 <View style={styles.dividerRow}>
                   <View style={styles.dividerLine} />
                   <Text style={styles.dividerText}>{translate('orDivider')}</Text>
                   <View style={styles.dividerLine} />
                 </View>
-                <TouchableOpacity
-                  style={styles.googleButton}
-                  onPress={handleGoogleSignIn}
-                  disabled={googleLoading}
-                  accessibilityRole="button"
-                  accessibilityLabel={translate('continueWithGoogle')}
-                >
-                  {googleLoading ? (
-                    <ActivityIndicator color="#5F6368" />
-                  ) : (
-                    <>
-                      <GoogleIcon size={18} />
-                      <Text style={styles.googleButtonText}>
-                        {translate('continueWithGoogle')}
-                      </Text>
-                    </>
-                  )}
-                </TouchableOpacity>
+                {isGoogleSignInAvailable && (
+                  <TouchableOpacity
+                    style={styles.googleButton}
+                    onPress={handleGoogleSignIn}
+                    disabled={googleLoading}
+                    accessibilityRole="button"
+                    accessibilityLabel={translate('continueWithGoogle')}
+                  >
+                    {googleLoading ? (
+                      <ActivityIndicator color="#5F6368" />
+                    ) : (
+                      <>
+                        <GoogleIcon size={18} />
+                        <Text style={styles.googleButtonText}>
+                          {translate('continueWithGoogle')}
+                        </Text>
+                      </>
+                    )}
+                  </TouchableOpacity>
+                )}
+                {isAppleSignInAvailable && (
+                  <AppleAuthenticationButton
+                    buttonType={AppleAuthenticationButtonType.CONTINUE}
+                    buttonStyle={AppleAuthenticationButtonStyle.BLACK}
+                    cornerRadius={12}
+                    style={styles.appleButton}
+                    onPress={handleAppleSignIn}
+                  />
+                )}
               </>
             )}
 
@@ -423,6 +463,10 @@ const styles = StyleSheet.create({
     color: '#3C4043',
     fontSize: 15,
     fontWeight: '600',
+  },
+  appleButton: {
+    height: 48,
+    marginTop: 14,
   },
   toggleButton: {
     marginTop: 20,
