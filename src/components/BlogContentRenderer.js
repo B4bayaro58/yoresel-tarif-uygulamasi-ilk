@@ -9,7 +9,7 @@ import { Image } from 'expo-image';
 // tercih edildi — hem daha basit hem uygulamanın geri kalanıyla tutarlı.
 //
 // Desteklenen node tipleri, web editörünün extension set'iyle (StarterKit +
-// heading[2,3] + Link + recipeCard/recipeLink) birebir sınırlıdır.
+// heading[2,3] + Link + Image + recipeCard/recipeLink) birebir sınırlıdır.
 
 function resolveRecipe(recipes, recipeId) {
   if (!recipeId || !recipes) return null;
@@ -83,6 +83,23 @@ function Heading({ node, ...ctx }) {
   return <Text style={[level === 2 ? styles.h2 : styles.h3, { color: ctx.colors.text }]}>{children}</Text>;
 }
 
+function ImageNode({ node, colors }) {
+  const [aspectRatio, setAspectRatio] = React.useState(4 / 3);
+  const src = node.attrs?.src;
+  if (!src) return null;
+  return (
+    <Image
+      source={{ uri: src }}
+      style={[styles.contentImage, { aspectRatio, backgroundColor: colors.card }]}
+      contentFit="cover"
+      onLoad={(e) => {
+        const { width, height } = e.source || {};
+        if (width && height) setAspectRatio(width / height);
+      }}
+    />
+  );
+}
+
 function BlockQuote({ node, ...ctx }) {
   return (
     <View style={[styles.blockquote, { borderLeftColor: ctx.colors.primary }]}>
@@ -152,6 +169,8 @@ function BlockNode({ node, ...ctx }) {
       return <View style={[styles.hr, { backgroundColor: ctx.colors.border }]} />;
     case 'recipeCard':
       return <RecipeCardNode node={node} {...ctx} />;
+    case 'image':
+      return <ImageNode node={node} {...ctx} />;
     default:
       return null;
   }
@@ -178,6 +197,7 @@ const styles = StyleSheet.create({
     marginVertical: 12,
   },
   hr: { height: 1, marginVertical: 20 },
+  contentImage: { width: '100%', borderRadius: 16, marginVertical: 10 },
   list: { marginVertical: 8 },
   listItemRow: { flexDirection: 'row', marginBottom: 6 },
   listMarker: { width: 22, fontSize: 15, fontWeight: '700' },

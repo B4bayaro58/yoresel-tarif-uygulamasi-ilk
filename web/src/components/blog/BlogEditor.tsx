@@ -1,8 +1,11 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { useEditor, EditorContent } from '@tiptap/react'
-import { Bold, Italic, Heading2, List, Link as LinkIcon, UtensilsCrossed, Link2 } from 'lucide-react'
+import { Bold, Italic, Heading2, List, Link as LinkIcon, UtensilsCrossed, Link2, Image as ImageIcon } from 'lucide-react'
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
+import { storage } from '@/config/firebase'
+import { resizeImageToJpegBlob } from '@/lib/image'
 import { blogExtensions } from '@/lib/blogEditor/extensions'
 import RecipePickerPopover from './RecipePickerPopover'
 
@@ -30,6 +33,9 @@ type RecipePickerMode = 'card' | 'link' | null
 
 export default function BlogEditor({ content, onChange }: BlogEditorProps) {
   const [pickerMode, setPickerMode] = useState<RecipePickerMode>(null)
+  const [uploadingImage, setUploadingImage] = useState(false)
+  const [imageUploadError, setImageUploadError] = useState<string | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const editor = useEditor({
     extensions: blogExtensions,
@@ -53,6 +59,25 @@ export default function BlogEditor({ content, onChange }: BlogEditorProps) {
       editor.chain().focus().extendMarkRange('link').unsetLink().run()
     } else {
       editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
+    }
+  }
+
+  const handleImageFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    e.target.value = ''
+    setUploadingImage(true)
+    setImageUploadError(null)
+    try {
+      const blob = await resizeImageToJpegBlob(file, 1600, 0.85)
+      const storageRef = ref(storage, `blog/${Date.now()}.jpg`)
+      await uploadBytes(storageRef, blob, { contentType: 'image/jpeg', cacheControl: 'public, max-age=31536000, immutable' })
+      const url = await getDownloadURL(storageRef)
+      editor?.chain().focus().setImage({ src: url }).run()
+    } catch (err: any) {
+      setImageUploadError(err?.message || 'Yükleme başarısız.')
+    } finally {
+      setUploadingImage(false)
     }
   }
 
@@ -86,6 +111,17 @@ export default function BlogEditor({ content, onChange }: BlogEditorProps) {
         <ToolbarButton active={editor.isActive('link')} onClick={toggleLink}>
           <LinkIcon size={15} />
         </ToolbarButton>
+        <ToolbarButton active={false} onClick={() => fileInputRef.current?.click()}>
+          <ImageIcon size={15} />
+        </ToolbarButton>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={handleImageFileChange}
+          disabled={uploadingImage}
+        />
 
         <div className="w-px h-5 mx-1" style={{ backgroundColor: 'var(--border)' }} />
 
@@ -116,6 +152,13 @@ export default function BlogEditor({ content, onChange }: BlogEditorProps) {
             <RecipePickerPopover onSelect={handleRecipeSelect} onClose={() => setPickerMode(null)} />
           )}
         </div>
+
+        {uploadingImage && (
+          <span className="text-xs ml-1" style={{ color: 'var(--text-muted)' }}>Fotoğraf yükleniyor...</span>
+        )}
+        {imageUploadError && (
+          <span className="text-xs ml-1" style={{ color: '#C4593A' }}>{imageUploadError}</span>
+        )}
       </div>
       <EditorContent editor={editor} />
     </div>

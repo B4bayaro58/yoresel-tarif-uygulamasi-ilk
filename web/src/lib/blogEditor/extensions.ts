@@ -1,5 +1,6 @@
 import StarterKit from '@tiptap/starter-kit'
 import Link from '@tiptap/extension-link'
+import Image from '@tiptap/extension-image'
 import { RecipeCardExtension } from './recipeCardExtension'
 import { RecipeLinkExtension } from './recipeLinkExtension'
 
@@ -11,6 +12,7 @@ export const blogExtensions = [
     heading: { levels: [2, 3] },
   }),
   Link.configure({ openOnClick: false, autolink: true }),
+  Image.configure({ inline: false, HTMLAttributes: { class: 'blog-content-image' } }),
   RecipeCardExtension,
   RecipeLinkExtension,
 ]
