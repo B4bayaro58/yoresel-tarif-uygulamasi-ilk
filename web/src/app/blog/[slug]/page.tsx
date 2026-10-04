@@ -9,6 +9,7 @@ import { getBlogPostBySlug } from '@/lib/blog'
 import { BlogPost } from '@/types'
 import { isPreOptimized } from '@/lib/image'
 import BlogContentRenderer from '@/components/blog/BlogContentRenderer'
+import { trackView } from '@/lib/viewStats'
 
 function formatDate(value: unknown): string {
   if (!value) return ''
@@ -28,6 +29,10 @@ export default function BlogDetailPage() {
   useEffect(() => {
     if (slug) getBlogPostBySlug(slug).then(setPost)
   }, [slug])
+
+  useEffect(() => {
+    trackView('blog', post?.id)
+  }, [post?.id])
 
   if (post === undefined) {
     return (

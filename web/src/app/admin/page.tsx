@@ -14,6 +14,7 @@ import {
   TrendingUp,
   BookMarked,
   Newspaper,
+  BarChart3,
 } from 'lucide-react'
 import clsx from 'clsx'
 import { collection, getCountFromServer, getDocs, query, where } from 'firebase/firestore'
@@ -123,6 +124,13 @@ export default function AdminPage() {
   ]
 
   const quickLinks = [
+    {
+      href: '/admin/stats',
+      label: 'İstatistikler',
+      description: 'Tarif ve blog görüntülenme sayıları',
+      icon: <BarChart3 size={20} />,
+      color: 'text-purple-500',
+    },
     {
       href: '/admin/recipes/new',
       label: 'Yeni Tarif Ekle',

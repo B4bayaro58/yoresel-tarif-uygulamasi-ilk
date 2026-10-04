@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, Plus, Trash2, Newspaper } from 'lucide-react'
+import { ArrowLeft, Plus, Trash2, Newspaper, Eye } from 'lucide-react'
 import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore'
 import { db } from '@/config/firebase'
 import { BlogPost } from '@/types'
@@ -23,6 +23,7 @@ export default function AdminBlogPage() {
   const [items, setItems] = useState<BlogPost[]>([])
   const [loading, setLoading] = useState(true)
   const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [readStats, setReadStats] = useState<Record<string, { views: number; uniqueViews: number }>>({})
 
   const load = async () => {
     setLoading(true)
@@ -32,6 +33,17 @@ export default function AdminBlogPage() {
         .map((d) => ({ id: d.id, ...d.data() }) as BlogPost)
         .sort((a, b) => toMillis(b.updatedAt || b.createdAt) - toMillis(a.updatedAt || a.createdAt))
       setItems(data)
+      // Okunma sayaçları (lib/viewStats.ts) — yazı sayısı az, hepsi tek sorguda
+      getDocs(collection(db, 'blogStats'))
+        .then((statsSnap) => {
+          const map: Record<string, { views: number; uniqueViews: number }> = {}
+          statsSnap.docs.forEach((d) => {
+            const x: any = d.data()
+            map[d.id] = { views: x.views || 0, uniqueViews: x.uniqueViews || 0 }
+          })
+          setReadStats(map)
+        })
+        .catch(() => {})
     } catch (e) {
       console.error(e)
     } finally {
@@ -104,6 +116,15 @@ export default function AdminBlogPage() {
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-semibold truncate" style={{ color: 'var(--text)' }}>{post.title}</p>
                   <p className="text-xs truncate" style={{ color: 'var(--text-muted)' }}>/blog/{post.slug}</p>
+                </div>
+                <div
+                  className="flex items-center gap-1 text-xs tabular-nums flex-shrink-0"
+                  style={{ color: 'var(--text-muted)' }}
+                  title={`${readStats[post.id]?.views || 0} okunma · ${readStats[post.id]?.uniqueViews || 0} tekil okuyucu`}
+                >
+                  <Eye size={13} />
+                  <span className="font-semibold" style={{ color: 'var(--text)' }}>{(readStats[post.id]?.views || 0).toLocaleString('tr-TR')}</span>
+                  <span>· {(readStats[post.id]?.uniqueViews || 0).toLocaleString('tr-TR')} kişi</span>
                 </div>
                 <Link
                   href={`/admin/blog/${post.id}`}

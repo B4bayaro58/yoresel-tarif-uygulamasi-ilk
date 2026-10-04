@@ -30,6 +30,7 @@ import ReviewsSection from '@/components/ReviewsSection'
 import AdSlot from '@/components/AdSlot'
 import { isPreOptimized } from '@/lib/image'
 import { getOverrideRecipe } from '@/lib/overridePhoto'
+import { trackView } from '@/lib/viewStats'
 // @ts-ignore
 import { RECIPES_DATA } from '@shared/recipes'
 
@@ -102,6 +103,13 @@ export default function RecipeDetailClient({ initialRecipe }: RecipeDetailClient
     }
     if (id) load()
   }, [id, initialRecipe])
+
+  // Admin istatistikleri: override edilmiş tarifler statik id'leri altında sayılır,
+  // böylece aynı tarif iki ayrı sayaca bölünmez
+  const statsId = recipe ? ((recipe as any).overridesStaticId ?? recipe.id) : null
+  useEffect(() => {
+    trackView('recipe', statsId)
+  }, [statsId])
 
   const handleAddAllToShoppingList = () => {
     if (!recipe) return

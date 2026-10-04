@@ -5,6 +5,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useApp } from '../contexts/AppContext';
 import { getBlogPostBySlug, formatBlogDate } from '../services/blogService';
 import BlogContentRenderer from '../components/BlogContentRenderer';
+import { trackBlogView } from '../services/viewStatsService';
 
 export default function BlogDetailScreen({ route, navigation }) {
   const { slug } = route.params;
@@ -20,6 +21,10 @@ export default function BlogDetailScreen({ route, navigation }) {
       navigation.setOptions({ headerTitle: post.title });
     }
   }, [post, navigation]);
+
+  useEffect(() => {
+    if (post?.id) trackBlogView(post.id);
+  }, [post?.id]);
 
   if (post === undefined) {
     return (

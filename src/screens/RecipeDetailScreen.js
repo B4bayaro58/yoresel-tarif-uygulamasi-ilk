@@ -40,6 +40,7 @@ import ReviewsSection from '../components/ReviewsSection';
 import RecipeCard from '../components/RecipeCard';
 import AdBanner from '../components/AdBanner';
 import { logRecipeView, logShare } from '../services/analyticsService';
+import { trackRecipeView } from '../services/viewStatsService';
 import { maybeShowInterstitial } from '../services/interstitialAdService';
 
 const { width } = Dimensions.get('window');
@@ -79,6 +80,7 @@ function RecipeDetailContent({ recipe, navigation }) {
   // Sayfa açılınca görüntüleme logu
   React.useEffect(() => {
     logRecipeView(recipe.id, recipe.name, recipe.continent);
+    trackRecipeView(recipe);
     maybeShowInterstitial(isPremium);
   }, [recipe.id]);
 
