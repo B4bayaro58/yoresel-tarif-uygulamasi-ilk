@@ -41,7 +41,9 @@ service cloud.firestore {
         && request.resource.data.get('isAdmin', false) == resource.data.get('isAdmin', false)
         && request.resource.data.get('isBlocked', false) == resource.data.get('isBlocked', false)
       );
-      allow delete: if isAdmin();
+      // Owners may delete their own doc -- in-app account deletion
+      // (AuthContext.js deleteAccount) needs it; store policies require it.
+      allow delete: if isOwner(userId) || isAdmin();
     }
 
     // Recipes collection
@@ -83,7 +85,9 @@ service cloud.firestore {
           && request.resource.data.rating is number
           && request.resource.data.rating >= 0 && request.resource.data.rating <= 5)
       );
-      allow delete: if isAdmin();
+      // Submitters may delete their own recipes -- account deletion removes
+      // everything the user submitted (AuthContext.js deleteAccount).
+      allow delete: if isAdmin() || (isAuth() && resource.data.submittedBy == request.auth.uid);
     }
 
     // Reviews collection
