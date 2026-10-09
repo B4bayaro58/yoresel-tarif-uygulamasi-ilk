@@ -216,6 +216,148 @@ Perde pilavının etkisi, sofrada kesildiği andadır: altın rengi, çıtır yu
 
 Püf noktası: İç pilavı tam pişirmeyin; fırında yufkanın içinde pişmeye devam edecek. Yufkaları kabın kenarlarından taşacak şekilde döşeyin ki pilavın üstünü tamamen kapatabilesiniz. Fırından çıkınca birkaç dakika dinlendirip öyle ters çevirin, perde dağılmaz.`,
   },
+
+  // ── 3. grup (20 tarif) ──
+  'konya-firin-kebabi': {
+    tr: `Konya fırın kebabı, Konya mutfağının en köklü et yemeklerinden biri. Kemikli kuzu eti, sadece tuz, karabiber ve birkaç aromatikle, kapalı bir kapta ve düşük ısıda saatlerce pişirilir. Sonuçta et kemikten kendiliğinden ayrılır, kendi suyunda ve yağında yumuşacık olur.
+
+Bu yemeğin sırrı sadeliğinde ve sabırda yatar. Konya'da fırın kebabı geleneksel olarak büyük taş fırınlarda, tandır kebabına benzer şekilde pişirilir ve genellikle pide ekmeği üzerinde servis edilir. Ev fırınında güveçle bu sonuca çok yaklaşmak mümkündür.
+
+Püf noktası: Güvecin kapağını kenarlarından un-su hamuruyla kapatın ki buhar kaçmasın; et kendi buharında pişmelidir. Pişirme süresince kapağı açmayın. Fırından çıkınca on beş dakika dinlendirin ve güveçte biriken suyu servis sırasında etin üzerine gezdirin.`,
+  },
+  'izmir-boyoz': {
+    tr: `Boyoz, İzmir'in sabahlarıyla özdeşleşmiş, tahinli ve katmerli küçük bir hamur işi. İspanya'dan göç eden Sefarad Yahudilerinin mutfağından İzmir'e geçtiği ve zamanla şehrin simgesi haline geldiği anlatılır. İzmir'de boyoz genellikle haşlanmış yumurta ve bir bardak çayla, sokakta ayaküstü yenir.
+
+Boyozun dokusu, tahin ve yağla katlanarak açılan hamurdan gelir. Fırında kabaran katmanlar dışta hafif çıtır, içte yumuşak kalır. Az malzemeyle yapılan ama sabır isteyen bir lezzettir.
+
+Püf noktası: Hamuru yoğurduktan sonra mutlaka dinlendirin ki elastikiyet kazanıp kolay açılsın. Tahinli harcı ince ve eşit sürün, sonra hamuru sıkıca rulo yapın. Ruloyu kesmeden önce buzdolabında dinlendirmek dilimlerin dağılmamasını sağlar. Boyozları fırından çıkınca bir bezle örtün, yumuşak kalırlar.`,
+  },
+  'edirne-tava-cigeri': {
+    tr: `Edirne tava ciğeri, şehrin adıyla birlikte anılan en ünlü lezzet. İncecik dilimlenmiş kuzu ciğeri una bulanıp kızgın yağda saniyeler içinde kızartılır ve yanında kızarmış kuru acı biber, soğan ve cacıkla servis edilir. Edirne'nin ciğercileri, bu tekniği kuşaktan kuşağa aktaran ustalarıyla bilinir.
+
+Tava ciğerin başarısı, ciğerin ne kadar ince kesildiğine ve ne kadar kısa sürede piştiğine bağlıdır. Doğru pişmiş ciğer yumuşak ve suludur; fazla pişen ciğer ise sertleşir ve lastik gibi olur.
+
+Püf noktası: Ciğeri kesmeden önce buzdolabında biraz sertleştirirseniz çok ince dilimleyebilirsiniz. Unu iyice silkeleyin, fazla un yağda yanar. Tavayı ve yağı çok iyi ısıtın ve ciğerleri tek kat halinde, az sayıda kızartın. Her yüzünü kısa süre pişirip hemen servis edin.`,
+  },
+  'tokat-kebabi': {
+    tr: `Tokat kebabı, Tokat'ın en bilinen yemeği ve sebzeyle etin aynı şişte buluştuğu özgün bir kebap. Kuzu eti, patlıcan, patates, domates ve biber, araya kuyruk yağı dilimleri konularak şişlere dizilir. Geleneksel olarak bu şişler özel fırınlarda dikey asılarak pişirilir; böylece kuyruk yağı eriyip sebzelerin ve etin üzerinden süzülür.
+
+Tokat kebabının lezzeti bu yağ akışından gelir: patates ve patlıcan, etin ve kuyruk yağının suyunu emerek yumuşar. Yanında bir baş közlenmiş sarımsak ve ince lavaş ya da tandır ekmeği servis edilir.
+
+Püf noktası: Patlıcanları tuzlu suda bekletip iyice kurulayın. Kuyruk yağı dilimlerini etin hemen üstüne gelecek şekilde dizin ki eriyen yağ ete ve sebzelere işlesin. Ev fırınında pişirirken şişleri bir kez çevirin ve son dakikalarda ızgara ayarında üstünü kızartın.`,
+  },
+  'nigde-etli-ekmek': {
+    tr: `Etli ekmek, Orta Anadolu'nun ince hamurlu fırın lezzeti. Niğde'de ve çevresinde mahalle fırınlarında pişirilen etli ekmek, incecik açılmış hamurun üzerine çiğ kıymalı harcın sürülüp yüksek ısıda kısa sürede pişirilmesiyle hazırlanır. Lahmacuna benzese de daha geniş ve ince hamuru, sade harcıyla kendine özgüdür.
+
+Harcın içinde kıymanın yanında rendelenmiş soğan ve domates, biber ve salça bulunur. Pişince üzerine maydanoz serpilir, limon sıkılır ve rulo yapılarak yenir.
+
+Püf noktası: Harcı kavurmadan, çiğ olarak ve ince bir tabaka halinde yayın; kalın harç hamuru ıslatır. Fırını mümkün olan en yüksek ısıya getirin ve bir fırın taşı ya da tepsiyi önceden ısıtın. Etli ekmek kısa sürede pişer; kenarları kızarınca hemen çıkarın.`,
+  },
+  'trabzon-akçaabat-köfte': {
+    tr: `Akçaabat köftesi, Trabzon'un Akçaabat ilçesinden çıkıp tüm Türkiye'ye yayılmış, coğrafi işaretli bir lezzet. Sadeliğiyle tanınır: yağlı dana kıyma, soğan, sarımsak ve birkaç baharat. İçine ekmek içi ya da yumurta katılmaz.
+
+Akçaabat'ta köftecilerde bu köfte genellikle piyaz, közlenmiş biber ve mısır ekmeğiyle servis edilir. Kalınca şekillendirilen köftelerin dışı ızgarada hafif kızarır, içi sulu kalır.
+
+Püf noktası: Kıymayı soğanın suyunu sıkıp ekledikten sonra uzun süre yoğurun ve buzdolabında dinlendirin; köfte böylece kendini toplar ve ızgarada dağılmaz. Közün alevsiz olmasını bekleyin. Köfteleri ızgarada fazla çevirmeyin, her yüzünü bir kez pişirin.`,
+  },
+  'inegol-koftesi': {
+    tr: `İnegöl köftesi, Bursa'nın İnegöl ilçesinin coğrafi işaretli ünlü lezzeti. Bu köftenin İnegöl'e 20. yüzyılın başlarında Balkanlardan göç eden ustalarla geldiği anlatılır. Bugün ilçede köfteci sayısı neredeyse sayılamayacak kadar çoktur.
+
+İnegöl köftesini diğerlerinden ayıran malzeme listesinin kısalığıdır: kıyma, soğan, tuz ve az miktarda karbonat. Sarımsak ve baharat çeşitliliği yoktur. Karbonat köfteye yumuşaklık verir; uzun dinlendirme ise lezzetin oturmasını sağlar.
+
+Püf noktası: Harcı en az iki saat, mümkünse bir gece dinlendirin. Köfteleri ıslak elle, kısa ve yassı silindirler halinde şekillendirin. Izgarayı çok iyi ısıtın ve köfteleri yüksek ateşte kısa sürede pişirin ki dışı kızarsın, içi sulu kalsın.`,
+  },
+  'tekirdag-köftesi': {
+    tr: `Tekirdağ köftesi, Trakya'nın en bilinen lezzeti ve coğrafi işaretli bir ürün. Bu köftenin Tekirdağ'a Balkanlardan gelen göçmenlerle yerleştiği anlatılır. Şehirde köfte, yanında piyaz ve közlenmiş biberle, çoğu zaman tek başına bir öğün olarak yenir.
+
+Tekirdağ köftesinin yumuşaklığı, kıymaya eklenen bayat ekmek içi ve karbonattan, aroması ise kimyondan gelir. Uzun ve hafif yuvarlak şekli onu yassı ızgara köftelerinden ayırır.
+
+Püf noktası: Ekmek içini ıslattıktan sonra suyunu çok iyi sıkın; fazla su köfteyi dağıtır. Harcı uzun süre yoğurun ve buzdolabında en az bir saat, tercihen bir gece dinlendirin. Izgarayı hafifçe yağlayın ve köftelerin her yüzünü kızarana kadar pişirin.`,
+  },
+  'mardin-kaburga-dolmasi': {
+    tr: `Kaburga dolması, Mardin mutfağının bayram ve misafir sofralarındaki gösterişli yemeği. Kuzu kaburgasının içine açılan cebe baharatlı, kıymalı pirinç harcı doldurulur ve saatlerce fırında pişirilir. Mardin'de bu yemek, özellikle Kurban Bayramı'nda pişirilen geleneksel yemeklerin başında gelir.
+
+Harçtaki yenibahar ve tarçın, Mardin mutfağının farklı kültürlerden beslenen zengin baharat geleneğini yansıtır. Uzun pişirme süresi boyunca kaburganın yağı pirince işler ve et kemikten ayrılacak kadar yumuşar.
+
+Püf noktası: Kaburganın cebini kasabınıza açtırın. Harcı fazla doldurmayın; pirinç pişerken şişer ve ağzını zorlar. Cebin ağzını iple dikin ya da kürdanla kapatın. Kaburgayı folyo altında düşük ısıda pişirin, son yarım saatte folyoyu açıp üstünü kızartın.`,
+  },
+  'hatay-tepsi-kebabi': {
+    tr: `Tepsi kebabı, Hatay mutfağının en pratik ve sevilen fırın yemeklerinden biri. Baharatlı kıyma tepsiye ince bir tabaka halinde yayılır, üzerine domates ve biber dizilir, salçalı bir sos gezdirilerek fırında pişirilir. Antakya'da tepsi kebabı genellikle evde hazırlanıp mahalle fırınına gönderilir.
+
+Bu yemek kalabalık sofralar için idealdir: tek tepside pişer, dilimlenerek servis edilir. Kıymaya katılan sarımsak, maydanoz ve Hatay'ın sevdiği baharatlar, ona kendine özgü bir lezzet verir.
+
+Püf noktası: Kıyma harcını dinlendirdikten sonra tepsiye eşit kalınlıkta yayın; kalın yerler geç pişer. Tepsiye yaymadan önce kıymayı ıslak elle bastırırsanız düzgün bir yüzey elde edersiniz. Fırından çıkınca birkaç dakika bekletin, dilimler daha düzgün kesilir.`,
+  },
+  'kayseri-pastirma': {
+    tr: `Kayseri pastırması, Türkiye'nin en bilinen et kurutma geleneğinin ürünü ve coğrafi işaretli bir lezzet. Adının, etin tuzlanıp preslenmesinden, yani "bastırılmasından" geldiği kabul edilir. Kayseri'nin kuru ve soğuk iklimi, bu uzun kurutma sürecine çok uygundur.
+
+Pastırmanın karakterini "çemen" denen kaplama verir: çemen otu tohumu, kırmızı biber ve sarımsakla hazırlanan bu macun ete hem koruyucu bir kabuk hem de yoğun, keskin bir aroma kazandırır. İnce dilimlenen pastırma çiğ olarak ya da yumurtayla, kuru fasulyeyle ve böreklerde kullanılır.
+
+Püf noktası: Evde pastırma yapmak haftalar süren bir süreçtir ve serin, havadar bir ortam gerektirir. Eti her gün çevirerek tuzlayın ve kurutma aşamalarını atlamayın. Servis ederken çok ince dilimleyin; kalın dilim pastırma sert ve tuzlu gelir.`,
+  },
+  'trabzon-hamsi-tava': {
+    tr: `Hamsi, Karadeniz'in en sevilen balığı ve hamsi tava da bu sevginin en sade ifadesi. Kasım ile şubat arası hamsinin en yağlı ve lezzetli olduğu dönemdir; bu aylarda Trabzon'dan Rize'ye sahil boyunca hamsi tavası pişmeyen ev neredeyse yoktur. Karadeniz'in türkülerinde ve fıkralarında da hamsi hep başroldedir.
+
+Hamsiler mısır ununa bulanıp tavada yan yana dizilerek kızartılır. Mısır unu, Karadeniz mutfağının temel malzemesidir ve hamsiye kendine özgü çıtır bir kabuk verir.
+
+Püf noktası: Hamsileri yıkadıktan sonra çok iyi kurulayın; ıslak balık unu tutmaz ve yağı sıçratır. Tavayı kalabalık etmeyin, hamsileri sıkı ama tek kat dizin. Yağın yeterince sıcak olduğundan emin olun ki hamsi yağ çekmeden kızarsın. Mısır ekmeği ve limonla hemen servis edin.`,
+  },
+  'adana-salgam': {
+    tr: `Şalgam suyu, Adana ve Mersin'in vazgeçilmez fermente içeceği. Ekşi, tuzlu ve dilerseniz acılı tadıyla özellikle kebap ve dürümün yanında içilir. Adı şalgamdan gelse de, içeceğe koyu mor rengini ve tadının büyük kısmını mor havuç verir.
+
+Şalgam suyu, mor havuç ve şalgamın bulgur ekşisi ve tuzla birlikte günlerce fermente edilmesiyle hazırlanır. Fermantasyon içeceğe hem ekşiliğini hem de kendine özgü kokusunu kazandırır. Bölgede acılı ve acısız olarak iki şekilde tüketilir.
+
+Püf noktası: Şalgam ve havuçları soymayın, sadece iyice fırçalayın; renk büyük oranda kabuktadır. Kavanozu oda sıcaklığında, güneş almayan bir yerde tutun ve her gün karıştırın. Rengi koyu mora döndüğünde ve hoş bir ekşi koku geldiğinde süzüp buzdolabında saklayın.`,
+  },
+  'isparta-gul-lokumu': {
+    tr: `Isparta, yağ gülü yetiştiriciliği ve gül yağı üretimiyle dünyaca tanınan bir şehir. Her bahar mayıs ve haziran aylarında, sabahın erken saatlerinde toplanan gül yapraklarından gül yağı ve gül suyu elde edilir. Gül lokumu da bu geleneğin sofraya yansımasıdır.
+
+Lokum, şeker şurubu ve nişastanın uzun süre karıştırılarak pişirilmesiyle yapılan, Osmanlı'dan bu yana Türk şekerlemeciliğinin simgesi olmuş bir tatlıdır. Gül suyu lokuma hafif, çiçeksi bir aroma ve pembe bir renk verir.
+
+Püf noktası: Nişastayı mutlaka soğuk suyla eritip öyle ekleyin ve pişirme boyunca karıştırmayı bırakmayın. Karışım şeffaflaşıp koyulaşınca ocaktan alın. Gül suyunu ateşten aldıktan sonra ekleyin ki kokusu uçmasın. Lokumu kesmeden önce tamamen donmasını bekleyin.`,
+  },
+  'karabuk-safranbolu-lokumu': {
+    tr: `Safranbolu lokumu, UNESCO Dünya Mirası listesindeki tarihi Safranbolu'nun ahşap konakları kadar tanınan lezzetidir. Şehir adını, eskiden çevresinde yetiştirilen safrandan alır. Safranbolu'da lokum, çarşıdaki lokumcularda hâlâ geleneksel yöntemlerle, büyük kazanlarda saatlerce karıştırılarak yapılır.
+
+Bu tarifte lokuma safran ve gül suyu ile aroma, bütün ceviz içiyle doku verilir. Safran, lokuma hafif altın sarısı bir renk ve kendine özgü bir koku katar.
+
+Püf noktası: Lokum karışımını kısık ateşte ve sabırla, kaşık dik durana kadar pişirin; erken alınan lokum yapışkan kalır. Safranı az sıcak suda bekletip suyuyla birlikte ekleyin ki rengi iyi dağılsın. Kestiğiniz lokumları pudra şekeri ve nişasta karışımına bolca bulayın, birbirine yapışmazlar.`,
+  },
+  'izmit-pismaniyesi': {
+    tr: `Pişmaniye, Kocaeli'nin ve İzmit'in simge tatlısı. İnce ince, pamuk gibi lifler halindeki bu tatlı, şekerin kaynatılıp tereyağında kavrulmuş unla birlikte defalarca çekilip katlanmasıyla yapılır. İzmit'ten geçen yolcuların pişmaniye kutusu almadan şehirden ayrılmaması bir gelenek gibidir.
+
+Pişmaniye yapmak ustalık ve ekip işidir: geleneksel olarak birkaç kişi bir tepsinin etrafında oturur ve şeker halkasını unla birlikte çekerek yüzlerce ince lif elde eder. Evde yapmak zahmetli ama keyifli bir deneyimdir.
+
+Püf noktası: Şekeri karıştırmadan kaynatın ve sıcaklığı bir termometreyle takip edin; doğru ısıya ulaşmayan şeker lif vermez. Unu tereyağında renk almadan kavurun ve tamamen soğutun. Çekme işlemini şeker sertleşmeden, hızlı ve sürekli yapın. Pişmaniye nemden etkilenir, kapalı kapta saklayın.`,
+  },
+  'bursa-ekmek-kadayifi': {
+    tr: `Ekmek kadayıfı, Türk tatlıları içinde en sade malzemeli ama en zengin lezzetlilerden biri: ekmek, şerbet ve kaymak. Bursa'da bu tatlı, şehrin ünlü kaymağıyla birlikte servis edilir. Fırında kızaran ekmeğin şerbeti çekip yumuşaması ve üzerindeki kaymakla birleşmesi, tatlıya hem ağır hem de ferah bir tat verir.
+
+Bu tarifte bayat ekmek dilimleri tereyağıyla fırında kızartılır, sıcakken soğuk şerbetle ıslatılır ve şerbeti iyice çektikten sonra kaymak ve dövülmüş cevizle süslenir.
+
+Püf noktası: Ekmeği fırında iyice kızartın; yeterince kurumayan ekmek şerbeti çekince dağılır. Sıcak ekmeğe soğuk şerbet dökün ve tatlıyı en az yirmi dakika dinlendirin. Kaymağı servis etmeden hemen önce koyun. Ekmek kadayıfı soğuk ya da oda sıcaklığında yenir.`,
+  },
+  'bodrum-cokertme-kebabi': {
+    tr: `Çökertme kebabı, Bodrum ve Muğla yöresinin en sevilen kebabı. İncecik kesilip kızartılmış çıtır patatesler, sarımsaklı yoğurt ve yüksek ateşte sotelenmiş dana eti üst üste dizilir; üzerine domates sosu ve kızgın pul biberli tereyağı gezdirilir. Ege'nin yazlık sofralarında hem lokantaların hem de evlerin klasiğidir.
+
+Çökertmeyi özel kılan, farklı doku ve sıcaklıkların aynı tabakta buluşmasıdır: çıtır patates, serin yoğurt, sıcak et ve cızırdayan tereyağı. Tabağa gelir gelmez yenmesi gereken bir yemektir.
+
+Püf noktası: Patatesleri kibrit çöpü inceliğinde kesin, soğuk suda bekletip nişastasını alın ve çok iyi kurulayın; ıslak patates çıtır olmaz. Yoğurdu oda sıcaklığında kullanın. Eti az miktarlarda, çok yüksek ateşte kısa süre pişirin ki suyunu bırakmadan mühürlensin.`,
+  },
+  'malatya-anali-kizli': {
+    tr: `Analı kızlı, Malatya ve çevresinin bulgurlu köfte çorbası. Adını çorbadaki iki farklı köfteden alır: içi kıymalı harçla doldurulan büyük köfteler "ana", içsiz küçük bulgur köfteleri ise "kız" olarak adlandırılır. Bu ikisi birlikte et suyunda pişirilir.
+
+Doğu ve Güneydoğu Anadolu'da bulgur köfteli çorbaların pek çok çeşidi vardır; analı kızlı bunların en bilinenlerinden biridir. Köfte yapımı emek ister, bu yüzden genellikle kalabalık aile sofralarında ve misafir için pişirilir.
+
+Püf noktası: Bulgur hamurunu iyice yoğurun ki köfteler pişerken dağılmasın; gerekirse biraz daha un ekleyin. Ana köfteleri ince duvarlı yapın. Köfteleri et suyuna kaynarken ekleyin ve önce büyükleri, ardından küçükleri pişirin. Servis öncesi pul biberli tereyağı gezdirin.`,
+  },
+  'yozgat-toyga-corbasi': {
+    tr: `Toyga çorbası, Yozgat ve Orta Anadolu'nun yoğurtlu çorbası. Adının eski Türkçede düğün anlamına gelen "toy" kelimesiyle ilişkili olduğu söylenir; bölgede gerçekten de düğün sofralarının açılış çorbası olarak bilinir. Yayla çorbasına benzese de içindeki nohut ona ayrı bir doyuruculuk katar.
+
+Yoğurt, yumurta ve unla terbiye edilen et suyu, pirinç ve nohutla birlikte pişirilir. Üzerine gezdirilen naneli ve pul biberli tereyağı çorbanın kokusunu ve rengini tamamlar.
+
+Püf noktası: Yoğurtlu karışımı çorbaya doğrudan dökmeyin; önce birkaç kepçe sıcak suyla ılıştırın, sonra yavaşça ekleyin ki yoğurt kesilmesin. Yoğurdu ekledikten sonra çorbayı kısık ateşte, kaynatmadan ve sürekli karıştırarak pişirin. Naneyi tereyağında kısa süre kavurun, yakmayın.`,
+  },
 }
 
 export function getRecipeIntro(recipeId, lang = 'tr') {
