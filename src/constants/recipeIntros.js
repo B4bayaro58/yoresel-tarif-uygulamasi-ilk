@@ -358,6 +358,148 @@ Yoğurt, yumurta ve unla terbiye edilen et suyu, pirinç ve nohutla birlikte pi�
 
 Püf noktası: Yoğurtlu karışımı çorbaya doğrudan dökmeyin; önce birkaç kepçe sıcak suyla ılıştırın, sonra yavaşça ekleyin ki yoğurt kesilmesin. Yoğurdu ekledikten sonra çorbayı kısık ateşte, kaynatmadan ve sürekli karıştırarak pişirin. Naneyi tereyağında kısa süre kavurun, yakmayın.`,
   },
+
+  // ── 4. grup (20 tarif) ──
+  'edirne-gullaç': {
+    tr: `Güllaç, Osmanlı saray mutfağından günümüze ulaşan ve özellikle Ramazan ayıyla özdeşleşmiş hafif bir sütlü tatlı. Nişasta ve undan yapılan incecik, kâğıt gibi güllaç yaprakları şekerli ve gül sulu sütle ıslatılarak kat kat dizilir. Saray kültürünün izlerini bugün de taşıyan Edirne'de güllaç, gül suyunun kokusuyla ayrı bir anlam kazanır.
+
+Güllaç, ağır şerbetli tatlıların aksine ferah ve hafiftir; iftar sofralarında bu yüzden çok sevilir. Üzerine serpilen nar taneleri ve dövülmüş Antep fıstığı hem renk hem de doku katar.
+
+Püf noktası: Sütü kaynattıktan sonra ılımaya bırakın; çok sıcak süt güllaç yapraklarını eritir, soğuk süt ise yaprakları yeterince yumuşatmaz. Her katı sütle iyice ıslatın. Güllacı en az dört saat, tercihen bir gece buzdolabında dinlendirin ve süslemeyi servisten hemen önce yapın.`,
+  },
+  'izmir-lokma': {
+    tr: `Lokma, İzmir'de bir tatlıdan çok bir paylaşma geleneği. Bir yakının ölümünün ardından, bir dileğin gerçekleşmesinde ya da özel günlerde büyük kazanlarda lokma kızartılır ve mahalleliye, sokaktan geçenlere ikram edilir. İzmir sokaklarında lokma kuyruğu görmek alışıldık bir manzaradır.
+
+Mayalı, akışkan bir hamurdan küçük toplar halinde kızgın yağa bırakılan lokmalar, kızarınca hemen şerbete atılır. Dışı çıtır, içi yumuşak ve şerbetini çekmiş lokma, sıcakken yenir.
+
+Püf noktası: Hamurun iyice mayalanıp kabarcıklanmasını bekleyin; mayalanmayan hamur ağır olur. Hamuru ıslak elle ya da ıslatılmış kaşıkla yağa bırakın, yapışmaz. Yağın çok sıcak olmamasına dikkat edin, yoksa lokmanın dışı kararır ama içi pişmez. Sıcak lokmayı soğuk şerbete atın.`,
+  },
+  'finike-portakalli-revani': {
+    tr: `Revani, irmikle yapılan şerbetli bir kek tatlısı ve Türk mutfağının en sevilen ev tatlılarından biri. Antalya'nın Finike ilçesi ise kokulu ve sulu portakallarıyla ünlüdür. Bu tarif, iki lezzeti bir araya getirerek hem hamura hem de şerbete taze portakal suyu ve kabuğu katar.
+
+Portakal, revaninin klasik tatlılığına ferah bir ekşilik ve çiçeksi bir koku verir. Şerbetini iyice çekmiş revani nemli ve yumuşak olur, yine de dağılmaz.
+
+Püf noktası: Portakal kabuğunu rendelerken sadece turuncu kısmı alın, beyaz kısım acılık verir. Yumurta ve şekeri iyice köpürene kadar çırpın, revaninin kabarıklığı buradan gelir. Şerbet soğuk, revani fırından yeni çıkmış ve sıcak olmalı. Kesmeden önce en az bir saat şerbetini çekmesini bekleyin.`,
+  },
+  'gaziantep-cevizli-sucuk': {
+    tr: `Cevizli sucuk, Gaziantep ve çevresinde bağ bozumu mevsiminde evlerde hazırlanan geleneksel bir kış yiyeceği. İpe dizilen ceviz içleri, unla koyulaştırılmış ve baharatlanmış üzüm suyuna (bulama) defalarca batırılıp kurutulur. Ortaya çıkan, sucuk şeklinde, hem tatlı hem de besleyici bir atıştırmalıktır.
+
+Güneydoğu ve Doğu Anadolu'da üzümün pestil, pekmez ve sucuk gibi kışlık yiyeceklere dönüştürülmesi yüzyıllardır süren bir gelenektir. Cevizli sucuk, bu geleneğin en sevilen ürünlerinden biridir ve birkaç ay bozulmadan saklanabilir.
+
+Püf noktası: Bulamayı kısık ateşte ve sürekli karıştırarak koyulaştırın; sulu kalırsa cevizi tutmaz. Her daldırmadan sonra sucuğun yüzeyinin tamamen kurumasını bekleyin, aceleyle yeni kat eklemeyin. Son kattan sonra serin ve havadar bir yerde birkaç gün kurutun.`,
+  },
+  'giresun-kuymak': {
+    tr: `Kuymak, Doğu Karadeniz'in mısır unu ve tereyağıyla yapılan sıcak kahvaltı yemeği. Mısırın bölgeye gelişinden sonra Karadeniz mutfağının temel malzemesi haline gelmesiyle, kuymak da evlerin ve yaylaların vazgeçilmezi olmuştur. Giresun'dan Rize'ye uzanan bölgede adı ve yapılışı biraz değişse de özü aynıdır.
+
+Kuymak ile muhlama sıklıkla karıştırılır. Muhlamada peynir ön plandadır ve peynirin uzaması aranır; kuymakta ise mısır unu ve tereyağı başroldedir, peynir isteğe bağlıdır. Bu tarifte peynir, kuymağa ek bir lezzet olarak eklenebilir.
+
+Püf noktası: Mısır ununu kaynayan suya yağmur gibi yavaş yavaş serpin ve sürekli karıştırın, topaklanmasın. Kısık ateşte sabırla pişirin; kuymak tabandan ayrılmaya başladığında olmuştur. Tereyağını cömert kullanın ve sahandan, sıcakken servis edin.`,
+  },
+  'konya-hosmerim': {
+    tr: `Höşmerim, taze peynir, irmik ve tereyağıyla yapılan, sıcak yenen bir peynir tatlısı. Anadolu'nun pek çok yöresinde bilinen bu tatlının adının, tadına bakanın "hoşuma gitti" demesinden geldiği söylenir. Konya ve İç Anadolu'da da sevilerek yapılır.
+
+Höşmerim az malzemeyle, kısa sürede hazırlanır: tereyağında kavrulan irmiğe ezilmiş taze peynir eklenir, karıştırılarak pişirilir ve şekerle tatlandırılır. Sonuç, hafif tuzlu ve tatlı arasında dengeli, yumuşak dokulu bir tatlıdır.
+
+Püf noktası: Tuzsuz ya da az tuzlu, taze bir peynir kullanın; tuzlu peyniri önceden suda bekletin. Peyniri iyice ezin ki tatlı pürüzsüz olsun. Karışımı tavadan ayrılana kadar sürekli karıştırarak pişirin. Höşmerim soğuyunca sertleşir, sıcakken kaymak ya da balla servis edin.`,
+  },
+  'kayseri-kadinbudu-kofte': {
+    tr: `Kadınbudu köfte, Osmanlı mutfağından gelen ve adı kadar zarif bir köfte. İçinde pirinç bulunan kıymalı harç, oval şekillendirilip önce una sonra yumurtaya bulanarak kızartılır. Böylece dışı ince ve altın sarısı bir kabukla kaplanır, içi yumuşak kalır. Adının köftenin dolgun, oval şeklinden geldiği söylenir.
+
+Kayseri başta olmak üzere pek çok yörede ev sofralarının ve özel günlerin klasik köftesidir. Domates sosunda kısa süre pişirilerek ya da sade olarak, pilav veya patates püresiyle servis edilir.
+
+Püf noktası: Pirinci önceden haşlayıp soğutun ve harca öyle ekleyin. Harcı buzdolabında dinlendirin, köfteler kızarırken dağılmaz. Unu silkeleyip yumurtaya bulayın ve hemen kızgın yağa atın. Yağın çok sıcak olmamasına dikkat edin, köftenin içi de pişmeli.`,
+  },
+  'izmir-kofte': {
+    tr: `İzmir köftesi, Türkiye'nin her evinde pişen, tepsiyle sofraya gelen sevilen bir fırın yemeği. Kızartılmış ya da mühürlenmiş uzun köfteler, patates, domates ve sivri biberle birlikte salçalı bir sosta fırında pişirilir. Tek tepside hem ana yemek hem de garnitür hazır olur.
+
+İzmir köftesinin lezzeti, köftelerin patates ve sebzelerle aynı sosta pişip birbirinin tadını almasından gelir. Patatesler köftenin suyunu ve domates sosunu çekerek yumuşar.
+
+Püf noktası: Köfteleri tepsiye dizmeden önce tavada kısa süre mühürleyin; fırında dağılmazlar ve daha lezzetli olurlar. Patatesleri çok kalın kesmeyin, köftelerle aynı sürede pişsinler. Tepsinin üzerini önce folyoyla örtüp pişirin, son dakikalarda açarak üstünü kızartın.`,
+  },
+  'kirklareli-kapama': {
+    tr: `Kuzu kapama, Trakya'nın ve Kırklareli'nin bahar yemeği. Kuzu etinin, mevsimin ilk taze soğanları, marulu ve dereotuyla birlikte kapalı bir tencerede, kendi buharında yavaş yavaş pişirilmesiyle yapılır. Adı da bu pişirme yönteminden, tencerenin kapalı tutulmasından gelir.
+
+Trakya'da kapama, kuzunun ve bahar sebzelerinin mevsimine denk gelen bir sofra geleneğidir. Az baharatla, etin ve sebzelerin kendi tadıyla pişen yemek, hafif ve kokulu olur.
+
+Püf noktası: Eti pişirmeden önce tereyağında her yüzünü mühürleyin. Marul yapraklarıyla etin üzerini tamamen kapatın; marul hem eti nemli tutar hem de suyunu verir. Kapağı sıkıca kapatın ve pişirme süresince açmayın, kısık ateşte sabırla pişirin. Limonla servis edin.`,
+  },
+  'aydin-zeytinyagli-enginar': {
+    tr: `Zeytinyağlı enginar, Ege mutfağının bahar sofralarının yıldızı. Enginar mevsiminde Aydın'dan İzmir'e kadar pazarlarda enginar satıcıları, enginarları yerinde temizleyip limonlu suya atarak satar. Zeytinyağı, limon ve dereotuyla pişen enginar, Ege'nin hafif ve ferah mutfağını en iyi yansıtan yemeklerdendir.
+
+Bu tarifte enginar çanakları, patates, havuç ve bezelyeyle birlikte zeytinyağında pişirilir. Tüm zeytinyağlılar gibi oda sıcaklığında ya da soğuk servis edilir.
+
+Püf noktası: Enginarları temizledikten hemen sonra limonlu suya atın, havayla temas edince çabuk kararırlar. Pişirirken suyuna da limon ekleyin. Enginarları tencereye çanak tarafı yukarı bakacak şekilde dizin. Pişirme suyunu tamamen çektirmeyin; enginar kendi suyunda soğuyarak lezzetlenir. Dereotunu servis öncesi serpin.`,
+  },
+  'balikesir-cerkez-tavugu': {
+    tr: `Çerkez tavuğu, Kafkasya'dan Anadolu'ya göç eden Çerkeslerin mutfağından Türk mutfağına geçmiş, en sevilen mezelerden biri. Balıkesir ve Manyas çevresi gibi Çerkes topluluklarının yaşadığı bölgelerde nesilden nesile aktarılmıştır. Haşlanmış ve didiklenmiş tavuk, cevizli ve sarımsaklı bir sosla harmanlanır.
+
+Çerkez tavuğunun karakteri ceviz sosundan gelir: dövülmüş ceviz, ıslatılmış ekmek içi, sarımsak ve tavuk suyuyla hazırlanan bu sos, tavuğa yoğun ve kremsi bir lezzet verir. Üzerine gezdirilen kırmızı biberli ceviz yağı ise hem renk hem de koku katar.
+
+Püf noktası: Tavuğu haşlarken suyunu atmayın, sosun kıvamını bu suyla ayarlayacaksınız. Ceviz sosunu kıvamını kontrol ederek, tavuk suyunu azar azar ekleyerek hazırlayın. Tavuğu ince lifler halinde didikleyin ki sos her yere işlesin. Oda sıcaklığında servis edin.`,
+  },
+  'eskisehir-ciborek': {
+    tr: `Çibörek, Kırım Tatarlarının Eskişehir'e taşıdığı ve bugün şehrin simgesi haline gelen bir lezzet. 19. yüzyılda ve sonrasında Kırım'dan göç eden Tatarlar, bu ince hamurlu, kıymalı ve kızartılmış böreği Eskişehir'in sofralarına kazandırmıştır. Şehirde çiböreğe özel lokantalar bulunur.
+
+Çiböreği özel kılan, incecik açılan hamurun içine çiğ kıymalı harcın konup yarım ay şeklinde kapatılması ve kızgın yağda kızartılmasıdır. Kızarırken hamurun içinde biriken buhar, harcı sulu ve yumuşak tutar.
+
+Püf noktası: Hamuru sertçe yoğurup dinlendirin ve olabildiğince ince açın. Harcı çiğ olarak ve ince bir tabaka halinde koyun. Kenarları çok iyi bastırın ki kızarırken açılmasın. Yağ yeterince sıcak olmalı, çiböreği koyduğunuzda köpürmelidir.`,
+  },
+  'denizli-kabak-tatlisi': {
+    tr: `Kabak tatlısı, sonbahar ve kış aylarının en sevilen Türk tatlılarından biri. Bal kabağının kendi şekeri ve suyuyla pişirilmesiyle yapılan bu tatlı, az malzemeyle hazırlanır ama sabır ister. Ege'nin ve Denizli'nin güneşli tarlalarında yetişen bal kabakları, bu tatlıya çok uygundur.
+
+Kabak tatlısının özelliği, kabağın üzerine serpilen şekerin bir gece boyunca kabaktan su çekmesi ve kabağın büyük ölçüde kendi suyunda pişmesidir. Üzerine serpilen ceviz ve tahin ya da kaymak, tatlının klasik eşlikçileridir.
+
+Püf noktası: Kabakları şekerle katlayıp bir gece bekletin; böylece fazla su eklemenize gerek kalmaz ve kabak dağılmaz. Kapağı kapalı, kısık ateşte pişirin. Kabaklar yumuşayınca kapağı açıp şerbeti biraz koyulaştırın. Tamamen soğuduktan sonra servis edin.`,
+  },
+  'afyon-keskek': {
+    tr: `Keşkek, dövme buğday ve etin uzun süre birlikte pişirilip dövülmesiyle yapılan, Anadolu'nun düğün, bayram ve hayır sofralarının yemeği. Keşkek geleneği, 2011 yılında UNESCO İnsanlığın Somut Olmayan Kültürel Mirası listesine alınmıştır. Afyon başta olmak üzere pek çok yörede keşkek, kalabalıklar için büyük kazanlarda pişirilir.
+
+Keşkek pişirmek bir imece işidir: kazanın başında saatlerce tokmakla dövülen buğday ve et, lif lif ayrılan, yoğun ve kremsi bir kıvama ulaşır. Üzerine dökülen pul biberli tereyağı yemeği tamamlar.
+
+Püf noktası: Buğdayı bir gece önceden suya yatırın. Eti ayrı haşlayıp suyunu buğdayı pişirmekte kullanın. Pişirme boyunca sürekli karıştırıp dövün, keşkek dibe tutmaya meyillidir. Kıvam, kaşıkla alındığında yavaşça düşecek kadar yoğun olmalıdır.`,
+  },
+  'adana-kagit-kebabi': {
+    tr: `Kağıt kebabı, etin ve sebzelerin kâğıt bir paketin içinde kendi buharıyla pişirildiği bir fırın yemeği. Kuzu eti, soğan, domates, biber ve sarımsak baharatlarla marine edilip yağlı kâğıda sarılır ve fırına verilir. Paket sofrada açılır ve içinden yükselen buhar yemeğin kokusunu masaya yayar.
+
+Bu pişirme yöntemi, etin suyunu ve aromasını içinde tutar; et yumuşar, sebzeler kendi suyunda pişer. Az yağlı ve hafif bir yemek olmasına rağmen oldukça lezzetlidir.
+
+Püf noktası: Kâğıdın kenarlarını birkaç kez katlayarak sıkıca kapatın, buhar kaçmamalı. Eti marine etmeyi atlamayın. Paketleri fırına koymadan önce tepsiye dizin ve aralarında boşluk bırakın. Paketi sofrada açarken yüzünüzü uzak tutun, içinden çıkan buhar çok sıcaktır.`,
+  },
+  'diyarbakir-simit-kebabi': {
+    tr: `Simit kebabı, Diyarbakır'ın mangal kültürünün sevilen kebaplarından biri. Baharatlı, sarımsaklı kıyma uzun silindirler halinde şişlere sarılır ve közde döndürülerek pişirilir. Diyarbakır'da kebap genellikle közlenmiş domates ve biber, taze soğan, maydanoz ve sumakla, lavaş üzerinde servis edilir.
+
+Diyarbakır mutfağı, Güneydoğu Anadolu'nun bol baharatlı ve et ağırlıklı mutfak geleneğini taşır. Bu kebapta kıymaya katılan yumurta ve galeta unu, köftenin şişte tutunmasını kolaylaştırır.
+
+Püf noktası: Harcı iyice yoğurup buzdolabında dinlendirin. Şişlere sararken ellerinizi ıslatın ve kıymayı şişin üzerinde sıkıca bastırın, pişerken düşmesin. Közün alevsiz olmasını bekleyin ve şişleri sık çevirin. Lavaşı aynı közde birkaç saniye ısıtarak kebabın yağını emdirin.`,
+  },
+  'kutahya-tas-kebabi': {
+    tr: `Tas kebabı, adına rağmen şişte değil tencerede pişen, Türk mutfağının klasik et yemeklerinden biri. Kuşbaşı et, soğan, domates ve biberle birlikte kısık ateşte uzun süre pişirilerek yumuşacık bir yahniye dönüşür. Kütahya ve İç Anadolu'da tas kebabı, bulgur pilavıyla birlikte ev sofralarının ve esnaf lokantalarının sevilen yemeğidir.
+
+Tas kebabının lezzeti, etin önce yüksek ateşte mühürlenmesi ve ardından kendi suyunda, domates ve baharatlarla ağır ağır pişmesinden gelir. Sos koyulaşıp ete işler.
+
+Püf noktası: Eti tencereye az miktarlarda koyarak mühürleyin; kalabalık tencerede et suyunu bırakır ve kızarmaz. Pişirme boyunca kısık ateşi koruyun ve gerektiğinde az sıcak su ekleyin. Et iyice yumuşayıp sos koyulaşınca yemek hazırdır. Bulgur pilavıyla servis edin.`,
+  },
+  'malatya-kayisili-pilav': {
+    tr: `Malatya, dünyanın en önemli kuru kayısı üretim merkezlerinden biri ve kayısı bu şehrin mutfağında tatlıdan pilava kadar her yerde karşınıza çıkar. Kayısılı pilav, tereyağlı pirinç pilavına kuru kayısı, kavrulmuş badem ve hafif baharatlar eklenerek yapılır.
+
+Kuru kayısının tatlı ekşi tadı ile tarçın ve yenibaharın sıcak aroması, pilavı sıradan bir garnitürden çıkarıp özel bir yemeğe dönüştürür. Et yemekleriyle ya da yoğurtla birlikte servis edilir.
+
+Püf noktası: Pirinci yarım saat suda bekletip iyice süzün, pilav tane tane olur. Bademleri ayrı kavurun ve servis sırasında ekleyin ki çıtırlıklarını korusunlar. Kuru kayısıları küçük küpler halinde doğrayın. Pilavı demledikten sonra kapağın altına bir bez koyarak dinlendirin.`,
+  },
+  'canakkale-midye-dolmasi': {
+    tr: `Midye dolması, Türkiye'nin kıyı şehirlerinde, özellikle Marmara ve Ege'de, sokak lezzeti olarak da bilinen bir meze. Midyeler kabuğuyla birlikte, baharatlı pirinç harcıyla doldurulup buharda pişirilir ve limonla yenir. Çanakkale de denizle iç içe yaşayan mutfağıyla midye dolmasının sevildiği şehirlerdendir.
+
+İç pilavdaki çam fıstığı, kuş üzümü, tarçın ve yenibahar, midye dolmasına kendine özgü, hafif tatlı ve baharatlı bir aroma verir. Midyeler soğuduktan sonra servis edilir.
+
+Püf noktası: Midyeleri iyi temizleyin, sakallarını alın ve açık ya da kırık olanları kullanmayın. Kabukları bıçakla açarken iki yarıyı tamamen ayırmayın. İç pilavı yarı pişmiş olarak doldurun ve midyeleri fazla doldurmayın; pirinç pişerken şişer. Midyeleri tencereye sıkıca dizin ki pişerken açılmasınlar.`,
+  },
+  'van-mucver': {
+    tr: `Van mutfağı, zengin kahvaltı kültürü ve otlu peyniriyle tanınır. Van otlu peyniri, yöreye özgü yabani otlarla olgunlaştırılan, kokulu ve tuzlu bir peynirdir. Bu tarif, klasik kabak mücverine Van otlu peyniri ve bol taze ot ekleyerek ona yöresel bir karakter kazandırır.
+
+Rendelenmiş kabak, yumurta, un, dereotu, nane ve taze soğanla karıştırılır, kaşıkla tavaya alınıp kızartılır. Otlu peynir, mücvere hem tuzunu hem de aromasını verir. Yanında sarımsaklı yoğurtla servis edilir.
+
+Püf noktası: Kabakları rendeledikten sonra tuzlayıp bekletin ve suyunu avucunuzla iyice sıkın; suyu alınmayan kabak mücveri dağıtır ve yağ çektirir. Otlu peynir tuzlu olduğu için ek tuzu dikkatli kullanın. Yağı orta-yüksek ısıda tutun ve mücverleri tavaya hafifçe bastırarak koyun.`,
+  },
 }
 
 export function getRecipeIntro(recipeId, lang = 'tr') {

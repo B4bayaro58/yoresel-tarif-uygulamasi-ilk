@@ -41427,7 +41427,7 @@ export const RECIPES_DATA = {
     },
     {
       id: 'van-mucver',
-      name: 'Van Mücveri (Kürtçe: Kizartik)',
+      name: 'Van Mücveri',
       country: 'Türkiye',
       city: 'Van',
       continent: 'turkish-cuisine',
