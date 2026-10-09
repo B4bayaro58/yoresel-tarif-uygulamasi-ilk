@@ -2,6 +2,7 @@ import type { MetadataRoute } from 'next'
 import { collection, getDocs, query, where } from 'firebase/firestore'
 import { db } from '@/config/firebase'
 import { Recipe } from '@/types'
+import { getPublishedPostsServer } from '@/lib/blogServer'
 // @ts-ignore
 import { RECIPES_DATA } from '@shared/recipes'
 
@@ -15,7 +16,7 @@ const localRecipes: Recipe[] = (RECIPES_DATA as any).tr || []
 export const revalidate = 86400
 
 const STATIC_PAGES = [
-  '', 'arama', 'tarif-oner', 'gizlilik-politikasi', 'kullanim-kosullari',
+  '', 'recipes', 'blog', 'arama', 'tarif-oner', 'gizlilik-politikasi', 'kullanim-kosullari',
   'kvkk', 'cerez-politikasi', 'icerik-politikasi', 'hakkimizda', 'sss', 'iletisim',
 ]
 
@@ -44,5 +45,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Firestore'a ulaşılamadı — sitemap yine de statik tariflerle üretilsin
   }
 
-  return [...staticEntries, ...staticRecipeEntries, ...nativeRecipeEntries]
+  // Blog yazıları eskiden site haritasında hiç yoktu (2026-10 AdSense reddi
+  // incelemesinde fark edildi) -- sitenin en özgün içeriği bunlar.
+  const blogEntries: MetadataRoute.Sitemap = (await getPublishedPostsServer()).map((post) => ({
+    url: `${SITE_URL}/blog/${post.slug}`,
+    lastModified: post.updatedAt ? new Date(post.updatedAt) : post.publishedAt ? new Date(post.publishedAt) : new Date(),
+  }))
+
+  return [...staticEntries, ...blogEntries, ...staticRecipeEntries, ...nativeRecipeEntries]
 }

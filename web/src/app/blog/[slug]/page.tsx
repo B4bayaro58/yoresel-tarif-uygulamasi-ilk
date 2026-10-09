@@ -1,60 +1,60 @@
-'use client'
-
-import React, { useEffect, useState } from 'react'
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
-import { useParams } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
-import { getBlogPostBySlug } from '@/lib/blog'
-import { BlogPost } from '@/types'
+import { getPostBySlugServer, formatPostDate } from '@/lib/blogServer'
 import { isPreOptimized } from '@/lib/image'
-import BlogContentRenderer from '@/components/blog/BlogContentRenderer'
-import { trackView } from '@/lib/viewStats'
+import BlogStaticContent, { blogPlainText } from '@/components/blog/BlogStaticContent'
+import BlogViewTracker from '@/components/blog/BlogViewTracker'
 
-function formatDate(value: unknown): string {
-  if (!value) return ''
-  const millis =
-    typeof value === 'object' && value !== null && 'seconds' in (value as any)
-      ? (value as any).seconds * 1000
-      : Date.parse(String(value))
-  if (Number.isNaN(millis)) return ''
-  return new Date(millis).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' })
+// Sunucuda üretiliyor -- yazının tam metni HTML'de hazır gelir (eskiden
+// client'ta yükleniyordu, arama motorları boş sayfa görüyordu).
+export const revalidate = 3600
+
+type Props = { params: Promise<{ slug: string }> }
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params
+  const post = await getPostBySlugServer(slug)
+  if (!post) return { title: 'Yazı Bulunamadı — Yöresel Tarif' }
+  const description = post.excerpt || blogPlainText(post.content)
+  return {
+    title: `${post.title} — Yöresel Tarif`,
+    description,
+    alternates: { canonical: `/blog/${post.slug}` },
+    openGraph: {
+      title: post.title,
+      description,
+      type: 'article',
+      publishedTime: post.publishedAt,
+      images: post.coverPhoto ? [{ url: post.coverPhoto }] : undefined,
+    },
+  }
 }
 
-export default function BlogDetailPage() {
-  const params = useParams()
-  const slug = params?.slug as string
-  const [post, setPost] = useState<BlogPost | null | undefined>(undefined)
+export default async function BlogDetailPage({ params }: Props) {
+  const { slug } = await params
+  const post = await getPostBySlugServer(slug)
+  if (!post) notFound()
 
-  useEffect(() => {
-    if (slug) getBlogPostBySlug(slug).then(setPost)
-  }, [slug])
-
-  useEffect(() => {
-    trackView('blog', post?.id)
-  }, [post?.id])
-
-  if (post === undefined) {
-    return (
-      <div className="max-w-3xl mx-auto px-4 py-8">
-        <div className="skeleton rounded-3xl mb-6" style={{ height: '280px' }} />
-        <div className="skeleton h-6 rounded mb-3" style={{ width: '70%' }} />
-        <div className="skeleton h-4 rounded" style={{ width: '40%' }} />
-      </div>
-    )
-  }
-
-  if (post === null) {
-    return (
-      <div className="max-w-3xl mx-auto px-4 py-16 text-center">
-        <p className="text-lg font-display font-bold" style={{ color: 'var(--text)' }}>Yazı bulunamadı</p>
-        <Link href="/blog" className="text-sm underline mt-2 inline-block" style={{ color: 'var(--primary)' }}>Blog&apos;a dön</Link>
-      </div>
-    )
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: post.excerpt || blogPlainText(post.content),
+    image: post.coverPhoto ? [post.coverPhoto] : undefined,
+    datePublished: post.publishedAt,
+    dateModified: post.updatedAt || post.publishedAt,
+    author: { '@type': post.authorName ? 'Person' : 'Organization', name: post.authorName || 'Yöresel Tarif' },
+    publisher: { '@type': 'Organization', name: 'Yöresel Tarif', url: 'https://yoreseltarif.com' },
+    mainEntityOfPage: `https://yoreseltarif.com/blog/${post.slug}`,
   }
 
   return (
     <div>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\u003c') }} />
+      <BlogViewTracker postId={post.id} />
       <div className="relative overflow-hidden" style={{ minHeight: '320px' }}>
         {post.coverPhoto && (
           <Image
@@ -75,13 +75,13 @@ export default function BlogDetailPage() {
           </Link>
           <h1 className="font-display font-bold text-3xl sm:text-4xl text-white mb-3 leading-tight">{post.title}</h1>
           <p className="text-white/75 text-sm">
-            {formatDate(post.publishedAt)}{post.authorName ? ` · ${post.authorName}` : ''}
+            {formatPostDate(post.publishedAt)}{post.authorName ? ` · ${post.authorName}` : ''}
           </p>
         </div>
       </div>
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10">
-        <BlogContentRenderer content={post.content} />
+        <BlogStaticContent content={post.content} />
       </div>
     </div>
   )

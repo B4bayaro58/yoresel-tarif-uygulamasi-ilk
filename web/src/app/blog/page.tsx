@@ -1,29 +1,22 @@
-'use client'
-
-import React, { useEffect, useState } from 'react'
+import React from 'react'
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
 import { ArrowLeft, Newspaper } from 'lucide-react'
-import { getPublishedBlogPosts } from '@/lib/blog'
-import { BlogPost } from '@/types'
+import { getPublishedPostsServer, formatPostDate } from '@/lib/blogServer'
 import { isPreOptimized } from '@/lib/image'
 
-function formatDate(value: unknown): string {
-  if (!value) return ''
-  const millis =
-    typeof value === 'object' && value !== null && 'seconds' in (value as any)
-      ? (value as any).seconds * 1000
-      : Date.parse(String(value))
-  if (Number.isNaN(millis)) return ''
-  return new Date(millis).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' })
+// Sunucuda üretiliyor (bkz. blogServer.ts) -- yazılar HTML'de hazır gelir.
+export const revalidate = 3600
+
+export const metadata: Metadata = {
+  title: 'Blog — Yöresel Mutfaktan Notlar | Yöresel Tarif',
+  description: 'Bayram sofralarından yöresel klasiklere, şehir lezzet rehberlerinden mutfak ipuçlarına: Yöresel Tarif blogunda mutfağınıza ilham verecek yazılar.',
+  alternates: { canonical: '/blog' },
 }
 
-export default function BlogListPage() {
-  const [posts, setPosts] = useState<BlogPost[] | null>(null)
-
-  useEffect(() => {
-    getPublishedBlogPosts().then(setPosts)
-  }, [])
+export default async function BlogListPage() {
+  const posts = await getPublishedPostsServer()
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
@@ -47,11 +40,7 @@ export default function BlogListPage() {
         Bayram sofralarından yöresel klasiklere, mutfağınıza ilham verecek yazılar.
       </p>
 
-      {posts === null ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {Array.from({ length: 6 }).map((_, i) => <div key={i} className="skeleton rounded-2xl" style={{ height: '260px' }} />)}
-        </div>
-      ) : posts.length === 0 ? (
+      {posts.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-24">
           <div className="w-20 h-20 rounded-3xl flex items-center justify-center text-4xl mb-4" style={{ backgroundColor: 'var(--primary-dim)' }}>
             <Newspaper size={32} style={{ color: 'var(--primary)' }} />
@@ -85,7 +74,7 @@ export default function BlogListPage() {
               </div>
               <div className="p-4">
                 <p className="text-[11px] font-semibold uppercase tracking-wider mb-1.5" style={{ color: 'var(--primary)' }}>
-                  {formatDate(post.publishedAt)}
+                  {formatPostDate(post.publishedAt)}
                 </p>
                 <h2 className="font-display font-bold text-base mb-1.5 leading-snug line-clamp-2" style={{ color: 'var(--text)' }}>
                   {post.title}
