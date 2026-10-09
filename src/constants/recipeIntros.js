@@ -500,6 +500,148 @@ Rendelenmiş kabak, yumurta, un, dereotu, nane ve taze soğanla karıştırılı
 
 Püf noktası: Kabakları rendeledikten sonra tuzlayıp bekletin ve suyunu avucunuzla iyice sıkın; suyu alınmayan kabak mücveri dağıtır ve yağ çektirir. Otlu peynir tuzlu olduğu için ek tuzu dikkatli kullanın. Yağı orta-yüksek ısıda tutun ve mücverleri tavaya hafifçe bastırarak koyun.`,
   },
+
+  // ── 5. grup (20 tarif) ──
+  'maras-dondurma': {
+    tr: `Maraş dondurması, uzayan, bıçakla kesilen ve kolay kolay erimeyen dokusuyla dünyada benzeri olmayan bir dondurma. Bu özel dokuyu Kahramanmaraş çevresindeki dağlarda yetişen orkidelerin yumrularından elde edilen salep ve dondurmanın uzun süre dövülmesi verir. Şehirde dondurmacılar, uzun demir küreklerle dondurmayı döverek ve çekerek hazırlar.
+
+Salep dondurmaya esneklik, damla sakızı ise hafif reçinemsi kokusunu kazandırır. Dövme işlemi dondurmanın içindeki havayı azaltır ve onu yoğun, ağır bir kıvama getirir.
+
+Püf noktası: Gerçek salep pahalı ve zor bulunur; mümkünse güvenilir bir yerden alın, hazır salep karışımları aynı dokuyu vermez. Damla sakızını dondurup öyle dövün, aksi halde yapışır. Dondurma donarken belirli aralıklarla çıkarıp kuvvetlice karıştırın ya da dövün; uzayan doku bu adımla oluşur.`,
+  },
+  'sivas-madımak-yemeği': {
+    tr: `Madımak, Sivas ve çevresinde ilkbaharda dağlarda ve tarla kenarlarında kendiliğinden yetişen yabani bir ot. Kısa bir mevsimi olduğu için Sivaslılar için baharın gelişini müjdeler; toplanan madımak hem taze pişirilir hem de kurutularak kışa saklanır. Madımak yemeği, Sivas mutfağının en tanınan lezzetlerindendir.
+
+Bu tarifte madımak önce kısa süre haşlanıp hafif buruk tadından arındırılır, ardından tereyağında kavrulan et, soğan ve salçayla birlikte pişirilir. Yanında sarımsaklı yoğurtla servis edilir.
+
+Püf noktası: Madımağı çok iyi yıkayın, yabani ot olduğu için toprağı bol olabilir. Kalın ve sert saplarını ayıklayın. Haşlama süresini uzatmayın, birkaç dakika yeterlidir; fazla haşlanırsa lezzetini kaybeder. Taze bulamazsanız kurutulmuş madımağı önce ılık suda bekletip kullanabilirsiniz.`,
+  },
+  'manisa-mesir-macunu': {
+    tr: `Mesir macunu, Manisa'nın yaklaşık beş yüz yıllık geleneğinin tatlı simgesi. Anlatılana göre Kanuni Sultan Süleyman'ın annesi Hafsa Sultan'ın hastalığı, Merkez Efendi'nin onlarca baharatla hazırladığı bir macunla iyileşmiş ve bunun üzerine macun her yıl halka dağıtılmaya başlanmıştır. Bugün de her bahar Sultan Camii'nin minarelerinden halka mesir macunu saçılır. Manisa Mesir Macunu Festivali, 2012'de UNESCO Somut Olmayan Kültürel Miras listesine girmiştir.
+
+Mesir macunu, şeker şurubu ve balın onlarca baharatla birleşmesinden oluşur. Zencefil, tarçın, karanfil ve kakule gibi baharatlar ona sıcak ve keskin bir tat verir.
+
+Püf noktası: Şurubu bir şeker termometresiyle takip edin; doğru ısıya ulaşmazsa macun katılaşmaz. Baharatları ateşten aldıktan sonra ekleyin ki aromaları yanmasın. Kesmeden önce macunun yarı katılaşmasını bekleyin.`,
+  },
+  'ankara-tava': {
+    tr: `Ankara tava, başkentin kendi adını taşıyan geleneksel et yemeği. Kemikli kuzu eti, soğan, domates, biber ve sarımsakla birlikte toprak bir tavada, fırında ağır ağır pişirilir. Ankara'nın eski mahallelerinde bu yemek, evde hazırlanıp mahalle fırınına gönderilen yemeklerdendir.
+
+Yemeğin lezzeti, kuzu etinin sebzelerin buharında ve kendi suyunda yumuşaması ve sonunda üstünün kızarmasından gelir. Bazı yörelerde Ankara tavası pirinç ya da arpa şehriye ile de yapılır; bu tarif sebzeli versiyondur.
+
+Püf noktası: Eti pişirmeden önce baharatlarla bir süre bekletin. Toprak tava kullanıyorsanız kabı fırına soğukken koyun ve fırını onunla birlikte ısıtın, ani ısı farkı toprak kabı çatlatabilir. Tavanın üstünü pişirmenin ilk bölümünde kapalı tutun, son yarım saatte açarak kızartın.`,
+  },
+  'harput-koftesi': {
+    tr: `Harput köftesi, adını Elazığ'ın tarihi Harput Kalesi'nden alan ve şehrin düğün ve misafir sofralarında yeri olan bir köfte. Haşlanmış pirinçle yoğrulan kıyma, iri toplar halinde şekillendirilip kızartılır ve ardından salçalı bir sosta fırında pişirilir.
+
+Harput mutfağı, Doğu Anadolu'nun et ağırlıklı ve bol baharatlı geleneğini taşır. Bu köftede yenibahar ve kuru nane, sosun salça tadıyla birleşerek tanıdık ama kendine özgü bir lezzet oluşturur.
+
+Püf noktası: Pirinci önceden haşlayıp tamamen soğutun, sıcak pirinç kıymayı yumuşatır. Harcı iyice yoğurun ki köfteler pişerken dağılmasın. Köfteleri fırına vermeden önce tavada kızartmak hem lezzet hem de şekil açısından önemlidir. Sosun köftelere iyice işlemesi için fırında acele etmeyin.`,
+  },
+  'corum-leblebisi': {
+    tr: `Leblebi, kavrulmuş nohuttan yapılan, Türkiye'nin en sevilen kuruyemişlerinden biri. Çorum ise leblebinin başkenti olarak bilinir; şehirdeki leblebi atölyeleri, nohutu ıslatma, dinlendirme ve defalarca kavurma aşamalarından oluşan, günler süren bir yöntemi kuşaklardır sürdürür.
+
+Leblebinin dışı sert, içi kuru ve çıtırdır. Sade, tuzlu, şekerli ya da baharatlı çeşitleri vardır. Çorum'a gelen ziyaretçilerin leblebi almadan dönmesi neredeyse düşünülemez.
+
+Püf noktası: Evde ustaların yöntemini birebir uygulamak zordur, ancak nohutu iyice ıslatıp haşladıktan sonra tamamen kurutmak en önemli adımdır; nemli nohut çıtır olmaz. Kavururken sık sık karıştırın ki her taraf eşit pişsin. Leblebiyi soğuduktan sonra hava almayan bir kapta saklayın.`,
+  },
+  'kars-kaz-kavurmasi': {
+    tr: `Kaz, Kars mutfağının ve kış hazırlıklarının en önemli parçası. Kars'ta köylerde yetiştirilen kazlar sonbaharda kesilir; etleri kavrulup kışa saklanır ya da tütsülenerek kurutulur. Uzun ve çok soğuk Kars kışında kaz eti, sofraların en kıymetli yiyeceklerinden biridir.
+
+Kaz kavurması, kazın kendi yağında, soğan, sarımsak ve birkaç baharatla uzun süre pişirilmesiyle yapılır. Kaz eti, tavuğa göre daha koyu renkli, yağlı ve lezzetlidir. Kars'ta kaz eti genellikle bulgur pilavıyla birlikte sofraya gelir.
+
+Püf noktası: Kaz etini pişirmeden önce baharatlarla bir gece bekletin. Pişirirken ek yağ kullanmayın; kazın kendi yağı yeterlidir. Kısık ateşte sabırla pişirin, kaz eti sert olabilir ve yumuşaması zaman alır. Et kemikten kolayca ayrıldığında yemek hazırdır.`,
+  },
+  'kastamonu-etli-ekmek': {
+    tr: `Kastamonu etli ekmeği, Kastamonu fırınlarının sabahları hazırladığı, ince ama lahmacundan daha kalın hamurlu, bol kıymalı bir fırın lezzeti. Uzun ve dar şekliyle bilinir; dilimlenerek servis edilir.
+
+Kastamonu mutfağı Batı Karadeniz'in sade ve doyurucu yemekleriyle tanınır. Etli ekmekte harç, kıyma, soğan, domates, biber ve maydanozdan oluşur ve hamura çiğ olarak sürülür.
+
+Püf noktası: Harcın suyunu iyice sıkılmış rendelenmiş soğanla hazırlayın ki hamur ıslanmasın. Harcı hamurun tüm yüzeyine, kenarlara kadar eşit sürün. Fırını iyice ısıtın; etli ekmek yüksek ısıda kısa sürede pişmelidir. Fırından çıkınca hemen dilimleyip sıcak servis edin.`,
+  },
+  'kilis-tava': {
+    tr: `Kilis tavası, Suriye sınırındaki Kilis'in, Gaziantep ve Halep mutfaklarıyla ortak bir geçmişe sahip mutfağından gelen bir fırın yemeği. Kuzu eti, domates, biber, soğan ve sarımsakla birlikte geniş bir tavada fırında pişirilir ve tavadan doğrudan sofraya gelir.
+
+Bu yemekte kimyon ve pul biber, bölgenin baharat sevgisini yansıtır. Fırında sebzeler hafifçe karamelize olur, et ise sebzelerin suyunda yumuşar.
+
+Püf noktası: Eti fırına vermeden önce yüksek ateşte mühürleyin, rengi ve lezzeti artar. Tavanın üstünü pişirmenin büyük bölümünde folyoyla kapalı tutun ki et kurumasın; son on beş dakikada açarak sebzelerin kızarmasını sağlayın. Maydanozu servis öncesi taze serpin.`,
+  },
+  'mudurnu-tavuk-yemegi': {
+    tr: `Bolu'nun Mudurnu ilçesi, tarihi Osmanlı evleri ve uzun bir tavukçuluk geleneğiyle tanınır. Bu tarif, köy tavuğunun soğan, sarımsak ve domatesle birlikte tencerede yavaş yavaş pişirilmesiyle hazırlanan sade bir ev yemeği.
+
+Yemeğin lezzetinin büyük kısmı tavuğun kendisinden gelir. Serbest dolaşan köy tavuğunun eti daha sıkı ve lezzetlidir, bu yüzden daha uzun sürede pişer. Defne yaprağı ve kekik, yemeğe hafif bir koku katar.
+
+Püf noktası: Tavuk parçalarını tencereye az sayıda koyarak, her yüzü altın rengi olana kadar kızartın; kalabalık tencerede tavuk kızarmaz, haşlanır. Köy tavuğu kullanıyorsanız pişirme süresini uzatın ve gerekirse az su ekleyin. Kapağı kapalı, kısık ateşte pişirin.`,
+  },
+  'samsun-pide': {
+    tr: `Samsun pidesi, Karadeniz pidesinin Samsun'a özgü yorumu. Kayık şeklindeki hamurun ortasına çiğ kıymalı harç konur, kenarları içe kıvrılır ama tamamen kapatılmaz; pişmeye yakın ortasına yumurta kırılarak fırına geri verilir. Fırından çıkınca üzerine bol tereyağı sürülür.
+
+Samsun ve çevresinde pide fırınları, kıymalı, kuşbaşılı, peynirli ve yumurtalı pek çok çeşidi taş fırında pişirir. Sarısı akışkan kalan yumurta, pidenin kıymalı harcıyla karışarak ona ayrı bir lezzet verir.
+
+Püf noktası: Yumurtayı pidenin pişmesine birkaç dakika kala kırın, böylece beyazı pişer ama sarısı akışkan kalır. Harcı çiğ olarak koyun ve soğanın suyunu iyice sıkın. Fırını en yüksek ısıya getirin. Tereyağını pide fırından çıkar çıkmaz, sıcakken sürün.`,
+  },
+  'amasya-elmali-pilav': {
+    tr: `Amasya, Yeşilırmak vadisinde yetişen, küçük, kokulu ve hafif ekşi elmasıyla ünlüdür. Amasya elması şehrin mutfağında da yer bulur: elmalı pilav, bu elmanın tereyağlı pirinç pilavı, kıyma ve baharatlarla buluştuğu yöresel bir yemektir.
+
+Elmanın hafif ekşiliği, tarçın ve yenibaharın sıcak aromasıyla birleşerek pilava tatlı ile tuzlu arasında dengeli bir tat verir. Üzerine serpilen kavrulmuş çam fıstığı ise doku katar.
+
+Püf noktası: Elmaları doğradıktan sonra kararmasınlar diye limonlu suya atın. Elmayı pirinçle birlikte uzun süre pişirmeyin; kısa süre kavurmak yeterlidir, aksi halde erir ve pilavı lapalaştırır. Ekşimsi bir elma seçin, çok tatlı elmalar pilavın dengesini bozar.`,
+  },
+  'osmaniye-yerfistikli-baklava': {
+    tr: `Osmaniye, Türkiye'nin en önemli yer fıstığı üretim bölgelerinden biri. Çukurova'nın verimli topraklarında yetişen yer fıstığı, şehrin mutfağında da önemli bir yer tutar. Yer fıstıklı baklava, klasik baklavanın bu yöreye özgü yorumudur.
+
+Antep fıstığı yerine kavrulmuş yer fıstığıyla yapılan bu baklava, daha uygun maliyetli olmasının yanı sıra kendine özgü kavrulmuş bir aromaya sahiptir. Tereyağlı ince yufkalar ve soğuk şerbetle hazırlanır.
+
+Püf noktası: Yer fıstığını önceden kavurun ve zarlarını ayıklayın; kavrulmamış fıstık baklavada çiğ tat bırakır. Yufkaların arasına tereyağını cömertçe sürün. Baklavayı fırına vermeden önce dilimleyin. Fırından çıkar çıkmaz soğuk şerbeti dökün ve birkaç saat dinlendirin.`,
+  },
+  'ordu-findik-corbasi': {
+    tr: `Ordu, Türkiye'nin fındık üretiminde başı çeken şehirlerinden biri; yaz sonunda fındık hasadı tüm şehri hareketlendirir. Fındık, Ordu mutfağında tatlıdan pilava kadar pek çok yemekte kullanılır. Fındık çorbası ise bu yemişin kremsi ve sıcak bir yorumudur.
+
+Kavrulmuş fındıklar et suyu ve sütle birlikte pişirilip pürüzsüz hale getirilir. Ortaya çıkan çorba, fındığın kavrulmuş aromasını taşıyan, kadifemsi ve doyurucu bir lezzettir.
+
+Püf noktası: Fındıkları fırında kavurun ve sıcakken bir bezle ovalayarak zarlarını ayırın; zarlar çorbaya acılık verebilir. Çorbayı blenderdan geçirdikten sonra süzgeçten geçirirseniz daha pürüzsüz olur. Süt ekledikten sonra çorbayı kaynatmayın. Üzerine biraz kavrulmuş fındık kırığı serpin.`,
+  },
+  'sinop-mantı-corbası': {
+    tr: `Sinop mantısı, Karadeniz kıyısındaki bu şehrin sofralarında sevilen bir lezzet. Bu tarifte küçük kıymalı mantılar, Kayseri mantısındaki gibi suda haşlanıp süzülmek yerine doğrudan et suyunda pişirilir ve çorba olarak servis edilir. Üzerine sarımsaklı yoğurt ve kızgın tereyağı eklenir.
+
+Mantının çorba olarak sunulması, yemeği hem daha hafif hem de kış günleri için daha sıcak ve doyurucu kılar. Salçalı et suyu, yoğurt ve naneli tereyağı birlikte zengin bir tat oluşturur.
+
+Püf noktası: Hamuru sert yoğurup dinlendirin ve ince açın. Mantıları sıkıca kapatın ki et suyunda pişerken açılmasın. Mantıları kaynayan et suyuna atın ve pişince hemen servis edin; bekledikçe hamur suyu çeker. Yoğurdu oda sıcaklığında kullanın.`,
+  },
+  'erzincan-tulum-gozlemesi': {
+    tr: `Erzincan tulum peyniri, keçi ya da koyun derisinden yapılan tulumlarda olgunlaştırılan, keskin ve kendine özgü tadıyla ünlü, coğrafi işaretli bir peynir. Bu peynirle yapılan gözleme, Erzincan'ın ve Doğu Anadolu'nun sevilen hamur işlerinden biridir.
+
+İncecik açılan hamurun arasına ufalanmış tulum peyniri ve nane konur, sacda ya da tavada pişirilir. Pişerken eriyen tulum peyniri gözlemeye yoğun ve tuzlu bir lezzet verir.
+
+Püf noktası: Hamuru yumuşak yoğurup dinlendirin ve olabildiğince ince açın. Tulum peyniri tuzlu olduğu için hamura ve harca ekstra tuz eklemeyin. Sacı ya da tavayı önceden iyice ısıtın. Gözlemenin her iki yüzü pişince tereyağı sürün ve sıcak servis edin.`,
+  },
+  'bayburt-tutmac': {
+    tr: `Tutmaç, Orta Asya'dan Anadolu'ya uzanan çok eski bir Türk yemeği. Adına 11. yüzyılda yazılan Kaşgarlı Mahmud'un Divânu Lugâti't-Türk'ünde rastlandığı bilinir. Bayburt'ta tutmaç, ince açılıp küçük kareler halinde kesilen hamurun et suyunda pişirilip yoğurt ve nohutla birleştirilmesiyle yapılan bir çorbadır.
+
+Tutmaç, Doğu Anadolu'nun soğuk kışlarında sofraların sıcak ve doyurucu yemeğidir. Üzerine gezdirilen naneli ve pul biberli tereyağı, çorbaya hem renk hem de koku katar.
+
+Püf noktası: Hamuru sert yoğurun ve kestiğiniz parçaları biraz kurutun ki pişerken dağılmasınlar. Yoğurdu çorbaya doğrudan eklemeyin, önce birkaç kepçe sıcak suyla ılıştırın. Yoğurt ekledikten sonra çorbayı kaynatmadan, kısık ateşte karıştırarak pişirin.`,
+  },
+  'tatvan-inci-kefali': {
+    tr: `İnci kefali, dünyada yalnızca Van Gölü havzasında yaşayan bir balık. Van Gölü'nün sodalı suyuna uyum sağlamış bu balık, her ilkbaharda üremek için göle dökülen tatlı su derelerine göç eder. Göl kıyısındaki Tatvan, inci kefalinin en çok tüketildiği yerlerden biridir.
+
+İnci kefali küçük bir balıktır ve genellikle bütün olarak, mısır ununa bulanıp kızartılır. Eti yumuşak ve hafiftir. Yanında soğan, maydanoz ve limonla servis edilir.
+
+Püf noktası: Balıkları tuzlayıp kısa süre bekletin, ardından mısır ununa bulayıp fazlasını silkeleyin. Yağı iyice ısıtın ve balıkları tavaya kalabalık etmeden koyun ki çıtır kızarsınlar. Küçük balıklar çabuk pişer; her yüzünü birkaç dakika kızartmak yeterlidir.`,
+  },
+  'mugla-zeytinyagli-semizotu': {
+    tr: `Semizotu, yazın bahçelerde ve tarla kenarlarında kendiliğinden yetişen, etli yapraklı bir ot. Muğla ve Ege mutfağında hem salatası hem de zeytinyağlısı yapılır. Hafif ekşimsi ve ferah tadıyla sıcak yaz günlerinin hafif yemeklerinden biridir.
+
+Zeytinyağlı semizotu, soğan, sarımsak ve domatesle zeytinyağında pişirilir ve limonla tatlandırılır. Tüm zeytinyağlılar gibi soğuk ya da oda sıcaklığında, yanında yoğurt ve ekmekle servis edilir.
+
+Püf noktası: Semizotunu çok iyi yıkayın, toprak ve kum barındırabilir. Kalın saplarını ayıklayın. Semizotu kendi suyunu bırakır, bu yüzden ek su eklemeyin. Fazla pişirmeyin; yapraklar dağılmadan, hafif diriliğini koruyacak kadar pişirin. Limonu en son ekleyin.`,
+  },
+  'gumushane-pestil': {
+    tr: `Pestil, üzüm ya da dut gibi meyvelerin suyunun nişasta veya unla koyulaştırılıp ince tabaka halinde kurutulmasıyla yapılan geleneksel bir kış yiyeceği. Gümüşhane, pestil ve köme gibi meyve ürünleriyle ünlüdür; şehirde bağ bozumu mevsimi aynı zamanda pestil yapma mevsimidir.
+
+Kurutulan pestil rulo yapılarak ya da katlanarak saklanır ve aylarca bozulmadan dayanır. Eskiden kış aylarında şeker yerine tüketilen besleyici bir atıştırmalıktı; bugün de kuruyemişlerle birlikte sevilerek yenir.
+
+Püf noktası: Üzüm suyunu süzüp berraklaştırın ve köpüğünü alın. Nişastayı soğuk suyla eritip ekleyin ve karışımı sürekli karıştırarak koyulaştırın. Pestili ince ve eşit kalınlıkta yayın, kalın yerler kurumaz. Kurutma için güneşli ve havadar bir yer seçin.`,
+  },
 }
 
 export function getRecipeIntro(recipeId, lang = 'tr') {
