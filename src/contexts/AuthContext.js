@@ -12,6 +12,7 @@ import {
   reauthenticateWithCredential,
   EmailAuthProvider,
   sendPasswordResetEmail,
+  revokeAccessToken,
 } from 'firebase/auth';
 import { doc, getDoc, setDoc, deleteDoc, collection, query, where, getDocs, writeBatch } from 'firebase/firestore';
 import { auth, db } from '../config/firebase';
@@ -204,14 +205,52 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // Hesap silmeden önce kimlik doğrulamanın hangi yolla yapılacağı: şifreli
+  // hesaplar şifre sorar, Google/Apple ile girenlerin şifresi olmadığı için
+  // aynı sağlayıcıyla yeniden giriş istenir.
+  const getDeleteAuthMethod = () => {
+    const providers = (auth.currentUser?.providerData || []).map(p => p.providerId);
+    if (providers.includes('password')) return 'password';
+    if (providers.includes('google.com')) return 'google';
+    if (providers.includes('apple.com')) return 'apple';
+    return 'password';
+  };
+
+  const reauthenticateForDelete = async (currentUser, password) => {
+    const method = getDeleteAuthMethod();
+    if (method === 'google') {
+      const idToken = await signInWithGoogle();
+      if (!idToken) return { cancelled: true };
+      await reauthenticateWithCredential(currentUser, GoogleAuthProvider.credential(idToken));
+      return {};
+    }
+    if (method === 'apple') {
+      // Apple ile giriş yalnızca iOS'ta var -- Android'deki Apple
+      // kullanıcısı e-postayla silme talebine yönlendirilir.
+      if (!(await isAppleSignInAvailable())) return { error: 'deleteAccountAppleUnavailable' };
+      const appleResult = await signInWithApple();
+      if (!appleResult) return { cancelled: true };
+      const credential = new OAuthProvider('apple.com').credential({
+        idToken: appleResult.identityToken,
+        rawNonce: appleResult.rawNonce,
+      });
+      await reauthenticateWithCredential(currentUser, credential);
+      return { appleAuthorizationCode: appleResult.authorizationCode };
+    }
+    const credential = EmailAuthProvider.credential(currentUser.email, password);
+    await reauthenticateWithCredential(currentUser, credential);
+    return {};
+  };
+
   const deleteAccount = async (password) => {
     try {
       const currentUser = auth.currentUser;
       if (!currentUser) return { success: false, error: 'No user' };
 
       // Firebase requires recent authentication before deletion
-      const credential = EmailAuthProvider.credential(currentUser.email, password);
-      await reauthenticateWithCredential(currentUser, credential);
+      const reauth = await reauthenticateForDelete(currentUser, password);
+      if (reauth.cancelled) return { success: false, error: null };
+      if (reauth.error) return { success: false, error: reauth.error };
 
       const uid = currentUser.uid;
       const avatarUrl = currentUser.photoURL;
@@ -241,6 +280,15 @@ export const AuthProvider = ({ children }) => {
       // kapsıyor (bkz. mağaza inceleme denetimi 2026-08-09).
       await Promise.all([avatarUrl, ...recipePhotoUrls].map(deleteImageByUrl));
 
+      // Apple ile giriş yapan hesaplarda uygulamanın Apple token'ı iptal
+      // edilmeli (App Store kuralı 5.1.1(v)). Başarısız olursa silmeyi
+      // engellememeli -- veriler zaten silindi.
+      if (reauth.appleAuthorizationCode) {
+        try {
+          await revokeAccessToken(auth, reauth.appleAuthorizationCode);
+        } catch {}
+      }
+
       // Delete Firebase Auth user last
       await deleteUser(currentUser);
 
@@ -248,6 +296,9 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       if (error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
         return { success: false, error: 'wrongPasswordDelete' };
+      }
+      if (error.code === 'auth/user-mismatch') {
+        return { success: false, error: 'deleteAccountWrongAccount' };
       }
       return { success: false, error: 'deleteAccountError' };
     }
@@ -284,6 +335,7 @@ export const AuthProvider = ({ children }) => {
     logout,
     resetPassword,
     deleteAccount,
+    getDeleteAuthMethod,
     continueAsGuest,
   };
 

@@ -41,6 +41,9 @@ export async function signInWithApple() {
       identityToken: credential.identityToken,
       rawNonce,
       fullName: credential.fullName,
+      // Hesap silmede Apple token'ını iptal etmek (revokeAccessToken) için
+      // gerekli -- App Store kuralı 5.1.1(v).
+      authorizationCode: credential.authorizationCode,
     };
   } catch (error) {
     if (error.code === 'ERR_REQUEST_CANCELED') return null;

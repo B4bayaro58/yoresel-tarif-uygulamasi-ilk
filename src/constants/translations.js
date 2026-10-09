@@ -1535,6 +1535,30 @@ export const TRANSLATIONS = {
     fr: 'Mot de passe incorrect, le compte n\'a pas pu être supprimé',
     it: 'Password errata, l\'account non può essere eliminato',
   },
+  deleteAccountReauthGoogle: {
+    tr: 'Onaylamak için Google hesabınızla tekrar giriş yapmanız istenecek.',
+    en: 'You will be asked to sign in with your Google account again to confirm.',
+    fr: 'Il vous sera demandé de vous reconnecter avec votre compte Google pour confirmer.',
+    it: 'Ti verrà chiesto di accedere di nuovo con il tuo account Google per confermare.',
+  },
+  deleteAccountReauthApple: {
+    tr: 'Onaylamak için Apple ile tekrar giriş yapmanız istenecek.',
+    en: 'You will be asked to sign in with Apple again to confirm.',
+    fr: 'Il vous sera demandé de vous reconnecter avec Apple pour confirmer.',
+    it: 'Ti verrà chiesto di accedere di nuovo con Apple per confermare.',
+  },
+  deleteAccountWrongAccount: {
+    tr: 'Farklı bir hesapla giriş yapıldı, hesap silinemedi',
+    en: 'You signed in with a different account, account could not be deleted',
+    fr: "Vous vous êtes connecté avec un autre compte, le compte n'a pas pu être supprimé",
+    it: "Hai effettuato l'accesso con un account diverso, l'account non può essere eliminato",
+  },
+  deleteAccountAppleUnavailable: {
+    tr: "Apple hesabınızı bu cihazda doğrulayamıyoruz. Lütfen bir iPhone'dan silin veya info@yoreseltarif.com adresine yazın.",
+    en: "We can't verify your Apple account on this device. Please delete it from an iPhone or email info@yoreseltarif.com.",
+    fr: 'Impossible de vérifier votre compte Apple sur cet appareil. Supprimez-le depuis un iPhone ou écrivez à info@yoreseltarif.com.',
+    it: 'Non possiamo verificare il tuo account Apple su questo dispositivo. Eliminalo da un iPhone o scrivi a info@yoreseltarif.com.',
+  },
   privacyPolicy: {
     tr: 'Gizlilik Politikası',
     en: 'Privacy Policy',
@@ -1831,19 +1855,19 @@ export const TRANSLATIONS = {
 
   // Daily Menu
   dailyMenu: {
-    tr: "Gunun Menusu",
+    tr: "Günün Menüsü",
     en: "Today's Menu",
     fr: "Menu du Jour",
     it: "Menu del Giorno",
   },
   dailyMenuEmpty: {
-    tr: 'Admin henuz gunun menusu olusturmadi.',
+    tr: 'Admin henüz günün menüsünü oluşturmadı.',
     en: 'Admin has not set today\'s menu yet.',
     fr: 'L\'admin n\'a pas encore defini le menu du jour.',
     it: 'L\'admin non ha ancora impostato il menu del giorno.',
   },
   manageDailyMenu: {
-    tr: 'Gunun Menusu Yonet',
+    tr: 'Günün Menüsünü Yönet',
     en: 'Manage Daily Menu',
     fr: 'Gerer le Menu du Jour',
     it: 'Gestisci Menu del Giorno',

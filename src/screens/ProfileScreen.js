@@ -12,6 +12,7 @@ import {
 import { Image } from 'expo-image';
 import { Globe, Palette, Settings, LogOut, User as UserIcon, ChevronRight, Trash2, Shield, Camera, Crown } from 'lucide-react-native';
 import { useApp } from '../contexts/AppContext';
+import { getCountryFlag } from '../constants/countryFlags';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { getRank, getNextRank, RANKS } from '../constants/ranks';
@@ -52,7 +53,7 @@ const CONTINENT_EMOJIS = {
 
 function PassportStamp({ country, continent }) {
   const color = CONTINENT_COLORS[continent] || CONTINENT_COLORS.unknown;
-  const emoji = CONTINENT_EMOJIS[continent] || '🌐';
+  const emoji = getCountryFlag(country) || CONTINENT_EMOJIS[continent] || '🌐';
   return (
     <View style={[stampStyles.stamp, { borderColor: color }]}>
       <View style={[stampStyles.innerRing, { borderColor: color + '60' }]}>
@@ -100,7 +101,7 @@ const stampStyles = StyleSheet.create({
 
 export default function ProfileScreen({ navigation }) {
   const { colors, translate, theme, setTheme, showNotification, completedRecipesCount, completedCountries, language } = useApp();
-  const { user, isAdmin, isGuest, logout, deleteAccount } = useAuth();
+  const { user, isAdmin, isGuest, logout, deleteAccount, getDeleteAuthMethod } = useAuth();
   const { isPremium } = useSubscription();
   const [showThemeModal, setShowThemeModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -123,15 +124,20 @@ export default function ProfileScreen({ navigation }) {
     }
   };
 
+  // Google/Apple ile giriş yapanların şifresi yok -- onlar şifre yerine
+  // aynı sağlayıcıyla yeniden giriş yaparak onaylar.
+  const deleteAuthMethod = showDeleteModal ? getDeleteAuthMethod() : 'password';
+  const needsPassword = deleteAuthMethod === 'password';
+
   const handleDeleteAccount = async () => {
-    if (!deletePassword) return;
+    if (needsPassword && !deletePassword) return;
     setDeleteLoading(true);
     const result = await deleteAccount(deletePassword);
     setDeleteLoading(false);
     if (result.success) {
       showNotification(translate('deleteAccountSuccess'));
       setShowDeleteModal(false);
-    } else {
+    } else if (result.error) {
       showNotification(translate(result.error));
     }
   };
@@ -580,16 +586,22 @@ export default function ProfileScreen({ navigation }) {
             <Text style={[styles.deleteWarningText, { color: colors.textSecondary }]}>
               {translate('deleteAccountWarning')}
             </Text>
-            <TextInput
-              style={[styles.deletePasswordInput, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
-              placeholder={translate('enterPasswordToConfirm')}
-              placeholderTextColor={colors.textTertiary}
-              value={deletePassword}
-              onChangeText={setDeletePassword}
-              secureTextEntry
-              autoCorrect={false}
-              spellCheck={false}
-            />
+            {needsPassword ? (
+              <TextInput
+                style={[styles.deletePasswordInput, { backgroundColor: colors.background, color: colors.text, borderColor: colors.border }]}
+                placeholder={translate('enterPasswordToConfirm')}
+                placeholderTextColor={colors.textTertiary}
+                value={deletePassword}
+                onChangeText={setDeletePassword}
+                secureTextEntry
+                autoCorrect={false}
+                spellCheck={false}
+              />
+            ) : (
+              <Text style={[styles.deleteWarningText, { color: colors.textSecondary }]}>
+                {translate(deleteAuthMethod === 'google' ? 'deleteAccountReauthGoogle' : 'deleteAccountReauthApple')}
+              </Text>
+            )}
             <View style={styles.deleteModalButtons}>
               <TouchableOpacity
                 style={[styles.deleteModalBtn, { backgroundColor: colors.border }]}
@@ -603,9 +615,9 @@ export default function ProfileScreen({ navigation }) {
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.deleteModalBtn, { backgroundColor: colors.error }, (!deletePassword || deleteLoading) && { opacity: 0.5 }]}
+                style={[styles.deleteModalBtn, { backgroundColor: colors.error }, ((needsPassword && !deletePassword) || deleteLoading) && { opacity: 0.5 }]}
                 onPress={handleDeleteAccount}
-                disabled={!deletePassword || deleteLoading}
+                disabled={(needsPassword && !deletePassword) || deleteLoading}
                 accessibilityRole="button"
                 accessibilityLabel={translate('confirm')}
               >
