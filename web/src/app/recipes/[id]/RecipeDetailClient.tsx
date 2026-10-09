@@ -49,9 +49,12 @@ interface RecipeDetailClientProps {
   // (prop hiç verilmemiş) eski client-fetch davranışına düşer; `null` ise
   // sunucu da tarifi bulamadı demektir.
   initialRecipe?: Recipe | null
+  // Yöre/hikaye/püf noktası metni (shared/recipeIntros.js) -- sunucudan
+  // geliyor ki tüm metin dosyası client bundle'ına girmesin.
+  intro?: string | null
 }
 
-export default function RecipeDetailClient({ initialRecipe }: RecipeDetailClientProps) {
+export default function RecipeDetailClient({ initialRecipe, intro }: RecipeDetailClientProps) {
   const params = useParams()
   const router = useRouter()
   const id = params?.id as string
@@ -300,6 +303,20 @@ export default function RecipeDetailClient({ initialRecipe }: RecipeDetailClient
           {addedToList ? '✓ Eklendi!' : t('addToShoppingList')}
         </button>
       </div>
+
+      {/* ── Bu Tarif Hakkında ───────────────────── */}
+      {intro && (
+        <section className="mb-6">
+          <h2 className="font-display font-bold text-lg mb-3 flex items-center gap-2" style={{ color: 'var(--text)' }}>
+            📖 Bu Tarif Hakkında
+          </h2>
+          <div className="space-y-3 text-[15px] leading-relaxed" style={{ color: 'var(--text)' }}>
+            {intro.split('\n\n').map((para, i) => (
+              <p key={i}>{para}</p>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* ── Reklam ─────────────────────────────── */}
       <div className="mb-6">

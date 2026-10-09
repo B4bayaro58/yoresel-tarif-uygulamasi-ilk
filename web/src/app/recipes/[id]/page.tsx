@@ -7,6 +7,8 @@ import { getOverrideRecipe } from '@/lib/overridePhoto'
 import { buildRecipeJsonLd } from '@/lib/recipeJsonLd'
 import RecipeDetailClient from './RecipeDetailClient'
 // @ts-ignore
+import { getRecipeIntro } from '@shared/recipeIntros'
+// @ts-ignore
 import { RECIPES_DATA } from '@shared/recipes'
 
 // Firestore'dan gelen `createdAt`/`updatedAt` ham `Timestamp` nesnesi olarak
@@ -57,6 +59,12 @@ const fetchRecipe = cache(async (id: string): Promise<Recipe | undefined> => {
   return undefined
 })
 
+// Giriş metni statik tarif id'sine göre tutuluyor; override edilmiş tarifin
+// Firestore doküman id'si farklı olduğundan overridesStaticId'ye de bakılır.
+function introFor(recipe: Recipe): string | null {
+  return getRecipeIntro(String(recipe.id)) || getRecipeIntro(String((recipe as any).overridesStaticId ?? ''))
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params
   const recipe = await fetchRecipe(id)
@@ -65,7 +73,10 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     return { title: 'Tarif Bulunamadı — Yöresel Tarif' }
   }
 
-  const description = `${recipe.name} tarifi — ${recipe.country}${recipe.city ? `, ${recipe.city}` : ''}. ${recipe.prepTime} dakikada hazırlanır. Malzemeler, yapılış adımları ve daha fazlası Yöresel Tarif'te.`
+  const intro = introFor(recipe)
+  const description = intro
+    ? intro.split('\n\n')[0].slice(0, 155).replace(/\s+\S*$/, '') + '…'
+    : `${recipe.name} tarifi — ${recipe.country}${recipe.city ? `, ${recipe.city}` : ''}. ${recipe.prepTime} dakikada hazırlanır. Malzemeler, yapılış adımları ve daha fazlası Yöresel Tarif'te.`
 
   return {
     title: `${recipe.name} Tarifi — Yöresel Tarif`,
@@ -93,7 +104,7 @@ export default async function RecipeDetailPage({ params }: { params: Promise<{ i
           dangerouslySetInnerHTML={{ __html: JSON.stringify(buildRecipeJsonLd(recipe)) }}
         />
       )}
-      <RecipeDetailClient initialRecipe={recipe ?? null} />
+      <RecipeDetailClient initialRecipe={recipe ?? null} intro={recipe ? introFor(recipe) : null} />
     </>
   )
 }
