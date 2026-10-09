@@ -38482,7 +38482,7 @@ export const RECIPES_DATA = {
         'Pirinci ekleyip 3 dk kavurun, tarçın, yenibahar ve tuzu ekleyin',
         'Tavuk suyunu dökün, kaynatın; kısık ateşte 15 dk yarı pişmiş pilav yapın, soğutun',
         'Yufka yapraklarını eritilmiş tereyağıyla fırçalayın',
-        'Yağlanmış yuvarlak kabın tabanı ve kenarlarını yufkayla döseyiп — kenarlardan taşsın',
+        'Yağlanmış yuvarlak kabın tabanı ve kenarlarını yufkayla döşeyin — kenarlardan taşsın',
         'Yarı pişmiş pilavı yufkanın içine doldurun',
         'Taşan yufkaları üste kapatarak pilavı tam örtün — "perde" bu kapatmadan gelir',
         'Üstüne tereyağı sürün, 180°C fırında 30-35 dk üzeri kızarana dek pişirin',
