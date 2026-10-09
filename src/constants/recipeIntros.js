@@ -642,6 +642,78 @@ Kurutulan pestil rulo yapılarak ya da katlanarak saklanır ve aylarca bozulmada
 
 Püf noktası: Üzüm suyunu süzüp berraklaştırın ve köpüğünü alın. Nişastayı soğuk suyla eritip ekleyin ve karışımı sürekli karıştırarak koyulaştırın. Pestili ince ve eşit kalınlıkta yayın, kalın yerler kurumaz. Kurutma için güneşli ve havadar bir yer seçin.`,
   },
+
+  // ── 6. grup (10 tarif) ──
+  'beypazari-kurusu': {
+    tr: `Beypazarı kurusu, Ankara'nın tarihi ilçesi Beypazarı'nın en bilinen lezzeti. Zeytinyağı ve sütle yoğrulan hamur, ince uzun çubuklar halinde açılıp susam ve çörekotuna bulanır ve fırında kurutulurcasına pişirilir. Sonuç, sert, çıtır ve uzun süre bozulmayan bir atıştırmalıktır.
+
+Beypazarı'nda kurular eskiden fırınlarda ekmekle birlikte pişirilir, kışlık olarak saklanırdı. Bugün tarihi konaklarıyla ziyaretçi çeken ilçenin çarşısında, havuç lokumu ve kurutulmuş meyvelerle birlikte en çok satılan ürünlerdendir. Çayın yanında, özellikle kahvaltıda ve akşam sohbetlerinde sevilerek yenir.
+
+Püf noktası: Zeytinyağını una parmak uçlarınızla iyice yedirin ki hamur kum gibi olsun; kurunun gevrekliği buradan gelir. Çubukları eşit kalınlıkta açın ki aynı sürede pişsinler. Fırında acele etmeyin, orta ısıda kuruyarak pişmelidir. Tamamen soğuduktan sonra kapalı kavanozda saklayın.`,
+  },
+  'sakarya-islama-kebabi': {
+    tr: `Islama köfte, Adapazarı'nın ve Sakarya'nın simge lezzeti. Izgarada pişen köftelerin yanında servis edilen ekmek, köftelerin pişirildiği et suyuna batırılarak "ıslatılır"; yemek de adını buradan alır. Adapazarı'nda ıslama köfteciler genellikle yalnızca köfte ve ıslanmış ekmek, yanında da piyaz ve közlenmiş biber sunar.
+
+Bu tarif, ıslama ekmeğe sarımsaklı yoğurt ve pul biberli tereyağı da ekleyerek onu doyurucu bir kebap tabağına dönüştürür. Ekmeğin et suyunu çekip yumuşaması ama dağılmaması, ıslamanın en önemli inceliğidir.
+
+Püf noktası: Ekmeği önce kızartın ya da ızgarada hafifçe kurutun; böylece et suyunu çeker ama hamurlaşmaz. Et suyunu ekmeğe servis anında, sıcak olarak dökün. Köfteleri ızgarada yüksek ateşte kısa sürede pişirin ki suyunu kaybetmesin.`,
+  },
+  'sivas-kangal-köftesi': {
+    tr: `Kangal, Sivas'ın hem dünyaca tanınan çoban köpeği ırkına hem de kaplıcalarına adını veren ilçesi. Kangal köftesi, bu bölgenin adını taşıyan, kimyonlu ve pul biberli, silindir şeklinde bir köfte. Domates sosu, biber ve domatesle birlikte pişirilerek sulu bir yemek olarak servis edilir.
+
+Kıymaya katılan ıslatılmış ekmek ve yumurta, köfteyi yumuşak tutar; kimyon ve yenibahar ise Orta Anadolu mutfağının sevdiği sıcak baharat tadını verir. Yanında pilav ve cacıkla tam bir öğün olur.
+
+Püf noktası: Ekmek içini ıslattıktan sonra suyunu çok iyi sıkın, fazla su köfteyi dağıtır. Harcı uzun süre yoğurup dinlendirin. Köfteleri sosa koymadan önce tavada her yüzünü mühürleyin. Sosta pişirirken köfteleri çok karıştırmayın, tencereyi sallamak yeterlidir.`,
+  },
+  'bolu-dugun-corbasi': {
+    tr: `Bolu, Türkiye'nin aşçılarıyla ünlü şehridir; özellikle Mengen ilçesi, Osmanlı saray mutfağından bugünün otellerine kadar yetiştirdiği ustalarla tanınır. Bolu düğün çorbası, bu zengin mutfak geleneğinin düğün sofralarındaki temsilcisidir ve geleneksel olarak sofranın açılış yemeğidir.
+
+Kuzu etinin suyuyla hazırlanan çorba, kavrulmuş un ve yumurta sarısı ile limondan oluşan bir terbiyeyle koyulaştırılır. Didiklenmiş et, çorbayı doyurucu yapar; üzerine gezdirilen naneli ve pul biberli tereyağı ise kokusunu tamamlar.
+
+Püf noktası: Unu tereyağında kokusu çıkana kadar kavurun, çiğ un tadı kalmasın. Terbiyeyi çorbaya eklemeden önce birkaç kaşık sıcak çorbayla ılıştırın; yoksa yumurta pişip topaklanır. Terbiyeyi ekledikten sonra çorbayı kaynatmayın.`,
+  },
+  'duzce-findikli-pilav': {
+    tr: `Düzce, Batı Karadeniz'in fındık bahçeleriyle çevrili şehirlerinden biri. Fındık, bölgede yalnızca bir tarım ürünü değil, mutfağın da temel malzemelerindendir. Fındıklı pilav, tereyağında kavrulmuş fındık ve didiklenmiş tavukla zenginleştirilmiş bir pirinç pilavıdır.
+
+Kavrulmuş fındık, pilava hem çıtır bir doku hem de hafif tatlı ve kavrulmuş bir aroma katar. Tavuk suyuyla pişen pilav, misafir sofraları için hem kolay hem de gösterişli bir seçenektir.
+
+Püf noktası: Fındıkları tereyağında altın rengine kadar kavurun ve kenara alın; pilavla birlikte pişirirseniz yumuşar ve çıtırlığını kaybeder. Servis sırasında üzerine serpin. Pirinci önceden ıslatıp süzün ve suyu sıcak olarak ekleyin. Pilavı demlerken kapağın altına kâğıt havlu koyun.`,
+  },
+  'kirsehir-ciger-sarma': {
+    tr: `Ciğer sarma, Orta Anadolu'nun sakatat ağırlıklı mangal kültürünün sevilen lezzetlerinden biri. Baharatlarla marine edilen ince kuzu ciğeri dilimleri ince bir zarla sarılıp şişe geçirilir ve közde pişirilir. Kırşehir'de bu lezzet genellikle lavaş, soğan, maydanoz ve sumakla birlikte servis edilir.
+
+Ciğeri saran zar, közde pişerken çıtırlaşır ve ciğerin kurumasını önleyerek suyunu içinde tutar. Böylece ciğer dışta çıtır, içte yumuşak ve sulu kalır.
+
+Püf noktası: Ciğeri ince ve eşit kalınlıkta dilimleyin. Zarı soğuk suda iyice yıkayın ve ciğeri sıkıca sarın. Közün alevsiz olmasını bekleyin ve şişleri sık çevirin. Ciğeri fazla pişirmeyin; aşırı pişen ciğer sertleşir. Zar kızarıp çıtırlaştığında genellikle ciğer de hazırdır.`,
+  },
+  'sirnak-cizre-köftesi': {
+    tr: `Cizre köftesi, Şırnak'ın Dicle kıyısındaki tarihi ilçesi Cizre'nin adını taşıyan bir ızgara köftesi. Güneydoğu Anadolu mutfağının et ve bulguru bir araya getiren geleneğini yansıtır: kuzu ve dana kıymasına iri bulgur katılarak yoğrulur ve közde pişirilir.
+
+İri bulgur, köfteye hem bağlayıcılık hem de dişte hissedilen bir doku verir. Kimyon ve pul biber ise bölgenin baharatlı damak tadını taşır. Köfte genellikle lavaş, soğan salatası ve közlenmiş sebzelerle servis edilir.
+
+Püf noktası: Bulguru ıslattıktan sonra suyunu çok iyi sıkın, fazla su köfteyi dağıtır. Harcı uzun süre yoğurun ki bulgur kıymayla iyice kaynaşsın, ardından buzdolabında dinlendirin. Köfteleri ıslak elle şekillendirin ve alevsiz közde pişirin.`,
+  },
+  'zonguldak-misir-corbasi': {
+    tr: `Zonguldak, Türkiye'nin taş kömürü madenciliğinin merkezi. Uzun ve ağır vardiyalardan dönen maden işçilerinin sofrasında sıcak ve tok tutan yemekler her zaman önemli olmuştur. Zonguldak mısır çorbası, kurutulmuş mısır taneleri, kuru fasulye ve etle hazırlanan bu türden doyurucu bir kış çorbasıdır.
+
+Batı Karadeniz mutfağında mısır temel bir malzemedir. Kurutulmuş mısır, uzun pişirme sonunda yumuşar ve çorbaya hem kıvam hem de hafif tatlı bir lezzet verir. Yanında mısır ekmeği ile servis edilir.
+
+Püf noktası: Kurutulmuş mısırı ve fasulyeyi bir gece önceden suya yatırın, aksi halde pişmeleri çok uzun sürer. Düdüklü tencere süreyi kısaltır. Tuzu, mısır ve fasulye yumuşadıktan sonra ekleyin. Çorba bekledikçe koyulaşır; ısıtırken biraz sıcak su ekleyin.`,
+  },
+  'yalova-zeytinli-ekmek': {
+    tr: `Yalova'nın Armutlu ve Çınarcık çevresi, Marmara'nın zeytin yetiştirilen bölgelerinden biri. Bölgede zeytin, kahvaltı sofralarından ekmeğin içine kadar her yerdedir. Zeytinli ekmek, mayalı hamura iri kıyılmış siyah zeytin, kekik ve biberiye katılarak fırında pişirilen kokulu bir ekmektir.
+
+Zeytin hamura hem tuzunu hem de yağlı, meyvemsi aromasını verir. Kekik ve biberiye ise ekmeğe Akdeniz'in tanıdık otsu kokusunu katar. Kahvaltıda peynir ve domatesle ya da çorbanın yanında çok yakışır.
+
+Püf noktası: Zeytinleri hamura ilk mayalanmadan sonra, yumruk yapıp söndürdüğünüzde ekleyin; baştan eklenirse hamurun gelişmesini zorlaştırır. Zeytin tuzlu olduğu için hamurdaki tuzu azaltabilirsiniz. Ekmeği fırından çıkınca tel ızgarada soğutun, alt kısmı nemlenmez.`,
+  },
+  'manisa-kebabi': {
+    tr: `Manisa kebabı, Ege'nin bu tarihi şehrinin kendi adını taşıyan kebabı. İnce, yassı kuzu köfteleri, domates sosuyla ıslatılmış küp küp pide üzerine dizilir, yanına sarımsaklı yoğurt konur ve en son üzerine kızgın tereyağı dökülür. Görünüşüyle İskender'i hatırlatsa da döner yerine köfteyle yapılır.
+
+Manisa kebabını özel kılan, köftelerin ince ve yassı olması ve tabağın her katmanının ayrı ayrı hazırlanmasıdır: domates sosunu emmiş pide, sıcak köfteler, serin yoğurt ve cızırdayan tereyağı.
+
+Püf noktası: Köfte harcını dinlendirdikten sonra ince ve eşit kalınlıkta şekillendirin ki çabuk ve eşit pişsinler. Domates sosunu pideye servis anında, sıcakken dökün. Yoğurdu oda sıcaklığında kullanın. Tereyağını sofraya getirmeden hemen önce köpürtüp dökün.`,
+  },
 }
 
 export function getRecipeIntro(recipeId, lang = 'tr') {
