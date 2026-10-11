@@ -89,7 +89,7 @@ tarif,yemek,mutfak,pişirme,yöresel,dünya mutfağı,alışveriş listesi,tarif
 - Lisans sözleşmesi (EULA): Apple'ın standart EULA'sı kullanılabilir; uygulama içi Kullanım Koşulları'nda abonelik bölümü var (2026-10-11), ödeme ekranında Koşullar/Gizlilik bağlantıları mevcut.
 
 **App Privacy (gizlilik etiketi) cevapları — koda göre:**
-- *Takip (Tracking): EVET* — AdMob + ATT izni isteniyor (`consentService.js`). "Cihaz Kimliği" → Üçüncü taraf reklamcılık, takip için kullanılıyor.
+- *Takip (Tracking): EVET* — AdMob + ATT izni isteniyor (`consentService.js`). Takipte kullanılanlar: Cihaz Kimliği, Reklam verileri, Ürün etkileşimi, Kaba konum.
 - *İletişim Bilgileri → E-posta adresi*: Uygulama işlevselliği; kullanıcıya bağlı; takip yok.
 - *İletişim Bilgileri → Ad*: (görünen ad / Apple-Google girişi) Uygulama işlevselliği; kullanıcıya bağlı.
 - *Kullanıcı İçeriği → Fotoğraflar, Diğer kullanıcı içeriği* (tarif önerisi, yorum, yorum fotoğrafı): Uygulama işlevselliği; kullanıcıya bağlı.
@@ -98,7 +98,10 @@ tarif,yemek,mutfak,pişirme,yöresel,dünya mutfağı,alışveriş listesi,tarif
 - *Satın Almalar → Satın alma geçmişi*: Uygulama işlevselliği (RevenueCat); kullanıcıya bağlı.
 - *Tanılama → Çökme verileri, Performans verileri*: Uygulama işlevselliği (Sentry); kullanıcıya bağlı (uid).
 - *Kullanım Verileri → Reklam verileri*: Üçüncü taraf reklamcılık (AdMob).
-- Toplanmayan: konum, kişiler, sağlık, finans bilgisi (ödeme Apple'da), arama geçmişi (2026-10-11'de analitik kayıtları kaldırıldı).
+- *Konum → Kaba konum (Coarse Location)*: Üçüncü taraf reklamcılık (AdMob, IP'den); kullanıcıya bağlı değil; takip EVET.
+- *Kullanım Verileri → Ürün etkileşimi (Product Interaction)*: Üçüncü taraf reklamcılık + Analitik (anonim görüntülenme sayaçları, `viewStatsService.js`); kullanıcıya bağlı değil; takip EVET.
+- Toplanmayan: hassas konum, kişiler, sağlık, finans bilgisi (ödeme Apple'da), arama geçmişi (2026-10-11'de analitik kayıtları kaldırıldı).
+- **2026-10-11: App Store Connect'te bu 12 veri türüyle dolduruldu.**
 
 **Yaş derecelendirmesi:** Tüm içerik soruları "Yok". Kullanıcı tarafından oluşturulan içerik var (yorum/tarif önerisi) — moderasyon, şikayet ve engelleme mevcut. Sonuç büyük olasılıkla 4+ (UGC nedeniyle Apple 12+ önerebilir; kabul edilebilir).
 
