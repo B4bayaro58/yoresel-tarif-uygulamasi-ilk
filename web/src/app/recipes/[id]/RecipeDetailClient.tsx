@@ -246,13 +246,15 @@ export default function RecipeDetailClient({ initialRecipe, intro }: RecipeDetai
 
         {/* Bottom info */}
         <div className="absolute bottom-0 left-0 right-0 px-5 pb-5">
-          {/* Stars */}
-          <div className="flex items-center gap-1 mb-2">
-            {[1,2,3,4,5].map((s) => (
-              <Star key={s} size={12} className={s <= Math.round(recipe.rating) ? 'text-yellow-400 fill-yellow-400' : 'text-white/30'} />
-            ))}
-            <span className="ml-1.5 text-xs text-white/80">{recipe.rating.toFixed(1)}</span>
-          </div>
+          {/* Stars — henüz puan yoksa (0) gösterilmez */}
+          {recipe.rating > 0 && (
+            <div className="flex items-center gap-1 mb-2">
+              {[1,2,3,4,5].map((s) => (
+                <Star key={s} size={12} className={s <= Math.round(recipe.rating) ? 'text-yellow-400 fill-yellow-400' : 'text-white/30'} />
+              ))}
+              <span className="ml-1.5 text-xs text-white/80">{recipe.rating.toFixed(1)}</span>
+            </div>
+          )}
           <h1 className="font-display font-bold text-white leading-tight mb-1" style={{ fontSize: '26px' }}>
             {recipe.name}
           </h1>
@@ -262,14 +264,16 @@ export default function RecipeDetailClient({ initialRecipe, intro }: RecipeDetai
 
       {/* ── Stats bar ──────────────────────────── */}
       <div
-        className="grid grid-cols-4 gap-2 rounded-2xl p-4 mb-5"
+        className={`grid ${recipe.rating > 0 ? 'grid-cols-4' : 'grid-cols-3'} gap-2 rounded-2xl p-4 mb-5`}
         style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)', boxShadow: 'var(--shadow)' }}
       >
         {[
           { icon: <Clock size={16} />, label: t('prepTime'), value: `${recipe.prepTime} ${t('minutes')}` },
           { icon: <Users size={16} />, label: t('servings'), value: `${recipe.servings} ${t('people')}` },
           { icon: <Flame size={16} />, label: t('calories'), value: `${recipe.calories}` },
-          { icon: <Star size={16} className="text-yellow-400 fill-yellow-400" />, label: 'Puan', value: recipe.rating.toFixed(1) },
+          ...(recipe.rating > 0
+            ? [{ icon: <Star size={16} className="text-yellow-400 fill-yellow-400" />, label: 'Puan', value: recipe.rating.toFixed(1) }]
+            : []),
         ].map((stat, i) => (
           <div key={i} className="flex flex-col items-center text-center gap-1">
             <div style={{ color: 'var(--primary)' }}>{stat.icon}</div>

@@ -61,11 +61,13 @@ function RecipeCard({ recipe, onPress }) {
               transition={150}
             />
 
-            {/* Rating Badge — sol üst */}
-            <View style={styles.ratingBadge}>
-              <Star size={12} color="#FFD700" fill="#FFD700" />
-              <Text style={styles.ratingText}>{displayRecipe.rating}</Text>
-            </View>
+            {/* Rating Badge — sol üst; henüz puan yoksa (0) gösterilmez */}
+            {displayRecipe.rating > 0 && (
+              <View style={styles.ratingBadge}>
+                <Star size={12} color="#FFD700" fill="#FFD700" />
+                <Text style={styles.ratingText}>{displayRecipe.rating}</Text>
+              </View>
+            )}
 
             {/* Favori butonu — sağ üst */}
             <TouchableOpacity

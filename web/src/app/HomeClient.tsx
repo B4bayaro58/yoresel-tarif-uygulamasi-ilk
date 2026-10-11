@@ -381,12 +381,14 @@ export default function HomeClient({ recipes, dailyMenuRecipes, popularRecipes }
                       <span style={{ fontSize: '42px' }}>{recipe.emoji}</span>
                     </div>
                   )}
-                  <div
-                    className="absolute top-2 right-2 flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold text-white"
-                    style={{ backgroundColor: 'rgba(0,0,0,0.45)' }}
-                  >
-                    ⭐ {recipe.rating}
-                  </div>
+                  {recipe.rating > 0 && (
+                    <div
+                      className="absolute top-2 right-2 flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold text-white"
+                      style={{ backgroundColor: 'rgba(0,0,0,0.45)' }}
+                    >
+                      ⭐ {recipe.rating}
+                    </div>
+                  )}
                   <div
                     className="absolute inset-0"
                     style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0) 55%)' }}

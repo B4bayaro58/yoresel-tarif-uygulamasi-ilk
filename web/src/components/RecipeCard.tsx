@@ -153,7 +153,8 @@ function RecipeCard({ recipe, isFav = false, onFavoriteToggle, priority = false 
 
           {/* Bottom overlay — recipe info */}
           <div className="absolute bottom-0 left-0 right-0 px-3 pb-3 pt-6">
-            <MiniStars rating={displayRecipe.rating} />
+            {/* Henüz puan yoksa (0) boş yıldız sırası gösterilmez */}
+            {displayRecipe.rating > 0 && <MiniStars rating={displayRecipe.rating} />}
             <h3
               className="font-display font-bold text-white leading-tight line-clamp-1 mt-1"
               style={{ fontSize: '15px' }}

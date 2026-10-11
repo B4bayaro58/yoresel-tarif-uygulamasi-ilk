@@ -39,10 +39,12 @@ function DailyMenuCard({ item, onPress }) {
           <Text style={styles.dailyCardName} numberOfLines={2}>{item.name}</Text>
           <Text style={styles.dailyCardCountry} numberOfLines={1}>{item.country}</Text>
           <View style={styles.dailyCardMeta}>
-            <View style={styles.dailyCardMetaItem}>
-              <Star size={11} color="rgba(255,255,255,0.9)" fill="rgba(255,255,255,0.9)" />
-              <Text style={styles.dailyCardMetaText}>{item.rating}</Text>
-            </View>
+            {item.rating > 0 && (
+              <View style={styles.dailyCardMetaItem}>
+                <Star size={11} color="rgba(255,255,255,0.9)" fill="rgba(255,255,255,0.9)" />
+                <Text style={styles.dailyCardMetaText}>{item.rating}</Text>
+              </View>
+            )}
             <View style={styles.dailyCardMetaItem}>
               <Clock size={11} color="rgba(255,255,255,0.9)" />
               <Text style={styles.dailyCardMetaText}>{item.prepTime} dk</Text>
@@ -84,10 +86,14 @@ function MyMenuItem({ item, onRemove, onPress, colors, translate }) {
           <Text style={[styles.myMenuItemMetaText, { color: colors.textTertiary }]}>
             {item.prepTime} dk
           </Text>
-          <Star size={12} color="#FFD700" fill="#FFD700" />
-          <Text style={[styles.myMenuItemMetaText, { color: colors.textTertiary }]}>
-            {item.rating}
-          </Text>
+          {item.rating > 0 && (
+            <>
+              <Star size={12} color="#FFD700" fill="#FFD700" />
+              <Text style={[styles.myMenuItemMetaText, { color: colors.textTertiary }]}>
+                {item.rating}
+              </Text>
+            </>
+          )}
         </View>
       </View>
       <TouchableOpacity

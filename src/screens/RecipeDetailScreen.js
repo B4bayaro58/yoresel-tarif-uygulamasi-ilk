@@ -107,7 +107,7 @@ function RecipeDetailContent({ recipe, navigation }) {
         title: recipe.name,
         message:
           `🍽️ ${recipe.name}\n` +
-          `📍 ${recipe.city ? `${recipe.country}, ${recipe.city}` : recipe.country} • ⭐ ${recipe.rating} • ⏱️ ${recipe.prepTime} dk\n\n` +
+          `📍 ${recipe.city ? `${recipe.country}, ${recipe.city}` : recipe.country} ${recipe.rating > 0 ? ` • ⭐ ${recipe.rating}` : ''} • ⏱️ ${recipe.prepTime} dk\n\n` +
           `📋 Malzemeler:\n${ingredientList}\n\n` +
           `👨‍🍳 Hazırlanışı:\n${stepList}\n\n` +
           `Yöresel Tarif uygulamasından paylaşıldı.\n` +
@@ -279,15 +279,17 @@ function RecipeDetailContent({ recipe, navigation }) {
 
           {/* Meta Info Grid */}
           <View style={styles.metaGrid}>
-            <View style={[styles.metaCard, { backgroundColor: colors.card }]}>
-              <Star size={20} color="#FFD700" fill="#FFD700" />
-              <Text style={[styles.metaValue, { color: colors.text }]}>
-                {recipe.rating}
-              </Text>
-              <Text style={[styles.metaLabel, { color: colors.textSecondary }]}>
-                {translate('rating')}
-              </Text>
-            </View>
+            {recipe.rating > 0 && (
+              <View style={[styles.metaCard, { backgroundColor: colors.card }]}>
+                <Star size={20} color="#FFD700" fill="#FFD700" />
+                <Text style={[styles.metaValue, { color: colors.text }]}>
+                  {recipe.rating}
+                </Text>
+                <Text style={[styles.metaLabel, { color: colors.textSecondary }]}>
+                  {translate('rating')}
+                </Text>
+              </View>
+            )}
             <View style={[styles.metaCard, { backgroundColor: colors.card }]}>
               <Clock size={20} color={colors.primary} />
               <Text style={[styles.metaValue, { color: colors.text }]}>

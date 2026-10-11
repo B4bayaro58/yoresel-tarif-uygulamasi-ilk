@@ -317,10 +317,12 @@ function DailyMenuSection({ colors, translate, dailyMenu, dailyMenuLoading, navi
                       <Text style={styles.dailyMenuName} numberOfLines={2}>{item.name}</Text>
                       <Text style={styles.dailyMenuCountry} numberOfLines={1}>{item.country}</Text>
                       <View style={styles.dailyMenuMeta}>
-                        <View style={styles.dailyMenuMetaItem}>
-                          <Star size={11} color="rgba(255,255,255,0.9)" fill="rgba(255,255,255,0.9)" />
-                          <Text style={styles.dailyMenuMetaText}>{item.rating}</Text>
-                        </View>
+                        {item.rating > 0 && (
+                          <View style={styles.dailyMenuMetaItem}>
+                            <Star size={11} color="rgba(255,255,255,0.9)" fill="rgba(255,255,255,0.9)" />
+                            <Text style={styles.dailyMenuMetaText}>{item.rating}</Text>
+                          </View>
+                        )}
                         <View style={styles.dailyMenuMetaItem}>
                           <Clock size={11} color="rgba(255,255,255,0.9)" />
                           <Text style={styles.dailyMenuMetaText}>{item.prepTime} dk</Text>
@@ -374,10 +376,12 @@ function PopularRecipesSection({ colors, translate, popularRecipes, popularRecip
                 end={{ x: 1, y: 1 }}
               />
             )}
-            <View style={styles.popularRatingBadge}>
-              <Star size={10} color="#FFFFFF" fill="#FFFFFF" />
-              <Text style={styles.popularRatingText}>{item.rating}</Text>
-            </View>
+            {item.rating > 0 && (
+              <View style={styles.popularRatingBadge}>
+                <Star size={10} color="#FFFFFF" fill="#FFFFFF" />
+                <Text style={styles.popularRatingText}>{item.rating}</Text>
+              </View>
+            )}
             <LinearGradient
               colors={['transparent', 'rgba(0,0,0,0.75)']}
               style={styles.popularCardOverlay}
