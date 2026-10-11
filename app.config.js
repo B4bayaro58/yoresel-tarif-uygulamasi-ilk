@@ -19,7 +19,9 @@ export default ({ config }) => ({
     backgroundColor: '#E86C2C',
   },
   ios: {
-    supportsTablet: true,
+    // v1 yalnız iPhone: iPad desteği App Store'da 13" iPad ekran görüntüsü
+    // zorunlu kılıyordu. iPad'de uygulama iPhone modunda yine çalışır.
+    supportsTablet: false,
     bundleIdentifier: 'com.cagatay58.yoreseltarifuygulamasi',
     // expo-apple-authentication'ın prebuild'de "Sign In with Apple"
     // capability + entitlement'ını otomatik eklemesi için gerekli.
