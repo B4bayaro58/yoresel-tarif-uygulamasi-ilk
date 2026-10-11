@@ -42,6 +42,7 @@ import AdBanner from '../components/AdBanner';
 import { logRecipeView, logShare } from '../services/analyticsService';
 import { trackRecipeView } from '../services/viewStatsService';
 import { maybeShowInterstitial } from '../services/interstitialAdService';
+import { getRecipeIntro } from '../constants/recipeIntros';
 
 const { width } = Dimensions.get('window');
 
@@ -57,6 +58,7 @@ function RecipeDetailContent({ recipe, navigation }) {
   const {
     colors,
     translate,
+    language,
     recipes,
     isFavorite,
     toggleFavorite,
@@ -76,6 +78,11 @@ function RecipeDetailContent({ recipe, navigation }) {
     openAlternatives,
   } = useApp();
   const { isPremium } = useSubscription();
+  // Giriş metinleri şimdilik yalnızca Türkçe; diğer dillerde bölüm gizlenir.
+  // Override edilmiş tariflerde metin statik id'ye bağlı (web'deki introFor ile aynı).
+  const intro =
+    getRecipeIntro(String(recipe.id), language) ||
+    getRecipeIntro(String(recipe.overridesStaticId ?? ''), language);
 
   // Sayfa açılınca görüntüleme logu
   React.useEffect(() => {
@@ -378,6 +385,19 @@ function RecipeDetailContent({ recipe, navigation }) {
               {translate(`difficulty-${recipe.difficulty}`)}
             </Text>
           </View>
+
+          {intro && (
+            <View style={styles.section}>
+              <Text style={[styles.sectionTitle, { color: colors.text }]}>
+                📖 {translate('aboutRecipe')}
+              </Text>
+              {intro.split('\n\n').map((para, i) => (
+                <Text key={i} style={[styles.introParagraph, { color: colors.text }]}>
+                  {para}
+                </Text>
+              ))}
+            </View>
+          )}
 
           <View style={styles.adContainer}>
             <AdBanner size="rectangle" />
@@ -951,6 +971,11 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: '700',
     marginBottom: 16,
+  },
+  introParagraph: {
+    fontSize: 15,
+    lineHeight: 23,
+    marginBottom: 12,
   },
   sectionTitleRow: {
     flexDirection: 'row',

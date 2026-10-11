@@ -1,5 +1,5 @@
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
-import { storage } from '../config/firebase';
+import { auth, storage } from '../config/firebase';
 
 let ImagePicker = null;
 let ImageManipulator = null;
@@ -126,6 +126,9 @@ export const uploadRecipeImage = async (uri, recipeId) => {
     await uploadBytes(storageRef, blob, {
       contentType: 'image/jpeg',
       cacheControl: 'public, max-age=31536000, immutable',
+      // storage.rules silmeye yalnızca yükleyene izin veriyor (dosya adında
+      // uid yok) -- hesap/tarif silinince deleteImageByUrl bunu kullanır.
+      customMetadata: { ownerUid: auth.currentUser?.uid ?? '' },
     });
     const downloadURL = await getDownloadURL(storageRef);
 

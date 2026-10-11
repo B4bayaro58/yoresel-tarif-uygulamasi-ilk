@@ -204,7 +204,7 @@ function HomeTabs() {
         name="ProfileTab"
         component={ProfileScreen}
         options={{
-          headerTitle: translate('settings'),
+          headerTitle: translate('profile'),
           tabBarLabel: translate('profile'),
           tabBarIcon: ({ color, size }) => (
             <User color={color} size={size} />

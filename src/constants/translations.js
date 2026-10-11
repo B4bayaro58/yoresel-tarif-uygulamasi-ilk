@@ -175,6 +175,12 @@ export const TRANSLATIONS = {
   },
 
   // Recipe Details
+  aboutRecipe: {
+    tr: 'Bu Tarif Hakkında',
+    en: 'About This Recipe',
+    fr: 'À propos de cette recette',
+    it: 'Informazioni sulla ricetta',
+  },
   ingredients: {
     tr: 'Malzemeler',
     en: 'Ingredients',
