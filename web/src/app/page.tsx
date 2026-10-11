@@ -4,6 +4,8 @@ import { Recipe } from '@/types'
 import HomeClient from './HomeClient'
 // @ts-ignore
 import { RECIPES_DATA } from '@shared/recipes'
+// @ts-ignore
+import { getRecipeTags } from '@shared/recipeTags'
 
 const localRecipes: Recipe[] = (RECIPES_DATA as any).tr || []
 
@@ -118,6 +120,39 @@ async function fetchHomeData() {
   }
 }
 
+// Ana sayfa yalnızca kart gösteriyor ama eskiden 1100+ tarifin TAMAMI
+// (malzemeler, adımlar, alternatifler...) Client Component prop'u olarak
+// HTML'e gömülüyordu -- sayfa ~2.6MB'tı (AdSense "düşük değerli içerik"
+// denetiminde de not edildi). Kart + filtrelerin okuduğu alanlar dışındakiler
+// atılıyor; hızlı filtre etiketleri malzeme/ekipmana baktığı için sunucuda
+// önceden hesaplanıp `quickTags` olarak gönderiliyor (HomeClient bunu kullanır).
+// RecipeCard'a yeni bir alan eklenirse buraya da eklenmeli.
+function toCardRecipe(r: Recipe): Recipe {
+  const a = r as any
+  return {
+    id: r.id,
+    name: r.name,
+    country: r.country,
+    city: r.city,
+    continent: r.continent,
+    category: r.category,
+    emoji: r.emoji,
+    gradient: r.gradient,
+    photo: r.photo,
+    photoThumb: r.photoThumb,
+    servings: r.servings,
+    prepTime: r.prepTime,
+    calories: r.calories,
+    rating: r.rating,
+    difficulty: r.difficulty,
+    ingredients: [],
+    equipment: [],
+    steps: [],
+    ...(a.overridesStaticId != null ? { overridesStaticId: a.overridesStaticId } : {}),
+    quickTags: getRecipeTags(r),
+  } as Recipe
+}
+
 export default async function HomePage() {
   const { firestoreRecipes, dailyIds, popularIds } = await getHomeData()
 
@@ -157,5 +192,11 @@ export default async function HomePage() {
     ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
   }
 
-  return <HomeClient recipes={shuffled} dailyMenuRecipes={dailyMenuRecipes} popularRecipes={popularRecipes} />
+  return (
+    <HomeClient
+      recipes={shuffled.map(toCardRecipe)}
+      dailyMenuRecipes={dailyMenuRecipes.map(toCardRecipe)}
+      popularRecipes={popularRecipes.map(toCardRecipe)}
+    />
+  )
 }

@@ -89,7 +89,9 @@ export default function HomeClient({ recipes, dailyMenuRecipes, popularRecipes }
     return recipes.filter((r) => {
       if (selectedContinent !== 'all' && r.continent !== selectedContinent) return false
       if (selectedCategory !== 'all' && r.category !== selectedCategory) return false
-      if (selectedQuickFilter && !getRecipeTags(r).includes(selectedQuickFilter)) return false
+      // quickTags sunucuda hesaplanıyor (page.tsx toCardRecipe) -- kart verisinde
+      // getRecipeTags'in baktığı malzeme/ekipman alanları yok.
+      if (selectedQuickFilter && !((r as any).quickTags ?? getRecipeTags(r)).includes(selectedQuickFilter)) return false
       return true
     })
   }, [recipes, selectedContinent, selectedCategory, selectedQuickFilter])
