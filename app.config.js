@@ -54,10 +54,21 @@ export default ({ config }) => ({
         action: 'VIEW',
         autoVerify: true,
         data: [
+          // '/recipe' öneki web'in /recipes/:id adreslerini de kapsar.
           {
             scheme: 'https',
             host: 'yoreseltarif.com',
             pathPrefix: '/recipe',
+          },
+          {
+            scheme: 'https',
+            host: 'yoreseltarif.com',
+            pathPrefix: '/blog',
+          },
+          {
+            scheme: 'https',
+            host: 'yoreseltarif.com',
+            pathPrefix: '/koleksiyon',
           },
         ],
         category: ['BROWSABLE', 'DEFAULT'],

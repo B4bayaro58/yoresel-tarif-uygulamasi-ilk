@@ -32,9 +32,6 @@ export const useAuth = () => {
   return context;
 };
 
-// Admin email - hardcoded for security
-const ADMIN_EMAIL = 'admin@yoreseltarifler.com';
-
 export const AuthProvider = ({ children }) => {
   const { setCurrentUserId, translate } = useApp();
   const [user, setUser] = useState(null);
@@ -53,11 +50,12 @@ export const AuthProvider = ({ children }) => {
         setUser(firebaseUser);
         setCurrentUserId(firebaseUser.uid);
         setSentryUser(firebaseUser);
-        // Resolve immediately from the hardcoded email so the app doesn't block
-        // startup on a Firestore round-trip; the real per-user flag (set via
-        // ManageUsersScreen's "promote to admin") arrives right after and only
-        // ever upgrades isAdmin to true, never downgrades it mid-session.
-        setIsAdmin(firebaseUser.email === ADMIN_EMAIL);
+        // Don't block startup on a Firestore round-trip: isAdmin starts false
+        // and the per-user flag (set via ManageUsersScreen's "promote to
+        // admin") upgrades it right after -- same source as web and as
+        // firestore.rules' isAdmin(). (A hardcoded admin email used to grant
+        // the admin UI here, on a dead domain anyone could register.)
+        setIsAdmin(false);
         setLoading(false);
 
         getDoc(doc(db, 'users', firebaseUser.uid))

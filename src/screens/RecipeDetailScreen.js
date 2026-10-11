@@ -39,7 +39,6 @@ import { useSubscription } from '../contexts/SubscriptionContext';
 import ReviewsSection from '../components/ReviewsSection';
 import RecipeCard from '../components/RecipeCard';
 import AdBanner from '../components/AdBanner';
-import { logRecipeView, logShare } from '../services/analyticsService';
 import { trackRecipeView } from '../services/viewStatsService';
 import { maybeShowInterstitial } from '../services/interstitialAdService';
 import { getRecipeIntro } from '../constants/recipeIntros';
@@ -48,7 +47,7 @@ const { width } = Dimensions.get('window');
 
 // Route parametrelerinde her zaman tam `recipe` objesi olmayabilir --
 // deep link'ler (yoreseltarif://recipe/:recipeId ve App Link
-// yoreseltarif.com/recipe/*, bkz. AppNavigator.js linking config) sadece
+// yoreseltarif.com/recipes/*, bkz. AppNavigator.js linking config) sadece
 // `recipeId` taşır. Bu yüzden asıl ekran mantığı burada, recipe'nin garanti
 // dolu olduğu bir iç bileşende yaşıyor; dışarıdaki wrapper (dosya sonunda)
 // recipe'yi çözüp yükleniyor/bulunamadı durumlarını ele alıyor.
@@ -86,7 +85,6 @@ function RecipeDetailContent({ recipe, navigation }) {
 
   // Sayfa açılınca görüntüleme logu
   React.useEffect(() => {
-    logRecipeView(recipe.id, recipe.name, recipe.continent);
     trackRecipeView(recipe);
     maybeShowInterstitial(isPremium);
   }, [recipe.id]);
@@ -104,7 +102,6 @@ function RecipeDetailContent({ recipe, navigation }) {
       .join('\n');
     const stepList = steps.map((s, i) => `${i + 1}. ${s}`).join('\n');
 
-    logShare(recipe.id, recipe.name);
     try {
       await Share.share({
         title: recipe.name,
@@ -114,7 +111,10 @@ function RecipeDetailContent({ recipe, navigation }) {
           `📋 Malzemeler:\n${ingredientList}\n\n` +
           `👨‍🍳 Hazırlanışı:\n${stepList}\n\n` +
           `Yöresel Tarif uygulamasından paylaşıldı.\n` +
-          `yoreseltarif://recipe/${recipe.id}`,
+          // https linki her uygulamada tıklanabilir; uygulaması olmayan web
+          // sayfasını açar, Android'de App Link ile uygulamaya düşer. Override
+          // edilmiş tariflerde web'in kanonik adresi statik id.
+          `https://yoreseltarif.com/recipes/${recipe.overridesStaticId || recipe.id}`,
       });
     } catch (error) {
       console.error('Share error:', error);
@@ -686,7 +686,7 @@ function RecipeDetailContent({ recipe, navigation }) {
                               { backgroundColor: completed ? colors.success : colors.primary },
                             ]}
                             onPress={() => {
-                              toggleStep(recipe.id, index, steps.length, recipe.name);
+                              toggleStep(recipe.id, index);
                               if (!completed) goToStep(index + 1);
                             }}
                             activeOpacity={0.85}
@@ -732,7 +732,7 @@ function RecipeDetailContent({ recipe, navigation }) {
                       { backgroundColor: colors.card, borderColor: colors.border },
                       completed && { borderColor: colors.success, borderWidth: 2 },
                     ]}
-                    onPress={() => toggleStep(recipe.id, index, steps.length, recipe.name)}
+                    onPress={() => toggleStep(recipe.id, index)}
                     activeOpacity={0.7}
                     accessibilityRole="button"
                     accessibilityLabel={`${translate('step')} ${index + 1}: ${step}`}

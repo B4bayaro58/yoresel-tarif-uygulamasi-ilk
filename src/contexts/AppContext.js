@@ -19,7 +19,6 @@ import { getRank, getNextRank } from '../constants/ranks';
 import { getEarnedBadges } from '../constants/badges';
 import { DEFAULT_GROCERY_CATEGORY } from '../constants/groceryCategories';
 import { categorizeIngredient } from '../utils/groceryCategorizer';
-import { logFavoriteToggle, logShoppingAdd, logSearch, logRecipeComplete } from '../services/analyticsService';
 import { deleteImageByUrl } from '../services/imageUploadService';
 import { Alert, Linking, Platform } from 'react-native';
 
@@ -577,7 +576,6 @@ export const AppProvider = ({ children }) => {
           : t('addToFavorites', language)
       );
       if (currentUserId) saveFavoritesToFirebase(currentUserId, updated);
-      logFavoriteToggle(recipeId, '', !isAlreadyFav);
       // Yeni favori eklenince o tarif için kişiselleştirilmiş bildirim planla
       if (!isAlreadyFav) {
         const recipe = recipes.find(r => String(r.id) === String(recipeId));
@@ -610,7 +608,6 @@ export const AppProvider = ({ children }) => {
       return updated;
     });
     showNotification(t('addToShoppingList', language));
-    logShoppingAdd(item.name);
   }, [currentUserId, language, showNotification]);
 
   const addMultipleToShoppingList = useCallback((items) => {
@@ -631,7 +628,6 @@ export const AppProvider = ({ children }) => {
       return updated;
     });
     showNotification(t('allIngredientsAdded', language));
-    items.forEach(item => logShoppingAdd(item.name));
   }, [currentUserId, language, showNotification]);
 
   const updateShoppingItemCategory = useCallback((itemId, category) => {
@@ -678,19 +674,9 @@ export const AppProvider = ({ children }) => {
   }, [currentUserId, language, showNotification]);
 
   // Steps Completion
-  const toggleStep = useCallback((recipeId, stepIndex, totalSteps, recipeName) => {
+  const toggleStep = useCallback((recipeId, stepIndex) => {
     const key = `${recipeId}-${stepIndex}`;
-    setCompletedSteps(prev => {
-      const updated = { ...prev, [key]: !prev[key] };
-      // Tüm adımlar tamamlandıysa analytics logu
-      if (totalSteps && updated[key]) {
-        const allDone = Array.from({ length: totalSteps }, (_, i) =>
-          updated[`${recipeId}-${i}`]
-        ).every(Boolean);
-        if (allDone) logRecipeComplete(recipeId, recipeName || recipeId);
-      }
-      return updated;
-    });
+    setCompletedSteps(prev => ({ ...prev, [key]: !prev[key] }));
   }, []);
 
   const isStepCompleted = useCallback((recipeId, stepIndex) => {
@@ -829,14 +815,6 @@ export const AppProvider = ({ children }) => {
 
     return filtered;
   }, [recipes, selectedContinent, selectedCategory, selectedCountry, selectedQuickFilter, searchQuery]);
-
-  // Arama logunu yalnızca kullanıcı yazmayı bıraktıktan 600ms sonra tek sefer yaz
-  // (önceden her tuş vuruşunda Firestore'a yazıyordu — bkz. maliyet denetimi 2026-07-09)
-  useEffect(() => {
-    if (!searchQuery) return;
-    const timeout = setTimeout(() => logSearch(searchQuery), 600);
-    return () => clearTimeout(timeout);
-  }, [searchQuery]);
 
   // Clear Filters
   const clearFilters = useCallback(() => {

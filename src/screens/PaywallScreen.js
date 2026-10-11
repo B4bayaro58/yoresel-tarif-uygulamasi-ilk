@@ -191,6 +191,27 @@ export default function PaywallScreen() {
             </Text>
           </TouchableOpacity>
         )}
+
+        {!isPremium && (
+          <View style={styles.legalBlock}>
+            <Text style={[styles.legalText, { color: colors.textSecondary }]}>
+              {translate('autoRenewNotice', { store: Platform.OS === 'ios' ? 'Apple ID' : 'Google Play' })}
+            </Text>
+            <View style={styles.legalLinks}>
+              <TouchableOpacity onPress={() => navigation.navigate('TermsOfService')} accessibilityRole="link">
+                <Text style={[styles.restoreText, { color: colors.textSecondary }]}>
+                  {translate('termsOfService')}
+                </Text>
+              </TouchableOpacity>
+              <Text style={[styles.legalText, { color: colors.textSecondary }]}>·</Text>
+              <TouchableOpacity onPress={() => navigation.navigate('PrivacyPolicy')} accessibilityRole="link">
+                <Text style={[styles.restoreText, { color: colors.textSecondary }]}>
+                  {translate('privacyPolicy')}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
       </ScrollView>
 
       {!isPremium && packages.length > 0 && (
@@ -385,6 +406,22 @@ const styles = StyleSheet.create({
   restoreText: {
     fontSize: 13,
     textDecorationLine: 'underline',
+  },
+  legalBlock: {
+    marginTop: 8,
+    paddingHorizontal: 8,
+  },
+  legalText: {
+    fontSize: 11,
+    lineHeight: 16,
+    textAlign: 'center',
+  },
+  legalLinks: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 6,
+    marginTop: 6,
   },
   ctaBar: {
     borderTopWidth: 1,

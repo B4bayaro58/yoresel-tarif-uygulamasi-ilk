@@ -10,7 +10,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { Image } from 'expo-image';
-import { Globe, Palette, Settings, LogOut, User as UserIcon, ChevronRight, Trash2, Shield, Camera, Crown } from 'lucide-react-native';
+import { Palette, Settings, LogOut, User as UserIcon, ChevronRight, Trash2, Shield, Camera, Crown } from 'lucide-react-native';
 import { useApp } from '../contexts/AppContext';
 import { getCountryFlag } from '../constants/countryFlags';
 import { useAuth } from '../contexts/AuthContext';
@@ -422,30 +422,6 @@ export default function ProfileScreen({ navigation }) {
           <ChevronRight color={colors.textSecondary} size={20} />
         </TouchableOpacity>
 
-        {/* Language Setting — Coming Soon */}
-        <View
-          style={[styles.settingItem, { backgroundColor: colors.card, borderColor: colors.border, opacity: 0.6 }]}
-        >
-          <View style={styles.settingLeft}>
-            <View style={[styles.iconContainer, { backgroundColor: colors.primary + '20' }]}>
-              <Globe color={colors.primary} size={20} />
-            </View>
-            <View>
-              <Text style={[styles.settingTitle, { color: colors.text }]}>
-                {translate('language')}
-              </Text>
-              <Text style={[styles.settingSubtitle, { color: colors.textSecondary }]}>
-                {translate('comingSoon')}
-              </Text>
-            </View>
-          </View>
-          <View style={[styles.comingSoonBadge, { backgroundColor: colors.primary + '25' }]}>
-            <Text style={[styles.comingSoonText, { color: colors.primary }]}>
-              {translate('comingSoon')}
-            </Text>
-          </View>
-        </View>
-
         {/* Theme Setting */}
         <TouchableOpacity
           style={[styles.settingItem, { backgroundColor: colors.card, borderColor: colors.border }]}
@@ -463,29 +439,6 @@ export default function ProfileScreen({ navigation }) {
               </Text>
               <Text style={[styles.settingSubtitle, { color: colors.textSecondary }]}>
                 {currentTheme.icon} {translate(theme === 'light' ? 'lightMode' : 'darkMode')}
-              </Text>
-            </View>
-          </View>
-          <ChevronRight color={colors.textSecondary} size={20} />
-        </TouchableOpacity>
-
-        {/* Other Settings */}
-        <TouchableOpacity
-          style={[styles.settingItem, { backgroundColor: colors.card, borderColor: colors.border }]}
-          onPress={() => showNotification(translate('comingSoon'))}
-          accessibilityRole="button"
-          accessibilityLabel={translate('otherSettings')}
-        >
-          <View style={styles.settingLeft}>
-            <View style={[styles.iconContainer, { backgroundColor: colors.primary + '20' }]}>
-              <Settings color={colors.primary} size={20} />
-            </View>
-            <View>
-              <Text style={[styles.settingTitle, { color: colors.text }]}>
-                {translate('otherSettings')}
-              </Text>
-              <Text style={[styles.settingSubtitle, { color: colors.textSecondary }]}>
-                {translate('comingSoon')}
               </Text>
             </View>
           </View>
@@ -1063,15 +1016,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     textAlign: 'center',
-  },
-  comingSoonBadge: {
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 10,
-  },
-  comingSoonText: {
-    fontSize: 12,
-    fontWeight: '700',
   },
   logoutButton: {
     flexDirection: 'row',

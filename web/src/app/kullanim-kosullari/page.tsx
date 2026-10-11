@@ -4,7 +4,7 @@ export const metadata = { title: 'Kullanım Koşulları — Yöresel Tarif' }
 
 export default function KullanimKosullariPage() {
   return (
-    <LegalPageLayout emoji="📜" title="Kullanım Koşulları" updatedAt="3 Temmuz 2026">
+    <LegalPageLayout emoji="📜" title="Kullanım Koşulları" updatedAt="11 Ekim 2026">
       <p>
         Yöresel Tarif sitesini (&quot;<strong>Site</strong>&quot;) kullanarak aşağıdaki koşulları kabul etmiş
         sayılırsınız. Lütfen siteyi kullanmadan önce bu koşulları dikkatlice okuyun.
@@ -35,6 +35,20 @@ export default function KullanimKosullariPage() {
         Sitedeki tarifler bilgilendirme amaçlıdır. Alerji, beslenme kısıtlaması veya sağlık durumunuz
         varsa tarifleri uygulamadan önce kendi değerlendirmenizi yapmanızı öneririz. Site, tariflerin
         uygulanmasından doğacak sonuçlardan sorumlu tutulamaz.
+      </p>
+
+      <h2>Premium Abonelik (Mobil Uygulama)</h2>
+      <p>
+        Yöresel Tarif mobil uygulamasındaki Premium, aylık veya yıllık otomatik yenilenen bir aboneliktir ve
+        reklamsız kullanım ile ek özellikler sunar. Ödeme, satın alma onaylandığında App Store veya Google Play
+        hesabınızdan alınır. Abonelik, dönem bitiminden en az 24 saat önce iptal edilmedikçe aynı ücretle
+        otomatik olarak yenilenir; yenileme ücreti dönem bitiminden önceki 24 saat içinde tahsil edilir.
+      </p>
+      <p>
+        Aboneliğinizi App Store veya Google Play hesap ayarlarından yönetebilir ve iptal edebilirsiniz; iptal,
+        mevcut dönemin sonunda geçerli olur ve o tarihe kadar Premium özellikleri kullanmaya devam edersiniz.
+        İade talepleri ilgili mağazanın (Apple veya Google) iade politikasına tabidir. Uygulamayı silmek
+        aboneliği iptal etmez.
       </p>
 
       <h2>Değişiklikler</h2>

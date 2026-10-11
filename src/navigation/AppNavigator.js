@@ -48,7 +48,12 @@ const linking = {
           FavoritesTab: 'favorites',
         },
       },
-      RecipeDetail: 'recipe/:recipeId',
+      // Web'deki tarif adresi /recipes/:id -- Android App Link'leri bu yolla
+      // geliyor. Eski paylaşımlardaki yoreseltarif://recipe/:id de çalışsın.
+      RecipeDetail: {
+        path: 'recipes/:recipeId',
+        alias: ['recipe/:recipeId'],
+      },
       CollectionDetail: 'koleksiyon/:collectionId',
       BlogList: 'blog',
       BlogDetail: 'blog/:slug',

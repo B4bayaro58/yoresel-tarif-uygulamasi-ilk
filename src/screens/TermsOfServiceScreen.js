@@ -10,6 +10,7 @@ const SECTIONS = [
   { titleKey: 'tosSection5Title', bodyKey: 'tosSection5Body' },
   { titleKey: 'tosSection6Title', bodyKey: 'tosSection6Body' },
   { titleKey: 'tosSection7Title', bodyKey: 'tosSection7Body' },
+  { titleKey: 'tosSection8Title', bodyKey: 'tosSection8Body' },
 ];
 
 export default function TermsOfServiceScreen() {

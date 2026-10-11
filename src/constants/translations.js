@@ -1959,10 +1959,10 @@ export const TRANSLATIONS = {
 
   // Privacy Policy
   ppLastUpdated: {
-    tr: 'Son güncelleme: Mart 2026',
-    en: 'Last updated: March 2026',
-    fr: 'Dernière mise à jour : Mars 2026',
-    it: 'Ultimo aggiornamento: Marzo 2026',
+    tr: 'Son güncelleme: Ekim 2026',
+    en: 'Last updated: October 2026',
+    fr: 'Dernière mise à jour : Octobre 2026',
+    it: 'Ultimo aggiornamento: Ottobre 2026',
   },
   ppIntro: {
     tr: 'Yöresel Tarif uygulaması ("Uygulama") kullanıcı gizliliğine önem verir. Bu politika, hangi verileri topladığımızı, nasıl kullandığımızı ve haklarınızı açıklar.',
@@ -2143,6 +2143,18 @@ export const TRANSLATIONS = {
     en: 'We may update these terms from time to time. Significant changes will be announced via in-app notification. Continued use of the app means you accept the updated terms.',
     fr: 'Nous pouvons mettre à jour ces conditions de temps à autre. Les modifications importantes seront annoncées par une notification dans l\'application. Continuer à utiliser l\'application signifie que vous acceptez les conditions mises à jour.',
     it: 'Potremmo aggiornare questi termini di tanto in tanto. Le modifiche significative saranno annunciate tramite notifica in-app. L\'uso continuato dell\'app significa che accetti i termini aggiornati.',
+  },
+  tosSection8Title: {
+    tr: '8. Premium Abonelik',
+    en: '8. Premium Subscription',
+    fr: '8. Abonnement Premium',
+    it: '8. Abbonamento Premium',
+  },
+  tosSection8Body: {
+    tr: 'Premium, aylık veya yıllık otomatik yenilenen bir aboneliktir ve reklamsız kullanım ile ek özellikler sunar. Ödeme, satın alma onaylandığında App Store veya Google Play hesabınızdan alınır. Abonelik, dönem bitiminden en az 24 saat önce iptal edilmedikçe aynı ücretle otomatik olarak yenilenir; yenileme ücreti dönem bitiminden önceki 24 saat içinde tahsil edilir. Aboneliğinizi App Store veya Google Play hesap ayarlarından yönetebilir ve iptal edebilirsiniz; iptal, mevcut dönemin sonunda geçerli olur ve o tarihe kadar Premium özellikleri kullanmaya devam edersiniz. İade talepleri ilgili mağazanın (Apple veya Google) iade politikasına tabidir. Uygulamayı silmek aboneliği iptal etmez.',
+    en: 'Premium is an auto-renewing monthly or yearly subscription that offers an ad-free experience and additional features. Payment is charged to your App Store or Google Play account at confirmation of purchase. The subscription renews automatically at the same price unless cancelled at least 24 hours before the end of the current period; renewal is charged within the 24 hours before the period ends. You can manage and cancel your subscription in your App Store or Google Play account settings; cancellation takes effect at the end of the current period and you keep Premium features until then. Refunds are subject to the refund policy of the respective store (Apple or Google). Deleting the app does not cancel the subscription.',
+    fr: "Premium est un abonnement mensuel ou annuel à renouvellement automatique qui offre une expérience sans publicité et des fonctionnalités supplémentaires. Le paiement est débité de votre compte App Store ou Google Play à la confirmation de l'achat. L'abonnement se renouvelle automatiquement au même prix sauf annulation au moins 24 heures avant la fin de la période en cours ; le renouvellement est facturé dans les 24 heures précédant la fin de la période. Vous pouvez gérer et annuler votre abonnement dans les réglages de votre compte App Store ou Google Play ; l'annulation prend effet à la fin de la période en cours et vous conservez les fonctionnalités Premium jusqu'à cette date. Les remboursements sont soumis à la politique de la boutique concernée (Apple ou Google). Supprimer l'application n'annule pas l'abonnement.",
+    it: "Premium è un abbonamento mensile o annuale a rinnovo automatico che offre un'esperienza senza pubblicità e funzionalità aggiuntive. Il pagamento viene addebitato sul tuo account App Store o Google Play alla conferma dell'acquisto. L'abbonamento si rinnova automaticamente allo stesso prezzo se non viene annullato almeno 24 ore prima della fine del periodo corrente; il rinnovo viene addebitato nelle 24 ore precedenti la fine del periodo. Puoi gestire e annullare l'abbonamento nelle impostazioni del tuo account App Store o Google Play; l'annullamento ha effetto alla fine del periodo corrente e mantieni le funzionalità Premium fino ad allora. I rimborsi sono soggetti alla politica di rimborso dello store (Apple o Google). Eliminare l'app non annulla l'abbonamento.",
   },
   tosSection7Title: {
     tr: '7. İletişim',
@@ -2598,6 +2610,14 @@ export const TRANSLATIONS = {
     en: 'Save {percent}%',
     fr: 'Économisez {percent}%',
     it: 'Risparmia il {percent}%',
+  },
+  // Apple 3.1.2 / Google Play abonelik politikası: satın alma ekranında
+  // otomatik yenileme bilgisi + Koşullar/Gizlilik bağlantıları zorunlu.
+  autoRenewNotice: {
+    tr: 'Abonelik, dönem bitiminden en az 24 saat önce iptal edilmezse aynı ücretle otomatik olarak yenilenir. Ödeme {store} hesabınızdan alınır; aboneliğinizi {store} hesap ayarlarından yönetebilir veya iptal edebilirsiniz.',
+    en: 'Your subscription renews automatically at the same price unless cancelled at least 24 hours before the end of the current period. Payment is charged to your {store} account; you can manage or cancel it in your {store} account settings.',
+    fr: "L'abonnement se renouvelle automatiquement au même prix sauf annulation au moins 24 heures avant la fin de la période en cours. Le paiement est débité de votre compte {store} ; vous pouvez le gérer ou l'annuler dans les réglages de votre compte {store}.",
+    it: "L'abbonamento si rinnova automaticamente allo stesso prezzo se non viene annullato almeno 24 ore prima della fine del periodo corrente. Il pagamento viene addebitato sul tuo account {store}; puoi gestirlo o annullarlo nelle impostazioni del tuo account {store}.",
   },
   cancelAnytime: {
     tr: 'İstediğin zaman iptal et',
