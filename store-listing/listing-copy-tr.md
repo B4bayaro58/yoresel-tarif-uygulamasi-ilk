@@ -30,7 +30,6 @@ hikayeyle birlikte.
 • Tarif pişirdikçe rozet kazan, ülkeleri keşfet, kendi mutfak pasaportunu
   doldur
 • Kendi tarifini paylaş, topluluğun yorumlarını oku ve puanla
-• Türkçe, İngilizce, Fransızca ve İtalyanca dil desteği
 • Karanlık/Aydınlık tema
 
 Yöresel Tarif, hem yeni başlayanlar hem deneyimli aşçılar için: net
@@ -48,7 +47,9 @@ mutfakta kaybolmadan pişirmeni sağlar.
 
 **Content rating anketi:** Play Console'da doldurulacak — uygulamada şiddet/yetişkin içerik yok, UGC (yorum) var ve moderasyon mekanizması mevcut (rapor/engelle), bu ankette belirtilmeli.
 
-**Data safety formu:** Toplanan veriler — e-posta (Firebase Auth), kullanıcı içeriği (yorumlar, tarif önerileri, favoriler). Üçüncü taraflarla paylaşılmıyor. Firebase/Google Analytics kullanılıyorsa (bkz. `analyticsService.js`) bu da formda belirtilmeli.
+**Data safety formu:** 2026-10-09'da dolduruldu.
+
+> 2026-10-11: Tam açıklamadan "Türkçe, İngilizce, Fransızca ve İtalyanca dil desteği" satırı çıkarıldı — uygulamada dil seçimi yok (Profil'deki "Yakında" satırı da kaldırıldı). Play Console'daki mağaza kaydında bu satır duruyorsa oradan da silinmeli.
 
 ---
 
@@ -80,7 +81,28 @@ tarif,yemek,mutfak,pişirme,yöresel,dünya mutfağı,alışveriş listesi,tarif
 
 **Destek URL'si:** https://yoreseltarif.com/iletisim (zaten canlı)
 
-**Grafik varlıklar (henüz yok, hazırlanmalı):**
+**Gönderim öncesi kontrol listesi (2026-10-11):**
+- Ekran görüntüleri: iPhone 6.9" — 1320×2868 veya 1290×2796 piksel, en az 3 (önerilen 5-6). Telefondan **doğrudan** aktarılmalı (AirDrop/kablo/iCloud — WhatsApp sıkıştırır ve boyutu değiştirir).
+- iPad: `app.config.js` → `supportsTablet: true` olduğu sürece 13" iPad ekran görüntüleri de zorunlu. Ya iPad görüntüsü hazırlanacak ya da `supportsTablet: false` yapılıp yeni iOS build alınacak (uygulama iPad'de yine iPhone modunda çalışır).
+- İnceleme notu + demo hesap: `inceleme.yoreseltarif@gmail.com` (şifre kullanıcıda; RevenueCat'te ömür boyu premium tanımlı). Not: "Premium satın alma akışı sandbox hesabıyla test edilebilir; demo hesapta premium zaten açık."
+- Sürüm 1.0, abonelik grubunu (Premium Aylık + Yıllık) içeren mevcut taslak gönderime eklenmeli.
+- Lisans sözleşmesi (EULA): Apple'ın standart EULA'sı kullanılabilir; uygulama içi Kullanım Koşulları'nda abonelik bölümü var (2026-10-11), ödeme ekranında Koşullar/Gizlilik bağlantıları mevcut.
+
+**App Privacy (gizlilik etiketi) cevapları — koda göre:**
+- *Takip (Tracking): EVET* — AdMob + ATT izni isteniyor (`consentService.js`). "Cihaz Kimliği" → Üçüncü taraf reklamcılık, takip için kullanılıyor.
+- *İletişim Bilgileri → E-posta adresi*: Uygulama işlevselliği; kullanıcıya bağlı; takip yok.
+- *İletişim Bilgileri → Ad*: (görünen ad / Apple-Google girişi) Uygulama işlevselliği; kullanıcıya bağlı.
+- *Kullanıcı İçeriği → Fotoğraflar, Diğer kullanıcı içeriği* (tarif önerisi, yorum, yorum fotoğrafı): Uygulama işlevselliği; kullanıcıya bağlı.
+- *Tanımlayıcılar → Kullanıcı Kimliği*: Uygulama işlevselliği (Firebase UID; Sentry hata kaydında da uid var); kullanıcıya bağlı.
+- *Tanımlayıcılar → Cihaz Kimliği*: Üçüncü taraf reklamcılık; takip EVET.
+- *Satın Almalar → Satın alma geçmişi*: Uygulama işlevselliği (RevenueCat); kullanıcıya bağlı.
+- *Tanılama → Çökme verileri, Performans verileri*: Uygulama işlevselliği (Sentry); kullanıcıya bağlı (uid).
+- *Kullanım Verileri → Reklam verileri*: Üçüncü taraf reklamcılık (AdMob).
+- Toplanmayan: konum, kişiler, sağlık, finans bilgisi (ödeme Apple'da), arama geçmişi (2026-10-11'de analitik kayıtları kaldırıldı).
+
+**Yaş derecelendirmesi:** Tüm içerik soruları "Yok". Kullanıcı tarafından oluşturulan içerik var (yorum/tarif önerisi) — moderasyon, şikayet ve engelleme mevcut. Sonuç büyük olasılıkla 4+ (UGC nedeniyle Apple 12+ önerebilir; kabul edilebilir).
+
+**Grafik varlıklar:**
 - 6.9" (iPhone 16 Pro Max vb.) ekran görüntüleri: en az 3, önerilen 5-10 — **yok**
 - 6.5" ekran görüntüleri (eski zorunluluk, artık 6.9" yeterli olabilir, App Store Connect'te kontrol et)
 - iPad ekran görüntüleri (uygulama `supportsTablet: true` — iPad'de de test edilmeli)
