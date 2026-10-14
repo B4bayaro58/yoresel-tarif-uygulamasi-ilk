@@ -18,7 +18,7 @@ import { doc, getDoc, setDoc, deleteDoc, collection, query, where, getDocs, writ
 import { auth, db } from '../config/firebase';
 import { useApp } from './AppContext';
 import { deleteImageByUrl } from '../services/imageUploadService';
-import { setUser as setSentryUser } from '../services/sentryService';
+import { setUser as setSentryUser, captureError } from '../services/sentryService';
 import { signInWithGoogle, isGoogleSignInAvailable } from '../services/googleAuthService';
 import { signInWithApple, isAppleSignInAvailable } from '../services/appleAuthService';
 
@@ -190,7 +190,12 @@ export const AuthProvider = ({ children }) => {
 
       return { success: true };
     } catch (error) {
-      return { success: false, error: translate('appleSignInError') };
+      // Hata kodu mesaja eklenir: Apple girişi iOS'ta hiç çalışmamıştı ve
+      // genel mesaj sebebi gizliyordu (2026-10-14).
+      console.error('Apple sign-in error:', error);
+      captureError(error, { flow: 'apple-sign-in', code: error?.code });
+      const code = error?.code || error?.message;
+      return { success: false, error: code ? `${translate('appleSignInError')} (${code})` : translate('appleSignInError') };
     }
   };
 
