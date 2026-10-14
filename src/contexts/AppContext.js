@@ -100,6 +100,13 @@ export const useApp = () => {
   return context;
 };
 
+// Firestore'a sadece işaretli adımlar yazılır (işareti kaldırılanlar false kalıyordu).
+const compactSteps = (steps) => {
+  const out = {};
+  Object.keys(steps || {}).forEach(k => { if (steps[k]) out[k] = true; });
+  return out;
+};
+
 export const AppProvider = ({ children }) => {
   // Core Settings
   const [language, setLanguage] = useState('tr');
@@ -152,8 +159,9 @@ export const AppProvider = ({ children }) => {
   const [timerRecipeName, setTimerRecipeName] = useState('');
 
   // Load persisted data and Firebase recipes on mount
+  const persistedLoadRef = useRef(null);
   useEffect(() => {
-    loadPersistedData();
+    persistedLoadRef.current = loadPersistedData();
     loadFirebaseRecipes();
     loadDailyMenu();
     loadPopularRecipes();
@@ -174,28 +182,99 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // Sync favorites + shopping list from Firebase when user logs in
+  // Kullanıcıya ait veriler (favoriler, alışveriş listesi, tamamlanan adımlar
+  // -> rütbe/rozet/pasaport, Menüm) users/{uid} dokümanında tutulur. Cihazdaki
+  // kopya sadece önbellek: önceden hesaptan bağımsız tek bir AsyncStorage
+  // anahtarındaydı, çıkış yapıp başka hesaba girince önceki kişinin rozetleri
+  // görünüyordu (2026-10-14). `userDataOwner` cihazdaki kopyanın kime ait
+  // olduğunu tutar.
+  const syncedUidRef = useRef(null);
+  const prevUserIdRef = useRef(undefined);
+  const progressHydratingRef = useRef(false);
+
   useEffect(() => {
+    const prev = prevUserIdRef.current;
+    prevUserIdRef.current = currentUserId;
     if (currentUserId) {
-      syncFavoritesFromFirebase(currentUserId);
-      syncShoppingListFromFirebase(currentUserId);
+      syncUserDataFromFirebase(currentUserId);
+    } else if (prev) {
+      // Çıkış: önceki hesabın verisi bir sonraki kullanıcıya görünmesin.
+      syncedUidRef.current = null;
+      progressHydratingRef.current = true;
+      setFavorites([]);
+      setShoppingList([]);
+      setCompletedSteps({});
+      setPersonalMenuIds([]);
+      AsyncStorage.removeItem('userDataOwner').catch(() => {});
     }
   }, [currentUserId]);
 
-  const syncFavoritesFromFirebase = async (uid) => {
+  const syncUserDataFromFirebase = async (uid) => {
+    syncedUidRef.current = null;
     try {
-      const userDoc = await getDoc(doc(db, 'users', uid));
-      if (userDoc.exists()) {
-        const data = userDoc.data();
-        if (Array.isArray(data.favorites)) {
-          setFavorites(data.favorites);
-          await AsyncStorage.setItem('favorites', JSON.stringify(data.favorites));
+      await persistedLoadRef.current;
+      const [userDoc, owner] = await Promise.all([
+        getDoc(doc(db, 'users', uid)),
+        AsyncStorage.getItem('userDataOwner'),
+      ]);
+      // Sahibi belli olmayan (eski sürümden ya da misafirken birikmiş) yerel
+      // veri bu hesaba taşınır; başka bir hesaba aitse kullanılmaz.
+      const localIsMine = !owner || owner === uid;
+      const data = userDoc.exists() ? userDoc.data() : {};
+      const missing = {};
+
+      const pick = (field, isValid, setter, empty) => {
+        if (isValid(data[field])) {
+          setter(data[field]);
+        } else if (localIsMine) {
+          missing[field] = true;
+        } else {
+          setter(empty);
         }
-      }
+      };
+      progressHydratingRef.current = true;
+      pick('favorites', Array.isArray, setFavorites, []);
+      pick('shoppingList', Array.isArray, setShoppingList, []);
+      pick('personalMenuIds', Array.isArray, setPersonalMenuIds, []);
+      pick('completedSteps', v => v && typeof v === 'object' && !Array.isArray(v), setCompletedSteps, {});
+      // Bayrağın her durumda sıfırlanması için completedSteps'i yine de yeniden ata.
+      if (missing.completedSteps) setCompletedSteps(prev => ({ ...prev }));
+
+      await AsyncStorage.setItem('userDataOwner', uid);
+      syncedUidRef.current = uid;
+      setUserDataUploadFields(missing);
     } catch (error) {
-      console.error('Error syncing favorites:', error);
+      console.error('Error syncing user data:', error);
     }
   };
+
+  // Bulutta henüz olmayan alanlar (ilk kez senkronlanan hesap) yerel
+  // değerlerle doldurulur -- state güncel olduğu için effect içinde yapılır.
+  const [userDataUploadFields, setUserDataUploadFields] = useState(null);
+  useEffect(() => {
+    if (!userDataUploadFields || !currentUserId || syncedUidRef.current !== currentUserId) return;
+    const fields = Object.keys(userDataUploadFields);
+    setUserDataUploadFields(null);
+    if (!fields.length) return;
+    const values = { favorites, shoppingList, personalMenuIds, completedSteps: compactSteps(completedSteps) };
+    const update = {};
+    fields.forEach(f => { update[f] = values[f]; });
+    updateDoc(doc(db, 'users', currentUserId), update)
+      .catch(error => console.error('Error uploading local user data:', error));
+  }, [userDataUploadFields]);
+
+  // Tamamlanan adımlar + Menüm değişince buluta yazılır (adım işaretlerken
+  // her dokunuşta yazmamak için kısa gecikmeyle).
+  useEffect(() => {
+    if (!currentUserId || syncedUidRef.current !== currentUserId) return;
+    const timer = setTimeout(() => {
+      updateDoc(doc(db, 'users', currentUserId), {
+        completedSteps: compactSteps(completedSteps),
+        personalMenuIds,
+      }).catch(error => console.error('Error saving progress to Firebase:', error));
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, [completedSteps, personalMenuIds]);
 
   const saveFavoritesToFirebase = async (uid, updatedFavorites) => {
     try {
@@ -208,21 +287,6 @@ export const AppProvider = ({ children }) => {
   // Alışveriş listesi bulut senkronu — favoriler ile aynı desen, ama
   // `favorites/{docId}` kuralının aksine (sahiplik kontrolsüz) mevcut
   // düzgün scope'lanmış `users/{uid}` update kuralı üzerinden yazılır.
-  const syncShoppingListFromFirebase = async (uid) => {
-    try {
-      const userDoc = await getDoc(doc(db, 'users', uid));
-      if (userDoc.exists()) {
-        const data = userDoc.data();
-        if (Array.isArray(data.shoppingList)) {
-          setShoppingList(data.shoppingList);
-          await AsyncStorage.setItem('shoppingList', JSON.stringify(data.shoppingList));
-        }
-      }
-    } catch (error) {
-      console.error('Error syncing shopping list:', error);
-    }
-  };
-
   const saveShoppingListToFirebase = async (uid, updatedList) => {
     try {
       await updateDoc(doc(db, 'users', uid), { shoppingList: updatedList });
@@ -761,6 +825,7 @@ export const AppProvider = ({ children }) => {
     const prev = prevCompletedCountRef.current;
     prevCompletedCountRef.current = completedRecipesCount;
     if (completedRecipesCount <= prev) return;
+    if (progressHydratingRef.current) return;
     const prevRank = getRank(prev, language);
     const newRank = getRank(completedRecipesCount, language);
     if (newRank.id !== prevRank.id) {
@@ -774,6 +839,7 @@ export const AppProvider = ({ children }) => {
     const prev = prevCountryCountRef.current;
     prevCountryCountRef.current = completedCountries.size;
     if (completedCountries.size <= prev) return;
+    if (progressHydratingRef.current) return;
     const prevBadges = getEarnedBadges(prev);
     const newBadges = getEarnedBadges(completedCountries.size);
     if (newBadges.length > prevBadges.length) {
@@ -781,6 +847,12 @@ export const AppProvider = ({ children }) => {
       showNotification(`${unlocked.emoji} "${unlocked.title}" rozeti kazanıldı!`);
     }
   }, [completedCountries.size]);
+
+  // Hesap verisi yüklenirken artan rütbe/rozet "kazanıldı" bildirimi
+  // göstermesin -- yukarıdaki iki effect'ten sonra çalışır.
+  useEffect(() => {
+    progressHydratingRef.current = false;
+  }, [completedSteps]);
 
   // Filtered Recipes — memoized function, recreated only when deps change
   const getFilteredRecipes = useCallback(() => {
