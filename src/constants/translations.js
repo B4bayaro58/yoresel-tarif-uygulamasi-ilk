@@ -691,6 +691,24 @@ export const TRANSLATIONS = {
     fr: 'Voulez-vous vraiment bloquer cet utilisateur ? Les utilisateurs bloqués ne peuvent plus publier d\'avis.',
     it: 'Sei sicuro di voler bloccare questo utente? Gli utenti bloccati non possono più pubblicare recensioni.',
   },
+  reviewOptions: {
+    tr: 'Bu yorum hakkında ne yapmak istersiniz?',
+    en: 'What would you like to do about this comment?',
+    fr: 'Que souhaitez-vous faire concernant ce commentaire ?',
+    it: 'Cosa vuoi fare riguardo a questo commento?',
+  },
+  blockReviewerConfirm: {
+    tr: 'Bu kullanıcının yorumlarını bir daha görmeyeceksiniz. Yorum ayrıca incelenmek üzere ekibimize bildirilecek.',
+    en: 'You will no longer see comments from this user. The comment will also be sent to our team for review.',
+    fr: 'Vous ne verrez plus les commentaires de cet utilisateur. Le commentaire sera également envoyé à notre équipe pour examen.',
+    it: 'Non vedrai più i commenti di questo utente. Il commento verrà inoltre inviato al nostro team per la revisione.',
+  },
+  reviewerBlocked: {
+    tr: 'Kullanıcı engellendi. Yorumları artık size gösterilmeyecek.',
+    en: 'User blocked. Their comments will no longer be shown to you.',
+    fr: 'Utilisateur bloqué. Ses commentaires ne vous seront plus affichés.',
+    it: 'Utente bloccato. I suoi commenti non ti verranno più mostrati.',
+  },
   userBlocked: {
     tr: 'Kullanıcı engellendi.',
     en: 'User has been blocked.',

@@ -23,9 +23,15 @@ import {
   increment,
   arrayUnion,
 } from 'firebase/firestore';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { db } from '../config/firebase';
 import { useApp } from '../contexts/AppContext';
 import { useAuth } from '../contexts/AuthContext';
+
+// Per-user list of reviewer uids this user has blocked (App Store 1.2).
+// Kept on-device rather than on the users doc, which every signed-in user
+// can read -- who-blocked-whom shouldn't be visible to others.
+const blockedKey = (uid) => `blockedReviewers:${uid}`;
 
 function StarRating({ value, onChange, size = 28, readonly = false }) {
   const { colors } = useApp();
@@ -66,6 +72,7 @@ export default function ReviewsSection({ recipe }) {
   const [comment, setComment] = useState('');
   const [userReview, setUserReview] = useState(null);
   const [isBlocked, setIsBlocked] = useState(false);
+  const [blockedReviewers, setBlockedReviewers] = useState([]);
   const isMountedRef = React.useRef(true);
 
   useEffect(() => {
@@ -79,6 +86,13 @@ export default function ReviewsSection({ recipe }) {
     getDoc(doc(db, 'users', user.uid))
       .then(snap => setIsBlocked(snap.exists() && snap.data().isBlocked === true))
       .catch(() => setIsBlocked(false));
+  }, [user]);
+
+  useEffect(() => {
+    if (!user) { setBlockedReviewers([]); return; }
+    AsyncStorage.getItem(blockedKey(user.uid))
+      .then(raw => setBlockedReviewers(raw ? JSON.parse(raw) : []))
+      .catch(() => setBlockedReviewers([]));
   }, [user]);
 
   const loadReviews = async () => {
@@ -172,11 +186,62 @@ export default function ReviewsSection({ recipe }) {
     }
   };
 
-  const handleReport = (review) => {
+  const reportReview = async (review) => {
+    await updateDoc(doc(db, 'reviews', review.id), {
+      reportedBy: arrayUnion(user.uid),
+      reportCount: increment(1),
+    });
+    setReviews(prev => prev.map(r => r.id === review.id
+      ? { ...r, reportedBy: [...(r.reportedBy || []), user.uid] }
+      : r));
+  };
+
+  const handleOptions = (review) => {
     if (!user) {
-      Alert.alert('Giriş Gerekli', 'Şikayet etmek için giriş yapmalısınız.');
+      Alert.alert('Giriş Gerekli', 'Şikayet etmek veya engellemek için giriş yapmalısınız.');
       return;
     }
+    const alreadyReported = review.reportedBy?.includes(user.uid);
+    Alert.alert(
+      review.userName || translate('reportReview'),
+      translate('reviewOptions'),
+      [
+        ...(alreadyReported ? [] : [{ text: translate('reportReview'), onPress: () => handleReport(review) }]),
+        { text: translate('blockUser'), style: 'destructive', onPress: () => handleBlock(review) },
+        { text: translate('cancel'), style: 'cancel' },
+      ]
+    );
+  };
+
+  const handleBlock = (review) => {
+    Alert.alert(
+      translate('blockUser'),
+      translate('blockReviewerConfirm'),
+      [
+        { text: translate('cancel'), style: 'cancel' },
+        {
+          text: translate('blockUser'),
+          style: 'destructive',
+          onPress: async () => {
+            const next = [...new Set([...blockedReviewers, review.userId])];
+            setBlockedReviewers(next);
+            try {
+              await AsyncStorage.setItem(blockedKey(user.uid), JSON.stringify(next));
+            } catch (error) {
+              console.error('Error saving blocked reviewers:', error);
+            }
+            // Also flag it for moderators so abusive content gets acted on.
+            if (!review.reportedBy?.includes(user.uid)) {
+              reportReview(review).catch(error => console.error('Error reporting review:', error));
+            }
+            Alert.alert(translate('blockUser'), translate('reviewerBlocked'));
+          },
+        },
+      ]
+    );
+  };
+
+  const handleReport = (review) => {
     Alert.alert(
       translate('reportReview'),
       translate('reportReviewConfirm'),
@@ -187,13 +252,7 @@ export default function ReviewsSection({ recipe }) {
           style: 'destructive',
           onPress: async () => {
             try {
-              await updateDoc(doc(db, 'reviews', review.id), {
-                reportedBy: arrayUnion(user.uid),
-                reportCount: increment(1),
-              });
-              setReviews(prev => prev.map(r => r.id === review.id
-                ? { ...r, reportedBy: [...(r.reportedBy || []), user.uid] }
-                : r));
+              await reportReview(review);
               Alert.alert(translate('reportReview'), translate('reportSubmitted'));
             } catch (error) {
               Alert.alert(translate('error'), error.message);
@@ -208,6 +267,7 @@ export default function ReviewsSection({ recipe }) {
     reviews.length > 0
       ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
       : null;
+  const visibleReviews = reviews.filter(r => !blockedReviewers.includes(r.userId));
 
   return (
     <View style={styles.container}>
@@ -262,12 +322,12 @@ export default function ReviewsSection({ recipe }) {
       {/* Reviews List */}
       {loading ? (
         <ActivityIndicator size="small" color={colors.primary} style={{ marginTop: 16 }} />
-      ) : reviews.length === 0 ? (
+      ) : visibleReviews.length === 0 ? (
         <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
           Henüz yorum yok. İlk yorumu siz yapın!
         </Text>
       ) : (
-        reviews.map(review => {
+        visibleReviews.map(review => {
           const alreadyReported = user && review.reportedBy?.includes(user.uid);
           const isOwnReview = user && review.userId === user.uid;
           return (
@@ -287,12 +347,11 @@ export default function ReviewsSection({ recipe }) {
                 </View>
                 {!isOwnReview && (
                   <TouchableOpacity
-                    onPress={() => !alreadyReported && handleReport(review)}
-                    disabled={alreadyReported}
+                    onPress={() => handleOptions(review)}
                     hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
                     style={styles.reportButton}
                     accessibilityRole="button"
-                    accessibilityLabel={alreadyReported ? translate('reported') : translate('reportReview')}
+                    accessibilityLabel={`${translate('reportReview')} / ${translate('blockUser')}`}
                   >
                     <Flag
                       size={16}
