@@ -54,3 +54,6 @@ web/out/
 # Sistem / araç dosyaları
 .claude/
 nul
+
+# Apple review screen recording (large binary)
+store-listing/review-video/

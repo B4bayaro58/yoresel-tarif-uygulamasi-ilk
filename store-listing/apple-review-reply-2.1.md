@@ -8,13 +8,13 @@ Fill in the [brackets] before sending.
 
 Hello,
 
-Thank you for reviewing Yöresel Tarif. Please find the requested information below. A screen recording captured on a physical iPhone running iOS [26.x] is attached.
+Thank you for reviewing Yöresel Tarif. Please find the requested information below. A screen recording captured on a physical iPhone running iOS 26.2 is attached.
 
 1. SCREEN RECORDING
-The recording starts with launching the app and shows: onboarding, account registration (email), login (email, Sign in with Apple), browsing and opening a recipe, the cooking-steps view, favorites and the shopping list, posting a review, reporting a review and blocking a user, the Premium subscription screen (title, duration and price of each plan, plus Terms of Use and Privacy Policy links), a sandbox purchase, and account deletion (Profile → Delete Account).
+The recording starts with launching the app and shows: account creation and login with Sign in with Apple (the login screen also offers email registration via "Kayıt Ol", Google sign-in and guest mode), browsing and opening a recipe, the cooking timer and the step-by-step cooking view, favorites and the shopping list, reporting a review and blocking its author, the Premium subscription screen (title, duration and price of each plan, auto-renewal terms, Restore Purchases, and links to the Terms of Use and Privacy Policy), and account deletion (Profile → Hesabı Sil / Delete Account), which returns the user to the login screen.
 
 2. PURPOSE AND TARGET AUDIENCE
-Yöresel Tarif is a recipe app focused on regional Turkish cuisine (organized by city) and world cuisines (organized by continent and country), with more than 1,000 recipes. It is for home cooks, mainly Turkish-speaking users, who want reliable traditional recipes. The app solves a common problem: authentic regional recipes are scattered and often unreliable online. We provide structured recipes (ingredients, step-by-step instructions, cooking times, background on each dish), together with practical tools: favorites, a shopping list built from recipe ingredients, a step-by-step cooking mode with timers, and a food blog.
+Yöresel Tarif is a recipe app focused on regional Turkish cuisine (organized by city) and world cuisines (organized by continent and country), with more than 1,000 recipes. It is for home cooks, mainly Turkish-speaking users, who want reliable traditional recipes. Authentic regional recipes are scattered and often unreliable online; we provide structured recipes plus favorites, a shopping list, a step-by-step cooking mode with timers, and a food blog.
 
 3. SETUP AND ACCESS INSTRUCTIONS
 No special setup is required. Users can browse as a guest or create an account.
@@ -30,12 +30,12 @@ Moderators review reported content in the in-app admin panel. They can delete it
 Account deletion: Profile → "Hesabı Sil" (Delete Account).
 
 4. EXTERNAL SERVICES
-- Firebase (Google): Authentication, Cloud Firestore (recipes, reviews, user data), Cloud Storage (recipe photos)
-- Sign in with Apple and Google Sign-In: optional login methods
-- RevenueCat: subscription management on top of Apple In-App Purchase (all purchases go through StoreKit)
-- Google AdMob: banner, interstitial and rewarded ads for non-Premium users (with the App Tracking Transparency prompt)
+- Firebase: Authentication, Firestore, Storage
+- Sign in with Apple, Google Sign-In
+- RevenueCat, on top of Apple In-App Purchase (StoreKit)
+- Google AdMob: ads for non-Premium users (with the ATT prompt)
 - Sentry: crash reporting
-- Unsplash: some recipe photos, used under the Unsplash License
+- Unsplash: some recipe photos (Unsplash License)
 No AI services are used.
 
 5. REGIONAL DIFFERENCES
@@ -46,8 +46,8 @@ The app does not operate in a regulated industry. The recipe content was written
 
 7. IN-APP PURCHASES
 One auto-renewable subscription group, "Premium Erişim", with two plans:
-- Premium Aylık (1 month) – [PRICE]
-- Premium Yıllık (1 year) – [PRICE]
+- Premium Aylık (1 month) – $0.99
+- Premium Yıllık (1 year) – $5.99
 Premium removes all ads and unlocks: shopping-list categories and recipe tags, portion scaling, the personal "Menü" (meal planner) tab, and ingredient alternatives ("Yoksa?").
 How to reach the purchase screen:
 - Profile tab → "Premium", or
@@ -55,4 +55,4 @@ How to reach the purchase screen:
 The subscription screen shows each plan's title, duration and price, the auto-renewal terms, a "Restore Purchases" button, and links to the Terms of Use (https://yoreseltarif.com/kullanim-kosullari) and the Privacy Policy (https://yoreseltarif.com/gizlilik-politikasi).
 
 Thank you,
-[Name]
+CAGATAY YILMAZ
