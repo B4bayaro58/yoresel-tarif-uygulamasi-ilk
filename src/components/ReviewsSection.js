@@ -23,15 +23,10 @@ import {
   increment,
   arrayUnion,
 } from 'firebase/firestore';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { db } from '../config/firebase';
 import { useApp } from '../contexts/AppContext';
 import { useAuth } from '../contexts/AuthContext';
-
-// Per-user list of reviewer uids this user has blocked (App Store 1.2).
-// Kept on-device rather than on the users doc, which every signed-in user
-// can read -- who-blocked-whom shouldn't be visible to others.
-const blockedKey = (uid) => `blockedReviewers:${uid}`;
+import { getBlockedReviewerIds, blockReviewer } from '../services/blockedReviewersService';
 
 function StarRating({ value, onChange, size = 28, readonly = false }) {
   const { colors } = useApp();
@@ -90,9 +85,7 @@ export default function ReviewsSection({ recipe }) {
 
   useEffect(() => {
     if (!user) { setBlockedReviewers([]); return; }
-    AsyncStorage.getItem(blockedKey(user.uid))
-      .then(raw => setBlockedReviewers(raw ? JSON.parse(raw) : []))
-      .catch(() => setBlockedReviewers([]));
+    getBlockedReviewerIds(user.uid).then(setBlockedReviewers);
   }, [user]);
 
   const loadReviews = async () => {
@@ -223,10 +216,9 @@ export default function ReviewsSection({ recipe }) {
           text: translate('blockUser'),
           style: 'destructive',
           onPress: async () => {
-            const next = [...new Set([...blockedReviewers, review.userId])];
-            setBlockedReviewers(next);
+            setBlockedReviewers([...new Set([...blockedReviewers, review.userId])]);
             try {
-              await AsyncStorage.setItem(blockedKey(user.uid), JSON.stringify(next));
+              await blockReviewer(user.uid, review.userId, review.userName);
             } catch (error) {
               console.error('Error saving blocked reviewers:', error);
             }

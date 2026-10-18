@@ -703,6 +703,30 @@ export const TRANSLATIONS = {
     fr: 'Vous ne verrez plus les commentaires de cet utilisateur. Le commentaire sera également envoyé à notre équipe pour examen.',
     it: 'Non vedrai più i commenti di questo utente. Il commento verrà inoltre inviato al nostro team per la revisione.',
   },
+  blockedUsers: {
+    tr: 'Engellenen Kullanıcılar',
+    en: 'Blocked Users',
+    fr: 'Utilisateurs Bloqués',
+    it: 'Utenti Bloccati',
+  },
+  noBlockedUsers: {
+    tr: 'Engellediğiniz kullanıcı yok.',
+    en: "You haven't blocked anyone.",
+    fr: "Vous n'avez bloqué personne.",
+    it: 'Non hai bloccato nessuno.',
+  },
+  unblockUser: {
+    tr: 'Engeli Kaldır',
+    en: 'Unblock',
+    fr: 'Débloquer',
+    it: 'Sblocca',
+  },
+  blockedUserUnnamed: {
+    tr: 'İsimsiz kullanıcı',
+    en: 'Unnamed user',
+    fr: 'Utilisateur sans nom',
+    it: 'Utente senza nome',
+  },
   reviewerBlocked: {
     tr: 'Kullanıcı engellendi. Yorumları artık size gösterilmeyecek.',
     en: 'User blocked. Their comments will no longer be shown to you.',

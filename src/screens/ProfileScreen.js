@@ -10,7 +10,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { Image } from 'expo-image';
-import { Palette, Settings, LogOut, User as UserIcon, ChevronRight, Trash2, Shield, Camera, Crown } from 'lucide-react-native';
+import { Palette, Settings, LogOut, User as UserIcon, ChevronRight, Trash2, Shield, Camera, Crown, UserX } from 'lucide-react-native';
 import { useApp } from '../contexts/AppContext';
 import { getCountryFlag } from '../constants/countryFlags';
 import { useAuth } from '../contexts/AuthContext';
@@ -21,6 +21,7 @@ import { pickAvatarImage, uploadRecipeImage } from '../services/imageUploadServi
 import { updateProfile } from 'firebase/auth';
 import { auth } from '../config/firebase';
 import LockedFeature from '../components/LockedFeature';
+import { getBlockedReviewers, unblockReviewer } from '../services/blockedReviewersService';
 
 const THEMES = [
   { value: 'light', icon: '☀️' },
@@ -108,6 +109,18 @@ export default function ProfileScreen({ navigation }) {
   const [deletePassword, setDeletePassword] = useState('');
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [photoLoading, setPhotoLoading] = useState(false);
+  const [showBlockedModal, setShowBlockedModal] = useState(false);
+  const [blockedList, setBlockedList] = useState([]);
+
+  const openBlockedModal = async () => {
+    setBlockedList(await getBlockedReviewers(user.uid));
+    setShowBlockedModal(true);
+  };
+
+  const handleUnblock = async (reviewerId) => {
+    await unblockReviewer(user.uid, reviewerId);
+    setBlockedList((list) => list.filter((b) => b.id !== reviewerId));
+  };
 
   const currentRank = getRank(completedRecipesCount, language);
   const nextRank = getNextRank(completedRecipesCount, language);
@@ -445,6 +458,26 @@ export default function ProfileScreen({ navigation }) {
           <ChevronRight color={colors.textSecondary} size={20} />
         </TouchableOpacity>
 
+        {/* Blocked Users -- yorumlarda engellenen kullanıcılar */}
+        {!isGuest && user && (
+          <TouchableOpacity
+            style={[styles.settingItem, { backgroundColor: colors.card, borderColor: colors.border }]}
+            onPress={openBlockedModal}
+            accessibilityRole="button"
+            accessibilityLabel={translate('blockedUsers')}
+          >
+            <View style={styles.settingLeft}>
+              <View style={[styles.iconContainer, { backgroundColor: colors.primary + '20' }]}>
+                <UserX color={colors.primary} size={20} />
+              </View>
+              <Text style={[styles.settingTitle, { color: colors.text }]}>
+                {translate('blockedUsers')}
+              </Text>
+            </View>
+            <ChevronRight color={colors.textSecondary} size={20} />
+          </TouchableOpacity>
+        )}
+
         {/* Privacy Policy */}
         <TouchableOpacity
           style={[styles.settingItem, { backgroundColor: colors.card, borderColor: colors.border }]}
@@ -580,6 +613,57 @@ export default function ProfileScreen({ navigation }) {
                 }
               </TouchableOpacity>
             </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Blocked Users Modal */}
+      <Modal
+        visible={showBlockedModal}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setShowBlockedModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={[styles.modalContent, { backgroundColor: colors.card }]}>
+            <Text style={[styles.modalTitle, { color: colors.text }]}>
+              {translate('blockedUsers')}
+            </Text>
+            {blockedList.length === 0 ? (
+              <Text style={[styles.deleteWarningText, { color: colors.textSecondary }]}>
+                {translate('noBlockedUsers')}
+              </Text>
+            ) : (
+              <ScrollView style={styles.blockedList}>
+                {blockedList.map((b) => (
+                  <View key={b.id} style={[styles.blockedRow, { borderColor: colors.border }]}>
+                    <Text style={[styles.blockedName, { color: colors.text }]} numberOfLines={1}>
+                      {b.name || translate('blockedUserUnnamed')}
+                    </Text>
+                    <TouchableOpacity
+                      style={[styles.unblockButton, { borderColor: colors.primary }]}
+                      onPress={() => handleUnblock(b.id)}
+                      accessibilityRole="button"
+                      accessibilityLabel={`${translate('unblockUser')}: ${b.name || translate('blockedUserUnnamed')}`}
+                    >
+                      <Text style={[styles.unblockText, { color: colors.primary }]}>
+                        {translate('unblockUser')}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                ))}
+              </ScrollView>
+            )}
+            <TouchableOpacity
+              style={[styles.modalCloseButton, { backgroundColor: colors.border }]}
+              onPress={() => setShowBlockedModal(false)}
+              accessibilityRole="button"
+              accessibilityLabel={translate('close')}
+            >
+              <Text style={[styles.modalCloseText, { color: colors.text }]}>
+                {translate('close')}
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
@@ -995,6 +1079,31 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     marginBottom: 20,
     textAlign: 'center',
+  },
+  blockedList: {
+    maxHeight: 320,
+  },
+  blockedRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+  },
+  blockedName: {
+    flex: 1,
+    fontSize: 16,
+    marginRight: 12,
+  },
+  unblockButton: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 8,
+    borderWidth: 1,
+  },
+  unblockText: {
+    fontSize: 14,
+    fontWeight: '600',
   },
   modalItem: {
     padding: 16,
