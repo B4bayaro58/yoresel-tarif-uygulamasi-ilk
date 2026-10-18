@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { cache } from 'react'
+import { notFound } from 'next/navigation'
 import { doc, getDoc, Timestamp } from 'firebase/firestore'
 import { db } from '@/config/firebase'
 import { Recipe } from '@/types'
@@ -23,6 +24,14 @@ function toPlainRecipe(recipe: Recipe): Recipe {
 }
 
 const localRecipes: Recipe[] = (RECIPES_DATA as any).tr || []
+
+// Admin panelinden pasife alınmış tarif (ör. status 'inactive' bir override)
+// listelerde ve site haritasında gizli; doğrudan linkle de açılmamalı.
+const PUBLIC_STATUSES = ['published', 'approved']
+function isHidden(recipe: Recipe): boolean {
+  const status = (recipe as any).status
+  return status != null && !PUBLIC_STATUSES.includes(status)
+}
 
 // 1 saat — anasayfadakiyle aynı gerekçe (bkz. web/src/app/page.tsx): sorgu
 // trafikten bağımsız, en fazla saatte bir çalışır.
@@ -69,7 +78,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const { id } = await params
   const recipe = await fetchRecipe(id)
 
-  if (!recipe) {
+  if (!recipe || isHidden(recipe)) {
     return { title: 'Tarif Bulunamadı — Yöresel Tarif' }
   }
 
@@ -94,6 +103,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 export default async function RecipeDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const recipe = await fetchRecipe(id)
+  if (recipe && isHidden(recipe)) notFound()
 
   return (
     <>

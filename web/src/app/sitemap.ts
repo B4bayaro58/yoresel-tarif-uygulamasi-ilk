@@ -15,6 +15,8 @@ const localRecipes: Recipe[] = (RECIPES_DATA as any).tr || []
 // günde bir kereye sınırlı bir okuma bunun kapsamı dışında).
 export const revalidate = 86400
 
+const PUBLIC_STATUSES = ['published', 'approved']
+
 const STATIC_PAGES = [
   '', 'recipes', 'blog', 'arama', 'tarif-oner', 'gizlilik-politikasi', 'kullanim-kosullari',
   'kvkk', 'cerez-politikasi', 'icerik-politikasi', 'hakkimizda', 'sss', 'iletisim',
@@ -26,24 +28,33 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: new Date(),
   }))
 
-  const staticRecipeEntries: MetadataRoute.Sitemap = localRecipes.map((r) => ({
-    url: `${SITE_URL}/recipes/${r.id}`,
-    lastModified: new Date(),
-  }))
-
   // Statik kataloğun dışında, sadece Firestore'da yaşayan (admin panelinden
   // sıfırdan eklenmiş, bir override olmayan) yayındaki tarifler
   let nativeRecipeEntries: MetadataRoute.Sitemap = []
+  // Admin panelinden pasife alınmış statik tarifler (override'ı yayında olmayan)
+  // site haritasına girmemeli -- sayfaları ziyaretçiye gösterilmiyor.
+  const hiddenStaticIds = new Set<string>()
   try {
-    const snap = await getDocs(
-      query(collection(db, 'recipes'), where('status', 'in', ['published', 'approved']))
-    )
-    nativeRecipeEntries = snap.docs
+    const [publicSnap, overrideSnap] = await Promise.all([
+      getDocs(query(collection(db, 'recipes'), where('status', 'in', PUBLIC_STATUSES))),
+      getDocs(query(collection(db, 'recipes'), where('overridesStaticId', '!=', null))),
+    ])
+    nativeRecipeEntries = publicSnap.docs
       .filter((d) => !d.data().overridesStaticId)
       .map((d) => ({ url: `${SITE_URL}/recipes/${d.id}`, lastModified: new Date() }))
+    overrideSnap.docs
+      .filter((d) => !PUBLIC_STATUSES.includes(d.data().status))
+      .forEach((d) => hiddenStaticIds.add(String(d.data().overridesStaticId)))
   } catch {
     // Firestore'a ulaşılamadı — sitemap yine de statik tariflerle üretilsin
   }
+
+  const staticRecipeEntries: MetadataRoute.Sitemap = localRecipes
+    .filter((r) => !hiddenStaticIds.has(String(r.id)))
+    .map((r) => ({
+      url: `${SITE_URL}/recipes/${r.id}`,
+      lastModified: new Date(),
+    }))
 
   // Blog yazıları eskiden site haritasında hiç yoktu (2026-10 AdSense reddi
   // incelemesinde fark edildi) -- sitenin en özgün içeriği bunlar.
