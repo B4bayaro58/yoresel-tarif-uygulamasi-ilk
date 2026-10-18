@@ -26,6 +26,9 @@ export default ({ config }) => ({
     // expo-apple-authentication'ın prebuild'de "Sign In with Apple"
     // capability + entitlement'ını otomatik eklemesi için gerekli.
     usesAppleSignIn: true,
+    // Universal links: yoreseltarif.com/recipes/... linkleri Safari yerine
+    // uygulamada açılsın. Site tarafı: web/public/.well-known/apple-app-site-association
+    associatedDomains: ['applinks:yoreseltarif.com'],
     privacyManifests: {
       NSPrivacyAccessedAPITypes: [],
     },

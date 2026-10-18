@@ -1,0 +1,16 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["T9S8D6T357.com.cagatay58.yoreseltarifuygulamasi"],
+        "components": [
+          { "/": "/recipes/*" },
+          { "/": "/recipe/*" },
+          { "/": "/blog" },
+          { "/": "/blog/*" },
+          { "/": "/koleksiyon/*" }
+        ]
+      }
+    ]
+  }
+}
