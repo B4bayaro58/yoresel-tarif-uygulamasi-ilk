@@ -15,6 +15,7 @@ import {
   BookMarked,
   Newspaper,
   BarChart3,
+  AlertTriangle,
 } from 'lucide-react'
 import clsx from 'clsx'
 import { collection, getCountFromServer, getDocs, query, where } from 'firebase/firestore'
@@ -179,6 +180,13 @@ export default function AdminPage() {
       description: 'Ana sayfada öne çıkacak tarifleri seç',
       icon: <TrendingUp size={20} />,
       color: 'text-red-500',
+    },
+    {
+      href: '/admin/hata-bildirimleri',
+      label: 'Hata Bildirimleri',
+      description: 'Kullanıcıların tariflerde bildirdiği hatalar',
+      icon: <AlertTriangle size={20} />,
+      color: 'text-amber-500',
     },
     {
       href: '/admin/pending',

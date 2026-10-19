@@ -20,6 +20,7 @@ import {
   Flag,
   BookMarked,
   Sparkles,
+  AlertTriangle,
 } from 'lucide-react-native';
 import { useApp } from '../contexts/AppContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -149,6 +150,13 @@ export default function AdminPanelScreen({ navigation }) {
       subtitle: translate('reportedReviewsDesc'),
       color: '#DC2626',
       onPress: () => navigation.navigate('ReportedReviews'),
+    },
+    {
+      icon: AlertTriangle,
+      title: translate('recipeErrorReports'),
+      subtitle: translate('recipeErrorReportsDesc'),
+      color: '#F59E0B',
+      onPress: () => navigation.navigate('RecipeErrorReports'),
     },
     {
       icon: UtensilsCrossed,

@@ -2691,6 +2691,84 @@ export const TRANSLATIONS = {
     fr: 'Commencer Premium',
     it: 'Inizia Premium',
   },
+  reportRecipeError: {
+    tr: 'Hata Bildir',
+    en: 'Report an Error',
+    fr: 'Signaler une erreur',
+    it: 'Segnala un errore',
+  },
+  reportRecipeErrorHint: {
+    tr: 'Bu tarifte yanlış bir malzeme, ölçü, adım veya bilgi mi gördünüz? Nerede hata olduğunu bize anlatın, inceleyip düzeltelim.',
+    en: 'Spotted a wrong ingredient, amount, step or detail in this recipe? Tell us where the error is and we will review and fix it.',
+    fr: 'Vous avez repéré un ingrédient, une quantité, une étape ou une information erronée ? Dites-nous où se trouve l\'erreur, nous la corrigerons.',
+    it: 'Hai notato un ingrediente, una quantità, un passaggio o un dettaglio sbagliato? Dicci dov\'è l\'errore e lo correggeremo.',
+  },
+  reportRecipeErrorPlaceholder: {
+    tr: 'Örn: 3. adımda fırın sıcaklığı 180 değil 200 derece olmalı.',
+    en: 'E.g. In step 3 the oven temperature should be 200, not 180 degrees.',
+    fr: 'Ex : À l\'étape 3, le four doit être à 200 et non 180 degrés.',
+    it: 'Es: Al passaggio 3 il forno deve essere a 200, non a 180 gradi.',
+  },
+  reportRecipeErrorLogin: {
+    tr: 'Hata bildirebilmek için giriş yapmanız gerekmektedir.',
+    en: 'Sign in to report an error.',
+    fr: 'Connectez-vous pour signaler une erreur.',
+    it: 'Accedi per segnalare un errore.',
+  },
+  reportRecipeErrorTooShort: {
+    tr: 'Lütfen hatayı en az birkaç kelimeyle açıklayın.',
+    en: 'Please describe the error in at least a few words.',
+    fr: 'Veuillez décrire l\'erreur en quelques mots au moins.',
+    it: 'Descrivi l\'errore con almeno qualche parola.',
+  },
+  reportRecipeErrorSend: {
+    tr: 'Gönder',
+    en: 'Send',
+    fr: 'Envoyer',
+    it: 'Invia',
+  },
+  reportRecipeErrorThanks: {
+    tr: 'Teşekkürler! Bildiriminiz bize ulaştı.',
+    en: 'Thank you! Your report has been received.',
+    fr: 'Merci ! Votre signalement a bien été reçu.',
+    it: 'Grazie! La tua segnalazione è stata ricevuta.',
+  },
+  recipeErrorReports: {
+    tr: 'Hata Bildirimleri',
+    en: 'Error Reports',
+    fr: 'Signalements d\'erreurs',
+    it: 'Segnalazioni di errori',
+  },
+  recipeErrorReportsDesc: {
+    tr: 'Kullanıcıların tariflerde bildirdiği hatalar',
+    en: 'Errors users reported in recipes',
+    fr: 'Erreurs signalées par les utilisateurs dans les recettes',
+    it: 'Errori segnalati dagli utenti nelle ricette',
+  },
+  noRecipeErrorReports: {
+    tr: 'Henüz hata bildirimi yok',
+    en: 'No error reports yet',
+    fr: 'Aucun signalement pour l\'instant',
+    it: 'Nessuna segnalazione per ora',
+  },
+  markResolved: {
+    tr: 'Çözüldü',
+    en: 'Resolved',
+    fr: 'Résolu',
+    it: 'Risolto',
+  },
+  markResolvedConfirm: {
+    tr: 'Bu bildirim çözüldü olarak işaretlenip listeden silinsin mi?',
+    en: 'Mark this report as resolved and remove it from the list?',
+    fr: 'Marquer ce signalement comme résolu et le retirer de la liste ?',
+    it: 'Segnare questa segnalazione come risolta e rimuoverla dall\'elenco?',
+  },
+  openRecipe: {
+    tr: 'Tarife Git',
+    en: 'Open Recipe',
+    fr: 'Voir la recette',
+    it: 'Apri ricetta',
+  },
 };
 
 // Helper function to get translation

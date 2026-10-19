@@ -25,6 +25,8 @@ import ManageUsersScreen from '../screens/ManageUsersScreen';
 import StatisticsScreen from '../screens/StatisticsScreen';
 import PendingRecipesScreen from '../screens/PendingRecipesScreen';
 import ReportedReviewsScreen from '../screens/ReportedReviewsScreen';
+import ReportRecipeErrorScreen from '../screens/ReportRecipeErrorScreen';
+import RecipeErrorReportsScreen from '../screens/RecipeErrorReportsScreen';
 import DailyMenuScreen from '../screens/DailyMenuScreen';
 import OnboardingScreen from '../screens/OnboardingScreen';
 import CollectionDetailScreen from '../screens/CollectionDetailScreen';
@@ -332,6 +334,22 @@ function MainStack() {
         component={ReportedReviewsScreen}
         options={{
           headerTitle: translate('reportedReviews'),
+          headerBackTitle: translate('back'),
+        }}
+      />
+      <Stack.Screen
+        name="RecipeErrorReports"
+        component={RecipeErrorReportsScreen}
+        options={{
+          headerTitle: translate('recipeErrorReports'),
+          headerBackTitle: translate('back'),
+        }}
+      />
+      <Stack.Screen
+        name="ReportRecipeError"
+        component={ReportRecipeErrorScreen}
+        options={{
+          headerTitle: translate('reportRecipeError'),
           headerBackTitle: translate('back'),
         }}
       />

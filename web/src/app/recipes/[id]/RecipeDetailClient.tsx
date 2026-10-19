@@ -20,6 +20,7 @@ import {
   Circle,
   List,
   LayoutGrid,
+  AlertTriangle,
 } from 'lucide-react'
 import clsx from 'clsx'
 import { doc, getDoc } from 'firebase/firestore'
@@ -572,6 +573,19 @@ export default function RecipeDetailClient({ initialRecipe, intro }: RecipeDetai
       </div>
 
       <ReviewsSection recipe={recipe} />
+
+      {/* Hata Bildir -- giriş kontrolü /hata-bildir sayfasında */}
+      <div className="flex justify-center mt-8">
+        <Link
+          href={`/hata-bildir?tarif=${encodeURIComponent(id)}&ad=${encodeURIComponent(recipe.name)}`}
+          rel="nofollow"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold hover:opacity-70 transition-opacity"
+          style={{ border: '1px solid var(--border)', color: 'var(--text-muted)' }}
+        >
+          <AlertTriangle size={15} />
+          Hata Bildir
+        </Link>
+      </div>
     </div>
   )
 }

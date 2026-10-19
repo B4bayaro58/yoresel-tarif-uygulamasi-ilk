@@ -10,6 +10,7 @@ import {
   Linking,
   FlatList,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -33,9 +34,11 @@ import {
   ChevronLeft,
   ChevronRight,
   UtensilsCrossed,
+  AlertTriangle,
 } from 'lucide-react-native';
 import { useApp } from '../contexts/AppContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
+import { useAuth } from '../contexts/AuthContext';
 import ReviewsSection from '../components/ReviewsSection';
 import RecipeCard from '../components/RecipeCard';
 import AdBanner from '../components/AdBanner';
@@ -77,6 +80,7 @@ function RecipeDetailContent({ recipe, navigation }) {
     openAlternatives,
   } = useApp();
   const { isPremium } = useSubscription();
+  const { user, logout } = useAuth();
   // Giriş metinleri şimdilik yalnızca Türkçe; diğer dillerde bölüm gizlenir.
   // Override edilmiş tariflerde metin statik id'ye bağlı (web'deki introFor ile aynı).
   const intro =
@@ -119,6 +123,19 @@ function RecipeDetailContent({ recipe, navigation }) {
     } catch (error) {
       console.error('Share error:', error);
     }
+  };
+  const handleReportError = () => {
+    if (!user) {
+      Alert.alert(translate('loginRequiredTitle'), translate('reportRecipeErrorLogin'), [
+        { text: translate('cancel'), style: 'cancel' },
+        { text: translate('loginButton'), onPress: logout },
+      ]);
+      return;
+    }
+    navigation.navigate('ReportRecipeError', {
+      recipeId: String(recipe.overridesStaticId || recipe.id),
+      recipeName: recipe.name,
+    });
   };
   const [scaledServings, setScaledServings] = useState(recipe.servings || 4);
   const [timerMinutes, setTimerMinutes] = useState(recipe.prepTime || 10);
@@ -786,6 +803,20 @@ function RecipeDetailContent({ recipe, navigation }) {
               </View>
             </View>
           )}
+
+          {/* Hata Bildir -- giriş zorunlu (misafir -> login'e dön, LockedFeature deseni) */}
+          <TouchableOpacity
+            style={[styles.reportErrorButton, { borderColor: colors.border }]}
+            onPress={handleReportError}
+            activeOpacity={0.7}
+            accessibilityRole="button"
+            accessibilityLabel={translate('reportRecipeError')}
+          >
+            <AlertTriangle size={16} color={colors.textSecondary} />
+            <Text style={[styles.reportErrorText, { color: colors.textSecondary }]}>
+              {translate('reportRecipeError')}
+            </Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </View>
@@ -1230,6 +1261,23 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 14,
     fontWeight: '700',
+  },
+  reportErrorButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    gap: 8,
+    paddingHorizontal: 18,
+    paddingVertical: 10,
+    borderRadius: 12,
+    borderWidth: 1,
+    marginTop: 8,
+    marginBottom: 24,
+  },
+  reportErrorText: {
+    fontSize: 14,
+    fontWeight: '600',
   },
   similarGrid: {
     flexDirection: 'row',

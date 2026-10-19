@@ -9,7 +9,7 @@ export default function robots(): MetadataRoute.Robots {
         userAgent: '*',
         allow: '/',
         // Admin ve oturum gerektiren, arama motoru için anlamsız sayfalar
-        disallow: ['/admin', '/login', '/setup-admin', '/profile', '/favorites', '/shopping-list'],
+        disallow: ['/admin', '/login', '/setup-admin', '/profile', '/favorites', '/shopping-list', '/hata-bildir'],
       },
     ],
     sitemap: `${SITE_URL}/sitemap.xml`,
