@@ -121,7 +121,6 @@ export default ({ config }) => ({
     firebaseMessagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
     firebaseAppId: process.env.FIREBASE_APP_ID,
     firebaseMeasurementId: process.env.FIREBASE_MEASUREMENT_ID,
-    sentryDsn: process.env.SENTRY_DSN,
     // AdMob ad unit ID'leri — AdMob hesabı kurulup gerçek ID'ler EAS Secrets'a
     // eklenene kadar boş kalır, src/constants/adUnits.js test ID'lerine düşer.
     admobBannerIdAndroid: process.env.ADMOB_BANNER_ID_ANDROID,

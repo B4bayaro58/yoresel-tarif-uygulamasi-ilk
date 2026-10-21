@@ -1,10 +1,6 @@
 import React, { useEffect } from 'react';
 import { View, LogBox } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { initSentry } from './src/services/sentryService';
-
-// Initialize Sentry error tracking
-initSentry();
 
 // Suppress known react-native-svg harmless warning (RN 0.81 + svg 15.x)
 LogBox.ignoreLogs(['Unsupported top level event type "topSvgLayout"']);
@@ -15,7 +11,6 @@ import AppNavigator from './src/navigation/AppNavigator';
 import AlternativesModal from './src/components/AlternativesModal';
 import NotificationToast from './src/components/NotificationToast';
 import AdConsentModal from './src/components/AdConsentModal';
-import AgeGateModal from './src/components/AgeGateModal';
 import ErrorBoundary from './src/components/ErrorBoundary';
 import { initAdsConsentAndSdk } from './src/services/consentService';
 
@@ -32,7 +27,6 @@ function AppContent() {
       <AlternativesModal />
       <NotificationToast />
       <AdConsentModal />
-      <AgeGateModal />
       <StatusBar style={theme === 'dark' ? 'light' : 'dark'} />
     </View>
   );

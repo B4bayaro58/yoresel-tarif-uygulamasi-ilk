@@ -7,7 +7,6 @@ dosyalar o sözleşmelerdir.
 | Dosya | Alıcı | Modül | Neden |
 |---|---|---|---|
 | `SS2_Google-Firebase.docx` | Google LLC | 2 — Veri Sorumlusundan Veri İşleyene | Üyelik, veritabanı, fotoğraflar |
-| `SS2_Sentry.docx` | Functional Software, Inc. | 2 | Mobil hata raporlama |
 | `SS2_RevenueCat.docx` | RevenueCat, Inc. | 2 | Premium abonelik |
 | `SS2_Vercel.docx` | Vercel Inc. | 2 | Web sitesi barındırma |
 | `SS1_Google-AdMob-AdSense.docx` | Google Ireland Limited | 1 — Veri Sorumlusundan Veri Sorumlusuna | Reklam (Google kendi amacıyla işler) |
@@ -48,7 +47,6 @@ dosyalar o sözleşmelerdir.
 |---|---|---|---|
 | Google (Firebase) | | | |
 | Google (AdMob/AdSense) | | | |
-| Sentry | | | |
 | RevenueCat | | | |
 | Vercel | | | |
 
@@ -60,15 +58,16 @@ Büyük sağlayıcılar Türk standart sözleşmesini her zaman imzalamıyor. Bu
 - Kanun bu aktarımlar için başka bir yol tanımıyor: açık rıza yalnızca **arızi** (düzenli olmayan)
   aktarımlarda geçerli (md.9/6), sürekli aktarımlarda dayanak olamaz. Yani imzalanmayan bir sağlayıcı
   için hukuken temiz seçenekler (a) aynı hizmeti sunan ve sözleşmeyi imzalayan başka bir sağlayıcıya
-  geçmek ya da (b) o hizmeti kullanmayı bırakmaktır. Sentry gibi vazgeçilebilir hizmetlerde (b) kolay;
-  Firebase için (a) büyük bir taşıma işidir.
+  geçmek ya da (b) o hizmeti kullanmayı bırakmaktır. Vazgeçilebilir hizmetlerde (b) kolay; Firebase için (a)
+  büyük bir taşıma işidir.
 - Hangi sağlayıcının ne cevap verdiğini öğrendiğinizde bir sonraki adımı birlikte değerlendirebiliriz.
+- Sentry (hata raporlama) 2026-10-21'de uygulamadan kaldırıldı; sözleşmesi gerekmiyor.
 
 ## E-posta taslakları
 
 Her birine ilgili `.docx`'in imzalı PDF'ini ekleyin.
 
-**Sentry** — legal@sentry.io · **RevenueCat** — compliance@revenuecat.com · **Vercel** — privacy@vercel.com
+**RevenueCat** — compliance@revenuecat.com · **Vercel** — privacy@vercel.com
 **Google (Firebase)** — Firebase destek talebi (https://firebase.google.com/support) ·
 **Google (AdMob/AdSense)** — Google gizlilik/veri koruma iletişim formu
 

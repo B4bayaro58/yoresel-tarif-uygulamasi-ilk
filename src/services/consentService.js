@@ -4,7 +4,7 @@ import {
   getTrackingPermissionsAsync,
   requestTrackingPermissionsAsync,
 } from 'expo-tracking-transparency';
-import { getAdConsent, isMinorMode, loadAdConsent, promptAdConsent, setUmpApplies } from './adConsentService';
+import { getAdConsent, loadAdConsent, promptAdConsent, setUmpApplies } from './adConsentService';
 
 // iOS, uygulama 'active' olmadan (ör. splash ekranı açıkken) yapılan ATT
 // isteğini hiçbir şey göstermeden yok sayıyor -- Apple review'da (iPadOS)
@@ -56,7 +56,7 @@ export async function initAdsConsentAndSdk() {
     }
     setUmpApplies(umpApplies);
 
-    if (!umpApplies && !isMinorMode() && getAdConsent() === null) {
+    if (!umpApplies && getAdConsent() === null) {
       await promptAdConsent();
     }
 

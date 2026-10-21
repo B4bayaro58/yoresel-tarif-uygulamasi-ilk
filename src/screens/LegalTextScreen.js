@@ -1,12 +1,12 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { useApp } from '../contexts/AppContext';
-import { KVKK_AYDINLATMA, AD_CONSENT_TEXT, PARENT_INFO, LEGAL_UPDATED_AT } from '../constants/legalTexts';
+import { KVKK_AYDINLATMA, AD_CONSENT_TEXT, LEGAL_UPDATED_AT } from '../constants/legalTexts';
 
 // KVKK Aydınlatma Metni ve Reklam Açık Rıza Metni -- web sitesindeki
 // /kvkk ve /acik-riza-metni ile aynı kaynaktan (constants/legalTexts.js).
 // Hukuki metnin aslı Türkçe, tüm dillerde Türkçe gösterilir.
-const DOCS = { kvkk: KVKK_AYDINLATMA, adConsent: AD_CONSENT_TEXT, parents: PARENT_INFO };
+const DOCS = { kvkk: KVKK_AYDINLATMA, adConsent: AD_CONSENT_TEXT };
 
 export default function LegalTextScreen({ route }) {
   const { colors } = useApp();

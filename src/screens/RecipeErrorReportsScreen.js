@@ -24,7 +24,7 @@ import { useApp } from '../contexts/AppContext';
 
 // Kullanıcıların tarif detayından gönderdiği "Hata Bildir" kayıtları
 // (ReportRecipeErrorScreen.js / web /hata-bildir). "Çözüldü" kaydı siler --
-// koleksiyon sadece açık işleri tutuyor. Sayfalı, ReportedReviewsScreen ile aynı.
+// koleksiyon sadece açık işleri tutuyor. Sayfalı.
 const PAGE_SIZE = 50;
 
 const formatDate = (ts) => {

@@ -46,17 +46,16 @@ service firebase.storage {
                    && request.resource.contentType.matches('image/.*');
     }
 
-    // Yorum fotoğrafları — giriş yapmış kullanıcılar kendi yorumlarına
-    // fotoğraf ekleyebilir, herkes okuyabilir. Dosya adı `{uid}_{timestamp}.jpg`
+    // Yorum fotoğrafları (eski) — herkes okuyabilir. Dosya adı `{uid}_{timestamp}.jpg`
     // formatında (bkz. web/src/components/ReviewsSection.tsx) ama burada isim
     // zorunlu kılınmıyor -- asıl güvenlik sınırı `reviews` koleksiyonundaki
     // Firestore kuralları (bkz. firestore.rules: yorum sahibi request.auth.uid
     // ile eşleşmeli).
     match /review-photos/{fileName} {
       allow read: if true;
-      allow create, update: if request.auth != null
-                   && request.resource.size < 5 * 1024 * 1024
-                   && request.resource.contentType.matches('image/.*');
+      // Yorum fotoğrafı özelliği kaldırıldı (yalnızca anonim puan) -- yeni
+      // yükleme yok; eski dosyalar sahibince silinebilir.
+      allow create, update: if false;
       // Silme: `write` request.resource'a baktığı için silme hep
       // reddediliyordu; hesap silinince yorum fotoğrafları yetim kalıyordu
       // (KVKK md.7). Dosya adı `{uid}_{timestamp}.jpg` -- yalnızca sahibi.

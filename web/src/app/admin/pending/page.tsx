@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, Check, X, Clock } from 'lucide-react'
 import {
-  collection, getDocs, query, where, updateDoc, deleteDoc, doc,
+  collection, getDocs, getDoc, query, where, updateDoc, deleteDoc, doc,
 } from 'firebase/firestore'
 import { db } from '@/config/firebase'
 import { Recipe } from '@/types'
@@ -13,12 +13,24 @@ export default function AdminPendingPage() {
   const [recipes, setRecipes] = useState<Recipe[]>([])
   const [loading, setLoading] = useState(true)
   const [actionId, setActionId] = useState<string | null>(null)
+  // Gönderen adı tarife yazılmıyor (yayınlanan tarifte kullanıcı adı
+  // olmasın); admin users/{uid}'den okur -- mobil PendingRecipesScreen ile aynı.
+  const [submitterNames, setSubmitterNames] = useState<Record<string, string>>({})
 
   const load = async () => {
     setLoading(true)
     try {
       const snap = await getDocs(query(collection(db, 'recipes'), where('status', '==', 'pending')))
-      setRecipes(snap.docs.map((d) => ({ id: d.id, ...d.data() } as Recipe)))
+      const loaded = snap.docs.map((d) => ({ id: d.id, ...d.data() } as Recipe))
+      setRecipes(loaded)
+      const uids = Array.from(new Set(loaded.map((r: any) => r.submittedBy).filter(Boolean))) as string[]
+      const entries = await Promise.all(uids.map(async (uid) => {
+        try {
+          const u = await getDoc(doc(db, 'users', uid))
+          return [uid, (u.data()?.displayName || u.data()?.email || uid) as string] as const
+        } catch { return [uid, uid] as const }
+      }))
+      setSubmitterNames(Object.fromEntries(entries))
     } catch (e) {
       console.error(e)
     } finally {
@@ -96,9 +108,9 @@ export default function AdminPendingPage() {
                   <p className="text-xs mt-0.5" style={{ color: 'var(--text-muted)' }}>
                     {recipe.country} · {recipe.prepTime} dk · {recipe.difficulty === 'easy' ? 'Kolay' : recipe.difficulty === 'medium' ? 'Orta' : 'Zor'}
                   </p>
-                  {recipe.authorName && (
+                  {((recipe as any).submittedBy || recipe.authorName) && (
                     <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
-                      Gönderen: <span style={{ color: 'var(--primary)' }}>{recipe.authorName}</span>
+                      Gönderen: <span style={{ color: 'var(--primary)' }}>{submitterNames[(recipe as any).submittedBy] || recipe.authorName}</span>
                     </p>
                   )}
                   <div className="mt-2">

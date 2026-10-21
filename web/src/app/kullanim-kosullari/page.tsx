@@ -1,6 +1,6 @@
 import LegalPageLayout from '@/components/LegalPageLayout'
 // @ts-ignore
-import { CONTROLLER, LEGAL_UPDATED_AT, MIN_AGE } from '@shared/legalTexts'
+import { CONTROLLER, LEGAL_UPDATED_AT } from '@shared/legalTexts'
 
 export const metadata = { title: 'Kullanım Koşulları — Yöresel Tarif' }
 
@@ -19,14 +19,6 @@ export default function KullanimKosullariPage() {
         <a href={`mailto:${CONTROLLER.email}`} className="underline">{CONTROLLER.email}</a>
       </p>
 
-      <h2>Yaş Sınırı</h2>
-      <p>
-        Hesap oluşturmak, yorum yapmak ve tarif paylaşmak için {MIN_AGE} yaşından büyük olmanız gerekir
-        (5651 sayılı Kanun ek 4. madde). Hesap kullanımından önce bu yönde beyan alınır; {MIN_AGE} yaşından
-        küçük olduğu anlaşılan kullanıcıların hesapları kapatılır. Tarifler üye olmadan herkes tarafından
-        görüntülenebilir.
-      </p>
-
       <h2>Hesap Sorumluluğu</h2>
       <p>
         Hesabınızla ilgili bilgilerin (e-posta, şifre) gizliliğinden siz sorumlusunuz. Hesabınız üzerinden
@@ -38,8 +30,9 @@ export default function KullanimKosullariPage() {
         &quot;Tarif Öner&quot; özelliği ile paylaştığınız tarifler, yayınlanmadan önce editör ekibimiz tarafından
         incelenir. Paylaştığınız içeriğin size ait olduğunu veya paylaşma hakkına sahip olduğunuzu kabul
         edersiniz. Uygunsuz, yanıltıcı veya telif hakkı ihlali içeren tarifler yayınlanmadan reddedilir.
-        Yorumlar ve diğer kullanıcı içerikleri <a href="/icerik-politikasi" className="underline">İçerik
-        Politikası</a>&apos;na tabidir; hukuka aykırı içerikler kaldırılır ve ilgili hesaplar engellenebilir.
+        Onaylanan tarifler gönderen adı belirtilmeden yayınlanır. Tariflere verdiğiniz yıldız puanları
+        anonimdir; yalnızca ortalama puan gösterilir. Ayrıntılar için{' '}
+        <a href="/icerik-politikasi" className="underline">İçerik Politikası</a>&apos;na bakın.
       </p>
 
       <h2>Yasaklı Kullanımlar</h2>

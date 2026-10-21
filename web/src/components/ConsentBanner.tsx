@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { AdConsent, getAdConsent, setAdConsent, OPEN_PREFS_EVENT } from '@/lib/adConsent'
-import { useAuth } from '@/contexts/AuthContext'
 // @ts-ignore
 import { AD_CONSENT_SUMMARY } from '@shared/legalTexts'
 
@@ -12,7 +11,6 @@ import { AD_CONSENT_SUMMARY } from '@shared/legalTexts'
 // Zorunlu depolama (oturum, tema, favoriler) rızaya bağlı değil.
 export default function ConsentBanner() {
   const [open, setOpen] = useState(false)
-  const { ageBracket } = useAuth()
 
   useEffect(() => {
     if (getAdConsent() === null) setOpen(true)
@@ -32,22 +30,6 @@ export default function ConsentBanner() {
 
   if (!open) return null
 
-  // 15-17 yaş hesaplardan reklam rızası alınmaz (her zaman kişiselleştirilmemiş).
-  if (ageBracket === '15-17') {
-    return (
-      <div role="dialog" aria-label="Reklam tercihleri" className="fixed bottom-0 inset-x-0 z-50 p-3 sm:p-4">
-        <div className="max-w-2xl mx-auto rounded-2xl p-4 sm:p-5" style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)', boxShadow: 'var(--shadow)' }}>
-          <p className="text-xs leading-relaxed mb-3" style={{ color: 'var(--text-muted)' }}>
-            15-17 yaş arası hesaplara yalnızca kişiselleştirilmemiş reklam gösterilir; reklam rızası istenmez.{' '}
-            <Link href="/ebeveyn-bilgilendirme" className="underline">Ayrıntılar</Link>
-          </p>
-          <button type="button" onClick={() => setOpen(false)} className="w-full py-2.5 rounded-xl text-sm font-semibold" style={{ backgroundColor: 'var(--card)', border: '1px solid var(--border)', color: 'var(--text)' }}>
-            Tamam
-          </button>
-        </div>
-      </div>
-    )
-  }
 
   const btn = 'flex-1 py-2.5 rounded-xl text-sm font-semibold transition-opacity hover:opacity-80'
 

@@ -14,13 +14,10 @@ import {
   sendPasswordResetEmail,
   revokeAccessToken,
 } from 'firebase/auth';
-import { doc, getDoc, setDoc, deleteDoc, collection, query, where, getDocs, writeBatch, updateDoc } from 'firebase/firestore';
-import { MINOR_PUBLIC_NAME } from '../constants/legalTexts';
-import { setMinorMode } from '../services/adConsentService';
+import { doc, getDoc, setDoc, deleteDoc, collection, query, where, getDocs, writeBatch } from 'firebase/firestore';
 import { auth, db } from '../config/firebase';
 import { useApp } from './AppContext';
 import { deleteImageByUrl } from '../services/imageUploadService';
-import { setUser as setSentryUser, captureError } from '../services/sentryService';
 import { signInWithGoogle, isGoogleSignInAvailable } from '../services/googleAuthService';
 import { signInWithApple, isAppleSignInAvailable } from '../services/appleAuthService';
 
@@ -40,16 +37,6 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isGuest, setIsGuest] = useState(false);
-  // 15 yaş beyanı (5651 ek 4 + Yaş Doğrulama Yönetmeliği). null = henüz
-  // bilinmiyor / okunamadı -- bu durumda AgeGateModal engellemez.
-  const [ageConfirmed, setAgeConfirmed] = useState(null);
-  // '18+' | '15-17' | null. '15-17' hesaplarda Yönetmelik md.8 korumaları
-  // uygulanır (kişiselleştirilmemiş reklam, herkese açık içerikte gerçek ad yok).
-  const [ageBracket, setAgeBracket] = useState(null);
-
-  useEffect(() => {
-    if (ageBracket === '15-17') setMinorMode(true);
-  }, [ageBracket]);
   const [appleSignInAvailable, setAppleSignInAvailable] = useState(false);
 
   useEffect(() => {
@@ -61,7 +48,6 @@ export const AuthProvider = ({ children }) => {
       if (firebaseUser) {
         setUser(firebaseUser);
         setCurrentUserId(firebaseUser.uid);
-        setSentryUser(firebaseUser);
         // Don't block startup on a Firestore round-trip: isAdmin starts false
         // and the per-user flag (set via ManageUsersScreen's "promote to
         // admin") upgrades it right after -- same source as web and as
@@ -75,22 +61,12 @@ export const AuthProvider = ({ children }) => {
             if (snap.exists() && snap.data().isAdmin === true) {
               setIsAdmin(true);
             }
-            const b = snap.exists() ? snap.data().ageBracket : null;
-            const bracket = b === '18+' || b === '15-17' ? b : null;
-            setAgeBracket(bracket);
-            setAgeConfirmed(bracket !== null);
           })
-          .catch(() => {
-            setAgeBracket(null);
-            setAgeConfirmed(null);
-          });
+          .catch(() => {});
       } else {
         setUser(null);
         setIsAdmin(false);
-        setAgeConfirmed(null);
-        setAgeBracket(null);
         setCurrentUserId(null);
-        setSentryUser(null);
         setLoading(false);
       }
     });
@@ -353,47 +329,8 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // merge: kayıt/Google/Apple akışının oluşturduğu users/{uid} dokümanındaki
-  // diğer alanlara dokunma (firestore.rules sahibin bu alanları yazmasına
-  // izin veriyor; isAdmin/isBlocked değişmediği sürece).
-  const confirmAge = async (bracket) => {
-    if (!auth.currentUser) return;
-    const uid = auth.currentUser.uid;
-    await setDoc(
-      doc(db, 'users', uid),
-      { ageBracket: bracket, ageConfirmed15: true, ageConfirmedAt: new Date().toISOString() },
-      { merge: true }
-    );
-    setAgeBracket(bracket);
-    setAgeConfirmed(true);
-    if (bracket === '15-17') {
-      // Beyandan önce yazılmış yorumlar da gerçek adla yayında kalmasın.
-      try {
-        const snap = await getDocs(query(collection(db, 'reviews'), where('userId', '==', uid)));
-        await Promise.all(snap.docs.map((d) => updateDoc(d.ref, { userName: MINOR_PUBLIC_NAME })));
-      } catch {}
-    }
-  };
-
-  const declineAge = async () => {
-    if (!auth.currentUser) return;
-    try {
-      await setDoc(
-        doc(db, 'users', auth.currentUser.uid),
-        { ageDeclaredUnder15: true, ageDeclaredAt: new Date().toISOString() },
-        { merge: true }
-      );
-    } finally {
-      await signOut(auth);
-    }
-  };
-
   const value = {
     user,
-    ageConfirmed,
-    ageBracket,
-    confirmAge,
-    declineAge,
     isAdmin,
     isGuest,
     loading,

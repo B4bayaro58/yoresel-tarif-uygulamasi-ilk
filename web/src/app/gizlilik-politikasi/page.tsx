@@ -1,6 +1,6 @@
 import LegalPageLayout from '@/components/LegalPageLayout'
 // @ts-ignore
-import { CONTROLLER, LEGAL_UPDATED_AT, MIN_AGE } from '@shared/legalTexts'
+import { CONTROLLER, LEGAL_UPDATED_AT } from '@shared/legalTexts'
 
 export const metadata = { title: 'Gizlilik Politikası — Yöresel Tarif' }
 
@@ -22,16 +22,15 @@ export default function GizlilikPolitikasiPage() {
       <ul>
         <li>Hesap oluştururken verdiğiniz ad ve e-posta adresi (veya Google/Apple hesabınızdan gelen ad, e-posta ve profil fotoğrafı)</li>
         <li>Favorileriniz, alışveriş listeniz, dil ve tema tercihleriniz</li>
-        <li>Gönderdiğiniz tarifler, yorumlar, puanlar, fotoğraflar, hata bildirimleri ve şikâyetler</li>
-        <li>{MIN_AGE} yaşından büyük olduğunuza dair beyanınız</li>
-        <li>Teknik veriler: hesap kimliği, hata kayıtları, hizmet sağlayıcıların sunucu kayıtlarındaki IP adresi</li>
+        <li>Gönderdiğiniz tarif önerileri ve fotoğrafları, verdiğiniz yıldız puanları ve hata bildirimleri</li>
+        <li>Teknik veriler: hesap kimliği, hizmet sağlayıcıların sunucu kayıtlarındaki IP adresi</li>
         <li>Reklam verileri: reklam çerezleri ve reklam tanımlayıcısı (kişiselleştirilmiş reklam yalnızca açık rızanızla)</li>
       </ul>
 
       <h2>Verilerin Kullanım Amacı</h2>
       <p>
-        Verileriniz hesabınızı yönetmek, favori ve alışveriş listesi gibi özellikleri çalıştırmak, kullanıcı
-        içeriklerini incelemek, hataları tespit etmek, güvenliği sağlamak, reklam göstermek ve yasal
+        Verileriniz hesabınızı yönetmek, favori ve alışveriş listesi gibi özellikleri çalıştırmak, tarif
+        önerilerini incelemek, güvenliği sağlamak, reklam göstermek ve yasal
         yükümlülüklerimizi yerine getirmek amacıyla kullanılır. Verileriniz satılmaz.
       </p>
 
@@ -46,21 +45,15 @@ export default function GizlilikPolitikasiPage() {
       <h2>Hizmet Sağlayıcılar ve Yurt Dışına Aktarım</h2>
       <p>
         Verileriniz Google (Firebase, AdMob, AdSense, Google ile Giriş), Apple (Apple ile Giriş, App Store),
-        Vercel (web barındırma), Sentry (hata raporlama) ve RevenueCat (abonelik yönetimi) altyapılarında
+        Vercel (web barındırma) ve RevenueCat (abonelik yönetimi) altyapılarında
         işlenir. Bu sağlayıcıların sunucuları yurt dışındadır; aktarım KVKK md.9&apos;a uygun olarak yapılır.
       </p>
 
       <h2>Saklama ve Silme</h2>
       <p>
-        Verileriniz hesabınız açık olduğu sürece saklanır. Hesabınızı sildiğinizde hesap kaydınız, yorumlarınız,
-        tarifleriniz, hata bildirimleriniz ve yüklediğiniz fotoğraflar silinir. Hesap silme adımları için{' '}
+        Verileriniz hesabınız açık olduğu sürece saklanır. Hesabınızı sildiğinizde hesap kaydınız, puanlarınız,
+        tarif önerileriniz, hata bildirimleriniz ve yüklediğiniz fotoğraflar silinir. Hesap silme adımları için{' '}
         <a href="/hesap-silme" className="underline">Hesap Silme</a> sayfasına bakın.
-      </p>
-
-      <h2>Yaş Sınırı</h2>
-      <p>
-        Hesap oluşturmak ve yorum/tarif paylaşmak için {MIN_AGE} yaşından büyük olmanız gerekir. Tarifler üye
-        olmadan herkes tarafından görüntülenebilir.
       </p>
 
       <h2>Haklarınız ve İletişim</h2>

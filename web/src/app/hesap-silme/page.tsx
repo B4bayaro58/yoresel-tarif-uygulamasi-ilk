@@ -27,14 +27,14 @@ export default function HesapSilmePage() {
         </a>{' '}
         adresine &quot;Hesap silme talebi&quot; konulu bir e-posta gönderin. Talebiniz en geç 30 gün içinde
         işleme alınır ve size bilgi verilir. Hesabınızı silmeden yalnızca belirli verilerinizin (ör.
-        yorumlarınız) silinmesini de aynı adresten talep edebilirsiniz.
+        puanlarınız) silinmesini de aynı adresten talep edebilirsiniz.
       </p>
 
       <h2>Silinen Veriler</h2>
       <ul>
         <li>Hesap bilgileriniz (ad, e-posta adresi, profil fotoğrafı)</li>
         <li>Favorileriniz, alışveriş listeniz ve tercihleriniz</li>
-        <li>Yazdığınız yorumlar ve puanlar</li>
+        <li>Verdiğiniz puanlar ve tarif hata bildirimleriniz</li>
         <li>Gönderdiğiniz tarifler ve bu tariflere ait fotoğraflar</li>
       </ul>
 

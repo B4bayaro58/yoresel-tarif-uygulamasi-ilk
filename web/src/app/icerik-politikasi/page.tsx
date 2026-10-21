@@ -17,7 +17,7 @@ export default function IcerikPolitikasiPage() {
       <p>
         Sitedeki tarifler iki kaynaktan gelir: editör ekibimiz tarafından derlenen yöresel tarifler ve
         kullanıcılar tarafından &quot;Tarif Öner&quot; özelliğiyle gönderilen tarifler. Kullanıcılar ayrıca
-        tariflere yorum, puan ve fotoğraf ekleyebilir.
+        tariflere anonim yıldız puanı verebilir.
       </p>
 
       <h2>Kullanıcı İçerikleri</h2>
@@ -25,7 +25,8 @@ export default function IcerikPolitikasiPage() {
         <li>Gönderilen her tarif, yayınlanmadan önce editör ekibi tarafından incelenir</li>
         <li>İçeriğin size ait olması veya paylaşma hakkınızın bulunması gerekir</li>
         <li>Hakaret, taciz, nefret söylemi, yanıltıcı bilgi, kişisel veri (başkasına ait telefon, adres vb.), müstehcenlik veya telif ihlali içeren içerikler yayınlanmaz ya da kaldırılır</li>
-        <li>Onaylanan tarifler ve yorumlar, paylaşan kullanıcının görünen adıyla yayınlanır</li>
+        <li>Onaylanan tarifler, gönderen adı belirtilmeden editoryal içerik olarak yayınlanır</li>
+        <li>Puanlar anonimdir; kim tarafından verildiği gösterilmez, yalnızca ortalama yayınlanır</li>
         <li>Kurallara aykırı içerik paylaşan hesaplar engellenebilir</li>
       </ul>
 
@@ -38,7 +39,6 @@ export default function IcerikPolitikasiPage() {
 
       <h2>Hukuka Aykırı İçerik Bildirimi</h2>
       <p>
-        Bir yorumu uygulamadaki &quot;Bildir&quot; düğmesiyle şikâyet edebilir, yorum sahibini engelleyebilirsiniz.
         Kişilik haklarınızı, özel hayatınızı veya telif hakkınızı ihlal ettiğini düşündüğünüz bir içerik için{' '}
         <a href={`mailto:${CONTROLLER.email}`} className="underline">{CONTROLLER.email}</a> adresine; içeriğin
         bağlantısını (URL), ihlalin açıklamasını ve kimlik/iletişim bilgilerinizi içeren bir bildirim

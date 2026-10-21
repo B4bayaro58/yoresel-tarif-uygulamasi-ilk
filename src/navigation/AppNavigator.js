@@ -25,7 +25,6 @@ import ManageRecipesScreen from '../screens/ManageRecipesScreen';
 import ManageUsersScreen from '../screens/ManageUsersScreen';
 import StatisticsScreen from '../screens/StatisticsScreen';
 import PendingRecipesScreen from '../screens/PendingRecipesScreen';
-import ReportedReviewsScreen from '../screens/ReportedReviewsScreen';
 import ReportRecipeErrorScreen from '../screens/ReportRecipeErrorScreen';
 import RecipeErrorReportsScreen from '../screens/RecipeErrorReportsScreen';
 import DailyMenuScreen from '../screens/DailyMenuScreen';
@@ -255,7 +254,7 @@ function AuthStack() {
         component={LegalTextScreen}
         options={({ route }) => ({
           headerShown: true,
-          headerTitle: translate({ adConsent: 'adConsentText', parents: 'parentInfo' }[route.params?.doc] || 'kvkkNotice'),
+          headerTitle: translate(route.params?.doc === 'adConsent' ? 'adConsentText' : 'kvkkNotice'),
           headerBackTitle: translate('back'),
           headerStyle: { backgroundColor: colors.background },
           headerTintColor: colors.text,
@@ -342,14 +341,6 @@ function MainStack() {
         }}
       />
       <Stack.Screen
-        name="ReportedReviews"
-        component={ReportedReviewsScreen}
-        options={{
-          headerTitle: translate('reportedReviews'),
-          headerBackTitle: translate('back'),
-        }}
-      />
-      <Stack.Screen
         name="RecipeErrorReports"
         component={RecipeErrorReportsScreen}
         options={{
@@ -418,7 +409,7 @@ function MainStack() {
         name="LegalText"
         component={LegalTextScreen}
         options={({ route }) => ({
-          headerTitle: translate({ adConsent: 'adConsentText', parents: 'parentInfo' }[route.params?.doc] || 'kvkkNotice'),
+          headerTitle: translate(route.params?.doc === 'adConsent' ? 'adConsentText' : 'kvkkNotice'),
           headerBackTitle: translate('back'),
         })}
       />

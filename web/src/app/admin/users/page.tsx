@@ -18,8 +18,6 @@ interface UserDoc {
   email: string
   displayName: string
   isAdmin?: boolean
-  ageBracket?: '18+' | '15-17'
-  ageDeclaredUnder15?: boolean
   favorites: string[]
   createdAt?: { seconds: number }
 }
@@ -260,22 +258,6 @@ export default function AdminUsersPage() {
               >
                 {user.isAdmin ? '🛡️ Admin' : '👤 Üye'}
               </span>
-              {/* Yaş Doğrulama Yönetmeliği geçici md.1: 15 yaş altı beyan eden
-                  hesap kapatılır, itiraz sonuçlanınca (bkz. /ebeveyn-bilgilendirme)
-                  verileri silinmeli -- buradan takip edilir. */}
-              {user.ageDeclaredUnder15 && user.ageBracket == null && (
-                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold w-fit"
-                  style={{ backgroundColor: 'rgba(196,89,58,0.12)', color: '#C4593A' }}
-                  title="15 yaşından küçük olduğunu beyan etti -- itiraz yoksa hesabı silin">
-                  ⚠️ 15 yaş altı
-                </span>
-              )}
-              {user.ageBracket === '15-17' && (
-                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold w-fit"
-                  style={{ backgroundColor: 'rgba(59,130,246,0.12)', color: '#3b82f6' }}>
-                  15-17
-                </span>
-              )}
               </div>
               <div className="flex items-center gap-1" style={{ color: 'var(--text-muted)' }}>
                 <Heart size={12} />

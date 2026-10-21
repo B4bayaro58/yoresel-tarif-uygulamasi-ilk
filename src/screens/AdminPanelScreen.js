@@ -17,7 +17,6 @@ import {
   TrendingUp,
   ChevronRight,
   UtensilsCrossed,
-  Flag,
   BookMarked,
   Sparkles,
   AlertTriangle,
@@ -143,13 +142,6 @@ export default function AdminPanelScreen({ navigation }) {
       subtitle: translate('pendingRecipesDesc'),
       color: '#EF4444',
       onPress: () => navigation.navigate('PendingRecipes'),
-    },
-    {
-      icon: Flag,
-      title: translate('reportedReviews'),
-      subtitle: translate('reportedReviewsDesc'),
-      color: '#DC2626',
-      onPress: () => navigation.navigate('ReportedReviews'),
     },
     {
       icon: AlertTriangle,

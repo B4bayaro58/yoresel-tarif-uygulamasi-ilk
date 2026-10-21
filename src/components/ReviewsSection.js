@@ -3,12 +3,11 @@ import {
   View,
   Text,
   StyleSheet,
-  TextInput,
   TouchableOpacity,
   ActivityIndicator,
   Alert,
 } from 'react-native';
-import { Star, Send, Flag } from 'lucide-react-native';
+import { Star } from 'lucide-react-native';
 import {
   collection,
   addDoc,
@@ -16,21 +15,20 @@ import {
   getDoc,
   query,
   where,
-  orderBy,
   serverTimestamp,
   updateDoc,
   doc,
   increment,
-  arrayUnion,
 } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { useApp } from '../contexts/AppContext';
 import { useAuth } from '../contexts/AuthContext';
-import { MINOR_PUBLIC_NAME } from '../constants/legalTexts';
-import { getBlockedReviewerIds, blockReviewer } from '../services/blockedReviewersService';
 
+// Yalnızca anonim yıldız puanı: yorum metni, ad ve fotoğraf yok. Kullanıcıların
+// herkese açık içerik paylaşmaması uygulamayı 5651 ek 4'teki "sosyal ağ
+// sağlayıcı" tanımının (ve 15 yaş/yaş doğrulama yükümlülüklerinin) dışında
+// tutuyor -- yorum/şikâyet/engelleme özellikleri bu yüzden kaldırıldı.
 function StarRating({ value, onChange, size = 28, readonly = false }) {
-  const { colors } = useApp();
   return (
     <View style={styles.starsRow}>
       {[1, 2, 3, 4, 5].map(star => (
@@ -59,23 +57,21 @@ function StarRating({ value, onChange, size = 28, readonly = false }) {
 
 export default function ReviewsSection({ recipe }) {
   const { colors, translate } = useApp();
-  const { user, ageBracket } = useAuth();
+  const { user } = useAuth();
 
-  const [reviews, setReviews] = useState([]);
+  const [ratings, setRatings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [rating, setRating] = useState(0);
-  const [comment, setComment] = useState('');
-  const [userReview, setUserReview] = useState(null);
+  const [myRating, setMyRating] = useState(null);
   const [isBlocked, setIsBlocked] = useState(false);
-  const [blockedReviewers, setBlockedReviewers] = useState([]);
   const isMountedRef = React.useRef(true);
 
   useEffect(() => {
     isMountedRef.current = true;
-    loadReviews();
+    loadRatings();
     return () => { isMountedRef.current = false; };
-  }, [recipe.id]);
+  }, [recipe.id, user?.uid]);
 
   useEffect(() => {
     if (!user) { setIsBlocked(false); return; }
@@ -84,34 +80,20 @@ export default function ReviewsSection({ recipe }) {
       .catch(() => setIsBlocked(false));
   }, [user]);
 
-  useEffect(() => {
-    if (!user) { setBlockedReviewers([]); return; }
-    getBlockedReviewerIds(user.uid).then(setBlockedReviewers);
-  }, [user]);
-
-  const loadReviews = async () => {
+  const loadRatings = async () => {
     try {
       setLoading(true);
-      const q = query(
-        collection(db, 'reviews'),
-        where('recipeId', '==', recipe.id),
-        orderBy('createdAt', 'desc')
+      const snapshot = await getDocs(
+        query(collection(db, 'reviews'), where('recipeId', '==', recipe.id))
       );
-      const snapshot = await getDocs(q);
       if (!isMountedRef.current) return;
       const loaded = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-      setReviews(loaded);
-
-      if (user) {
-        const mine = loaded.find(r => r.userId === user.uid);
-        if (mine) {
-          setUserReview(mine);
-          setRating(mine.rating);
-          setComment(mine.comment);
-        }
-      }
+      setRatings(loaded);
+      const mine = user ? loaded.find(r => r.userId === user.uid) : null;
+      setMyRating(mine || null);
+      setRating(mine ? mine.rating : 0);
     } catch (error) {
-      console.error('Error loading reviews:', error);
+      console.error('Error loading ratings:', error);
     } finally {
       if (isMountedRef.current) setLoading(false);
     }
@@ -119,7 +101,7 @@ export default function ReviewsSection({ recipe }) {
 
   const handleSubmit = async () => {
     if (!user) {
-      Alert.alert('Giriş Gerekli', 'Yorum yapmak için giriş yapmalısınız.');
+      Alert.alert('Giriş Gerekli', 'Puan vermek için giriş yapmalısınız.');
       return;
     }
     if (isBlocked) {
@@ -133,34 +115,26 @@ export default function ReviewsSection({ recipe }) {
 
     setSubmitting(true);
     try {
-      const reviewData = {
-        recipeId: recipe.id,
-        userId: user.uid,
-        // Herkese açık ad: 15-17 hesaplarda gerçek ad yayınlanmaz (Yönetmelik
-        // md.8); e-posta öneki asla ad olarak kullanılmaz (kişisel veri).
-        userName: ageBracket === '15-17' ? MINOR_PUBLIC_NAME : (user.displayName || 'Kullanıcı'),
-        rating,
-        comment: comment.trim(),
-        createdAt: serverTimestamp(),
-      };
-
-      if (userReview) {
-        await updateDoc(doc(db, 'reviews', userReview.id), {
+      if (myRating) {
+        await updateDoc(doc(db, 'reviews', myRating.id), {
           rating,
-          comment: comment.trim(),
           updatedAt: serverTimestamp(),
         });
       } else {
-        await addDoc(collection(db, 'reviews'), reviewData);
+        await addDoc(collection(db, 'reviews'), {
+          recipeId: recipe.id,
+          userId: user.uid,
+          rating,
+          createdAt: serverTimestamp(),
+        });
 
         // Update average rating on the recipe (Firebase recipes only).
-        // Separate try/catch: the review itself is already saved, so a
-        // failure here shouldn't surface as "yorum gönderilemedi" and leave
-        // the form dirty (retrying would create a duplicate review).
+        // Separate try/catch: the rating itself is already saved, so a
+        // failure here shouldn't surface as an error and invite a duplicate.
         if (recipe.isFirebase) {
           try {
-            const newCount = reviews.length + 1;
-            const newAvg = ((recipe.rating || 0) * reviews.length + rating) / newCount;
+            const newCount = ratings.length + 1;
+            const newAvg = ((recipe.rating || 0) * ratings.length + rating) / newCount;
             await updateDoc(doc(db, 'recipes', recipe.id), {
               rating: parseFloat(newAvg.toFixed(1)),
               reviewCount: increment(1),
@@ -170,201 +144,57 @@ export default function ReviewsSection({ recipe }) {
           }
         }
       }
-
-      setComment('');
-      setRating(0);
-      setUserReview(null);
-      await loadReviews();
+      await loadRatings();
     } catch (error) {
-      Alert.alert('Hata', 'Yorum gönderilemedi: ' + error.message);
+      Alert.alert('Hata', 'Puan kaydedilemedi: ' + error.message);
     } finally {
       setSubmitting(false);
     }
   };
 
-  const reportReview = async (review) => {
-    await updateDoc(doc(db, 'reviews', review.id), {
-      reportedBy: arrayUnion(user.uid),
-      reportCount: increment(1),
-    });
-    setReviews(prev => prev.map(r => r.id === review.id
-      ? { ...r, reportedBy: [...(r.reportedBy || []), user.uid] }
-      : r));
-  };
-
-  const handleOptions = (review) => {
-    if (!user) {
-      Alert.alert('Giriş Gerekli', 'Şikayet etmek veya engellemek için giriş yapmalısınız.');
-      return;
-    }
-    const alreadyReported = review.reportedBy?.includes(user.uid);
-    Alert.alert(
-      review.userName || translate('reportReview'),
-      translate('reviewOptions'),
-      [
-        ...(alreadyReported ? [] : [{ text: translate('reportReview'), onPress: () => handleReport(review) }]),
-        { text: translate('blockUser'), style: 'destructive', onPress: () => handleBlock(review) },
-        { text: translate('cancel'), style: 'cancel' },
-      ]
-    );
-  };
-
-  const handleBlock = (review) => {
-    Alert.alert(
-      translate('blockUser'),
-      translate('blockReviewerConfirm'),
-      [
-        { text: translate('cancel'), style: 'cancel' },
-        {
-          text: translate('blockUser'),
-          style: 'destructive',
-          onPress: async () => {
-            setBlockedReviewers([...new Set([...blockedReviewers, review.userId])]);
-            try {
-              await blockReviewer(user.uid, review.userId, review.userName);
-            } catch (error) {
-              console.error('Error saving blocked reviewers:', error);
-            }
-            // Also flag it for moderators so abusive content gets acted on.
-            if (!review.reportedBy?.includes(user.uid)) {
-              reportReview(review).catch(error => console.error('Error reporting review:', error));
-            }
-            Alert.alert(translate('blockUser'), translate('reviewerBlocked'));
-          },
-        },
-      ]
-    );
-  };
-
-  const handleReport = (review) => {
-    Alert.alert(
-      translate('reportReview'),
-      translate('reportReviewConfirm'),
-      [
-        { text: translate('cancel'), style: 'cancel' },
-        {
-          text: translate('reportReview'),
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              await reportReview(review);
-              Alert.alert(translate('reportReview'), translate('reportSubmitted'));
-            } catch (error) {
-              Alert.alert(translate('error'), error.message);
-            }
-          },
-        },
-      ]
-    );
-  };
-
   const avgRating =
-    reviews.length > 0
-      ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
+    ratings.length > 0
+      ? (ratings.reduce((sum, r) => sum + r.rating, 0) / ratings.length).toFixed(1)
       : null;
-  const visibleReviews = reviews.filter(r => !blockedReviewers.includes(r.userId));
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={[styles.title, { color: colors.text }]}>Yorumlar</Text>
-        {avgRating && (
+        <Text style={[styles.title, { color: colors.text }]}>Puanlar</Text>
+        {loading ? (
+          <ActivityIndicator size="small" color={colors.primary} />
+        ) : avgRating ? (
           <View style={styles.avgRow}>
             <Star size={16} color="#FFD700" fill="#FFD700" />
             <Text style={[styles.avgText, { color: colors.text }]}>
-              {avgRating} ({reviews.length} yorum)
+              {avgRating} ({ratings.length} puan)
             </Text>
           </View>
-        )}
+        ) : null}
       </View>
 
-      {/* Add Review Form */}
       <View style={[styles.form, { backgroundColor: colors.card, borderColor: colors.border }]}>
         <Text style={[styles.formLabel, { color: colors.text }]}>
-          {userReview ? 'Yorumunuzu Düzenleyin' : 'Yorum Ekleyin'}
+          {myRating ? 'Puanınızı güncelleyin' : 'Bu tarifi puanlayın'}
         </Text>
         <StarRating value={rating} onChange={setRating} />
-        <TextInput
-          style={[styles.commentInput, { color: colors.text, borderColor: colors.border, backgroundColor: colors.background }]}
-          placeholder="Tarifinizle ilgili düşüncelerinizi yazın..."
-          placeholderTextColor={colors.textTertiary}
-          multiline
-          numberOfLines={3}
-          value={comment}
-          onChangeText={setComment}
-          autoCorrect={false}
-          spellCheck={false}
-        />
         <TouchableOpacity
           style={[styles.submitBtn, { backgroundColor: colors.primary, opacity: submitting ? 0.7 : 1 }]}
           onPress={handleSubmit}
           disabled={submitting}
           activeOpacity={0.7}
           accessibilityRole="button"
-          accessibilityLabel={userReview ? translate('update') : 'Gönder'}
+          accessibilityLabel={myRating ? translate('update') : 'Puanla'}
         >
-          {submitting ? (
-            <ActivityIndicator size="small" color="#fff" />
-          ) : (
-            <Send size={18} color="#fff" />
-          )}
+          {submitting ? <ActivityIndicator size="small" color="#fff" /> : null}
           <Text style={styles.submitBtnText}>
-            {submitting ? 'Gönderiliyor...' : userReview ? 'Güncelle' : 'Gönder'}
+            {submitting ? 'Kaydediliyor...' : myRating ? 'Güncelle' : 'Puanla'}
           </Text>
         </TouchableOpacity>
-      </View>
-
-      {/* Reviews List */}
-      {loading ? (
-        <ActivityIndicator size="small" color={colors.primary} style={{ marginTop: 16 }} />
-      ) : visibleReviews.length === 0 ? (
-        <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
-          Henüz yorum yok. İlk yorumu siz yapın!
+        <Text style={[styles.note, { color: colors.textTertiary }]}>
+          Puanlar anonimdir; adınız gösterilmez.
         </Text>
-      ) : (
-        visibleReviews.map(review => {
-          const alreadyReported = user && review.reportedBy?.includes(user.uid);
-          const isOwnReview = user && review.userId === user.uid;
-          return (
-            <View
-              key={review.id}
-              style={[styles.reviewCard, { backgroundColor: colors.card, borderColor: colors.border }]}
-            >
-              <View style={styles.reviewHeader}>
-                <View style={[styles.avatar, { backgroundColor: colors.primary + '20' }]}>
-                  <Text style={[styles.avatarText, { color: colors.primary }]}>
-                    {review.userName?.[0]?.toUpperCase() || 'U'}
-                  </Text>
-                </View>
-                <View style={styles.reviewMeta}>
-                  <Text style={[styles.reviewUser, { color: colors.text }]}>{review.userName}</Text>
-                  <StarRating value={review.rating} size={14} readonly />
-                </View>
-                {!isOwnReview && (
-                  <TouchableOpacity
-                    onPress={() => handleOptions(review)}
-                    hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-                    style={styles.reportButton}
-                    accessibilityRole="button"
-                    accessibilityLabel={`${translate('reportReview')} / ${translate('blockUser')}`}
-                  >
-                    <Flag
-                      size={16}
-                      color={alreadyReported ? colors.textTertiary : colors.textSecondary}
-                      fill={alreadyReported ? colors.textTertiary : 'transparent'}
-                    />
-                  </TouchableOpacity>
-                )}
-              </View>
-              {review.comment ? (
-                <Text style={[styles.reviewComment, { color: colors.textSecondary }]}>
-                  {review.comment}
-                </Text>
-              ) : null}
-            </View>
-          );
-        })
-      )}
+      </View>
     </View>
   );
 }
@@ -396,7 +226,6 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 16,
     borderWidth: 1,
-    marginBottom: 16,
     gap: 12,
   },
   formLabel: {
@@ -406,14 +235,6 @@ const styles = StyleSheet.create({
   starsRow: {
     flexDirection: 'row',
     gap: 4,
-  },
-  commentInput: {
-    borderWidth: 1,
-    borderRadius: 12,
-    padding: 12,
-    fontSize: 15,
-    minHeight: 80,
-    textAlignVertical: 'top',
   },
   submitBtn: {
     flexDirection: 'row',
@@ -428,47 +249,8 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '700',
   },
-  emptyText: {
+  note: {
+    fontSize: 12,
     textAlign: 'center',
-    fontSize: 14,
-    paddingVertical: 20,
-  },
-  reviewCard: {
-    padding: 14,
-    borderRadius: 12,
-    borderWidth: 1,
-    marginBottom: 10,
-    gap: 8,
-  },
-  reviewHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  reportButton: {
-    marginLeft: 'auto',
-    padding: 4,
-  },
-  avatar: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  avatarText: {
-    fontSize: 16,
-    fontWeight: '700',
-  },
-  reviewMeta: {
-    gap: 2,
-  },
-  reviewUser: {
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  reviewComment: {
-    fontSize: 14,
-    lineHeight: 20,
   },
 });

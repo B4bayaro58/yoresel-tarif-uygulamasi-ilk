@@ -26,8 +26,8 @@ export default function AdSlot({ slot, format = 'auto', className, label }: AdSl
     try {
       // @ts-ignore
       const queue = (window.adsbygoogle = window.adsbygoogle || [])
-      // KVKK açık rızası yoksa (seçim yapılmadı veya reddedildi) ya da
-      // 15-17 yaş hesapsa kişiselleştirilmemiş reklam iste -- bkz. lib/adConsent.ts
+      // KVKK açık rızası yoksa (seçim yapılmadı veya reddedildi)
+      // kişiselleştirilmemiş reklam iste -- bkz. lib/adConsent.ts
       queue.requestNonPersonalizedAds = personalizedAdsAllowed() ? 0 : 1
       queue.push({})
       pushedRef.current = true
