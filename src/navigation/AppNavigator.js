@@ -255,7 +255,7 @@ function AuthStack() {
         component={LegalTextScreen}
         options={({ route }) => ({
           headerShown: true,
-          headerTitle: translate(route.params?.doc === 'adConsent' ? 'adConsentText' : 'kvkkNotice'),
+          headerTitle: translate({ adConsent: 'adConsentText', parents: 'parentInfo' }[route.params?.doc] || 'kvkkNotice'),
           headerBackTitle: translate('back'),
           headerStyle: { backgroundColor: colors.background },
           headerTintColor: colors.text,
@@ -418,7 +418,7 @@ function MainStack() {
         name="LegalText"
         component={LegalTextScreen}
         options={({ route }) => ({
-          headerTitle: translate(route.params?.doc === 'adConsent' ? 'adConsentText' : 'kvkkNotice'),
+          headerTitle: translate({ adConsent: 'adConsentText', parents: 'parentInfo' }[route.params?.doc] || 'kvkkNotice'),
           headerBackTitle: translate('back'),
         })}
       />

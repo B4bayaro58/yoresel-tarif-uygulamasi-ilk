@@ -20,6 +20,11 @@ export const CONTROLLER = {
 // 5651 Ek 4/7 + Yaş Doğrulama Yönetmeliği (RG 10/10/2026, yürürlük 1/11/2026).
 export const MIN_AGE = 15;
 
+// 15-17 yaş hesaplarında (Yönetmelik md.8) herkese açık içeriklerde
+// gösterilen ad -- gerçek ad yerine.
+export const MINOR_PUBLIC_NAME = 'Yöresel Tarif Kullanıcısı';
+export const AGE_BRACKETS = { ADULT: '18+', TEEN: '15-17' };
+
 export const KVKK_AYDINLATMA = [
   {
     p: `6698 sayılı Kişisel Verilerin Korunması Kanunu ("KVKK") uyarınca, Yöresel Tarif web sitesi (${CONTROLLER.website}) ve mobil uygulaması ("Yöresel Tarif") kapsamında kişisel verilerinizin işlenmesine ilişkin sizi bilgilendirmek isteriz.`,
@@ -41,7 +46,7 @@ export const KVKK_AYDINLATMA = [
       'İşlem güvenliği: hesap kimliği (UID), giriş yöntemi (e-posta, Google, Apple), oturum bilgileri, hata kayıtları (cihaz modeli, işletim sistemi, uygulama sürümü), hizmet sağlayıcılarımızın sunucu kayıtlarındaki IP adresi',
       'Abonelik: Premium abonelik durumu ve satın alma kaydı (ödeme Apple veya Google tarafından alınır; kart bilgilerinize erişimimiz yoktur)',
       'Reklam: reklam tanımlayıcısı (iOS\'ta yalnızca izin verirseniz), reklam çerezleri ve reklam etkileşim verileri',
-      `Beyan: ${MIN_AGE} yaşından büyük olduğunuza dair beyanınız ve tarihi`,
+      `Beyan: yaş grubunuza (18+ veya ${MIN_AGE}-17) ilişkin beyanınız ve tarihi`,
     ],
   },
   {
@@ -54,7 +59,7 @@ export const KVKK_AYDINLATMA = [
       'Kullanıcı içeriklerinin incelenmesi, şikâyet ve engelleme işlemleri, hukuka aykırı içeriğin kaldırılması, 5651 sayılı Kanun dahil mevzuattan doğan yükümlülüklerin yerine getirilmesi, yaş beyanının alınması — md.5/2-ç (hukuki yükümlülük) ve md.5/2-f (meşru menfaat)',
       'Hata tespiti, bilgi ve hizmet güvenliğinin sağlanması, kötüye kullanımın önlenmesi — md.5/2-f (meşru menfaat)',
       'Kişiselleştirilmemiş reklam gösterimi (ücretsiz hizmetin finansmanı) — md.5/2-f (meşru menfaat)',
-      'Kişiselleştirilmiş reklam gösterimi — yalnızca açık rızanızla (md.5/1); ayrı "Reklam Açık Rıza Metni" ile alınır, vermemeniz hiçbir hizmeti kısıtlamaz',
+      'Kişiselleştirilmiş reklam gösterimi — yalnızca açık rızanızla (md.5/1); ayrı "Reklam Açık Rıza Metni" ile alınır, vermemeniz hiçbir hizmeti kısıtlamaz. 15-17 yaş arası kullanıcılara kişiselleştirilmiş reklam hiç gösterilmez',
       'Başvuru ve taleplerin yanıtlanması, hukuki uyuşmazlıklarda hakların korunması — md.5/2-ç ve md.5/2-e',
     ],
   },
@@ -111,6 +116,7 @@ export const AD_CONSENT_TEXT = [
   },
   {
     ul: [
+      `${MIN_AGE}-17 yaş arası kullanıcılardan bu rıza alınmaz; bu kullanıcılara yalnızca kişiselleştirilmemiş reklam gösterilir.`,
       'Bu rıza isteğe bağlıdır. Vermezseniz uygulamanın ve sitenin tüm özelliklerini aynı şekilde kullanmaya devam edersiniz; size yalnızca kişiselleştirilmemiş reklam gösterilir.',
       'Rızanızı dilediğiniz zaman geri alabilirsiniz: uygulamada Profil > Reklam Tercihleri, sitede sayfanın altındaki "Çerez Tercihleri" bağlantısı.',
       'Kişisel verilerinizin işlenmesine ilişkin ayrıntılı bilgi KVKK Aydınlatma Metni\'nde yer alır.',
@@ -124,9 +130,11 @@ export const AD_CONSENT_SUMMARY =
 
 export const AGE_GATE_TEXT = {
   title: 'Yaş Beyanı',
-  body: `Türkiye'de ${MIN_AGE} yaşından küçüklere sosyal etkileşim (yorum, tarif paylaşımı) hizmeti sunulamaz (5651 sayılı Kanun ek 4. madde). Hesabınızı kullanmaya devam etmek için ${MIN_AGE} yaşından büyük olduğunuzu beyan etmeniz gerekir.`,
-  confirm: `${MIN_AGE} yaşından büyüğüm`,
+  body: `Türkiye'de ${MIN_AGE} yaşından küçüklere sosyal etkileşim (yorum, tarif paylaşımı) hizmeti sunulamaz; ${MIN_AGE}-18 yaş arası kullanıcılara ise kısıtlı ve korumalı hizmet sunulur (5651 sayılı Kanun ek 4. madde). Hesabınızı kullanmaya devam etmek için yaş grubunuzu beyan edin.`,
+  adult: '18 yaşından büyüğüm',
+  teen: `${MIN_AGE}-17 yaş arasındayım`,
   deny: `${MIN_AGE} yaşından küçüğüm`,
+  teenNote: `${MIN_AGE}-17 yaş arası hesaplarda kişiselleştirilmiş reklam gösterilmez ve yorumlarınız adınız yerine "${MINOR_PUBLIC_NAME}" olarak yayınlanır.`,
   deniedMessage: `${MIN_AGE} yaşından küçük kullanıcılar hesap oluşturamaz. Oturumunuz kapatıldı; tarifleri üye olmadan görüntülemeye devam edebilirsiniz. Hesabınızın silinmesini ${CONTROLLER.email} adresinden talep edebilirsiniz.`,
 };
 
@@ -158,8 +166,58 @@ export const AD_CONSENT_UI = {
 
 export const AGE_GATE_TEXT_EN = {
   title: 'Age Confirmation',
-  body: `Under Turkish law, social interaction features (comments, recipe sharing) cannot be offered to anyone under ${MIN_AGE}. To keep using your account, please confirm that you are at least ${MIN_AGE} years old.`,
-  confirm: `I am ${MIN_AGE} or older`,
+  body: `Under Turkish law, social interaction features (comments, recipe sharing) cannot be offered to anyone under ${MIN_AGE}, and users aged ${MIN_AGE}-18 get a restricted, protected service. To keep using your account, please state your age group.`,
+  adult: 'I am 18 or older',
+  teen: `I am ${MIN_AGE}-17`,
   deny: `I am under ${MIN_AGE}`,
+  teenNote: `Accounts aged ${MIN_AGE}-17 see no personalized ads and their reviews are published as "${MINOR_PUBLIC_NAME}" instead of their name.`,
   deniedMessage: `Users under ${MIN_AGE} cannot have an account. You have been signed out; you can keep browsing recipes without an account. You can request deletion of your account at ${CONTROLLER.email}.`,
 };
+
+// Yönetmelik md.9/5 (ebeveyn bilgilendirmesi) ve md.10 (başvuru ve itiraz
+// mekanizması) -- web /ebeveyn-bilgilendirme ve mobil LegalText 'parents'.
+export const PARENT_INFO = [
+  {
+    p: `Bu sayfa, 5651 sayılı Kanun ek 4. madde ve Sosyal Ağ Sağlayıcı Tarafından Çocuklara Özgü Ayrıştırılmış Hizmet Sunulmasına ve Yaş Doğrulamaya İlişkin Yönetmelik kapsamında ebeveynleri ve çocukları bilgilendirmek için hazırlanmıştır.`,
+  },
+  { h: 'Yaş Sınırı' },
+  {
+    ul: [
+      `${MIN_AGE} yaşından küçükler Yöresel Tarif'te hesap açamaz, yorum yapamaz ve tarif paylaşamaz. Tarifler hesap olmadan herkes tarafından görüntülenebilir.`,
+      'Her hesaptan, kullanılmaya başlamadan önce yaş grubu beyanı alınır. Mevcut hesaplardan da bu beyan istenir.',
+      `${MIN_AGE} yaşından küçük olduğu anlaşılan hesapların oturumu kapatılır ve hesap kapatılır; itiraz süreci sonuçlanınca hesaba ait içerik ve kişisel veriler gecikmeksizin silinir.`,
+      `Yaş doğrulaması, Siber Güvenlik Başkanlığı'nın e-Devlet üzerinden sunacağı yaş doğrulama belirteci hizmete açıldığında bu yöntemle yapılacaktır.`,
+    ],
+  },
+  { h: `${MIN_AGE}-17 Yaş Arası Hesaplar İçin Korumalar` },
+  {
+    ul: [
+      'Kişiselleştirilmiş reklam gösterilmez; yalnızca kişiselleştirilmemiş reklam gösterilir; mobil uygulamada reklam ağına kullanıcının reşit olmadığı bilgisi iletilir.',
+      `Yorumlar ve önerilen tarifler gerçek ad yerine "${MINOR_PUBLIC_NAME}" adıyla yayınlanır.`,
+      `Yöresel Tarif'te takip, mesajlaşma, canlı yayın, kişi listesi senkronizasyonu veya sonsuz kaydırmalı içerik akışı bulunmaz; profiller herkese açık değildir.`,
+      'Kullanıcı içerikleri yayınlanmadan veya yayından sonra incelenir; uygunsuz içerik kaldırılır, kullanıcı engellenebilir ve şikâyet edilebilir.',
+    ],
+  },
+  { h: 'Ebeveyn Kontrol Araçları' },
+  {
+    p: `Yöresel Tarif'in kendi hesap ayarları sınırlı olduğundan, ebeveyn kontrolü için cihazınızın işletim sistemindeki araçları kullanmanızı öneririz. Bu araçlar Türkçe dahil tüm dillerde, ücretsiz olarak sunulur:`,
+  },
+  {
+    ul: [
+      'iPhone / iPad — Ekran Süresi (Ayarlar > Ekran Süresi): uygulama kullanım süresi sınırı, içerik kısıtlamaları; Aile Paylaşımı ile "Satın Almak İçin Sor" (uygulama içi satın almalar ebeveyn onayına bağlanır).',
+      'Android — Google Family Link: günlük kullanım süresi sınırı, uygulama onayı ve Google Play satın almalarında ebeveyn onayı.',
+      'Konum: Yöresel Tarif konum bilgisi toplamaz ve paylaşmaz.',
+      'Premium abonelik yalnızca App Store / Google Play üzerinden satın alınabilir; yukarıdaki ebeveyn onayı ayarları bu satın almalar için de geçerlidir.',
+    ],
+  },
+  { h: 'Başvuru ve İtiraz' },
+  {
+    ul: [
+      `Yaş beyanı veya yaş doğrulaması sonucuna, hesabın askıya alınmasına veya kapatılmasına ve ${MIN_AGE}-17 yaş korumalarına ilişkin başvuru ve itirazlarınızı ${CONTROLLER.email} adresine Türkçe olarak, ücretsiz iletebilirsiniz. Ebeveyn, vasi veya kullanıcının kendisi başvurabilir.`,
+      'Başvurular otomatik sistemlerle değil, bir kişi tarafından incelenir ve en geç 30 gün içinde sonuçlandırılır.',
+      'İtiraz sonuçlanana kadar hesaba ait içerik ve kişisel veriler silinmez.',
+      `Sonuca karşı Siber Güvenlik Başkanlığı'na şikâyette bulunabilir ve yargı yoluna başvurabilirsiniz.`,
+      `Ebeveynler, çocuklarına ait bir hesabın kapatılmasını ve verilerinin silinmesini aynı adresten talep edebilir.`,
+    ],
+  },
+];

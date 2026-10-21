@@ -11,6 +11,8 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import { db, storage } from '@/config/firebase'
 import { useApp } from '@/contexts/AppContext'
 import { useAuth } from '@/contexts/AuthContext'
+// @ts-ignore
+import { MINOR_PUBLIC_NAME } from '@shared/legalTexts'
 import { Recipe, Review } from '@/types'
 import { isPreOptimized, resizeImageToJpegBlob } from '@/lib/image'
 
@@ -42,7 +44,7 @@ function StarRating({ value, onChange, size = 22, readonly = false }: StarRating
 
 export default function ReviewsSection({ recipe }: { recipe: Recipe & { isFirebase?: boolean } }) {
   const { t } = useApp()
-  const { user } = useAuth()
+  const { user, ageBracket } = useAuth()
 
   const [reviews, setReviews] = useState<Review[]>([])
   const [loading, setLoading] = useState(true)
@@ -151,7 +153,9 @@ export default function ReviewsSection({ recipe }: { recipe: Recipe & { isFireba
         await addDoc(collection(db, 'reviews'), {
           recipeId: recipe.id,
           userId: user.uid,
-          userName: user.displayName || user.email?.split('@')[0] || 'Kullanıcı',
+          // Herkese açık ad: 15-17 hesaplarda gerçek ad yayınlanmaz (Yönetmelik
+          // md.8); e-posta öneki asla ad olarak kullanılmaz (kişisel veri).
+          userName: ageBracket === '15-17' ? MINOR_PUBLIC_NAME : (user.displayName || 'Kullanıcı'),
           rating,
           comment: comment.trim(),
           photoUrl: photoUrl ?? null,

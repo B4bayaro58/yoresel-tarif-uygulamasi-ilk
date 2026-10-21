@@ -52,17 +52,26 @@ export default function AgeGateModal() {
             <>
               <Text style={[styles.title, { color: colors.text }]}>{txt.title}</Text>
               <Text style={[styles.body, { color: colors.textSecondary }]}>{txt.body}</Text>
+              <Text style={[styles.note, { color: colors.textTertiary }]}>{txt.teenNote}</Text>
               {busy ? (
                 <ActivityIndicator color={colors.primary} style={{ marginVertical: 16 }} />
               ) : (
                 <>
                   <TouchableOpacity
                     style={[styles.primary, { backgroundColor: colors.primary }]}
-                    onPress={() => run(confirmAge)}
+                    onPress={() => run(() => confirmAge('18+'))}
                     accessibilityRole="button"
-                    accessibilityLabel={txt.confirm}
+                    accessibilityLabel={txt.adult}
                   >
-                    <Text style={styles.primaryText}>{txt.confirm}</Text>
+                    <Text style={styles.primaryText}>{txt.adult}</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.secondary, { borderColor: colors.border, marginBottom: 10 }]}
+                    onPress={() => run(() => confirmAge('15-17'))}
+                    accessibilityRole="button"
+                    accessibilityLabel={txt.teen}
+                  >
+                    <Text style={[styles.secondaryText, { color: colors.text }]}>{txt.teen}</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={[styles.secondary, { borderColor: colors.border }]}
@@ -86,7 +95,8 @@ const styles = StyleSheet.create({
   backdrop: { flex: 1, backgroundColor: 'rgba(0,0,0,0.55)', justifyContent: 'center', padding: 20 },
   card: { borderRadius: 18, borderWidth: 1, padding: 20 },
   title: { fontSize: 18, fontWeight: '700', marginBottom: 10 },
-  body: { fontSize: 14, lineHeight: 21, marginBottom: 16 },
+  body: { fontSize: 14, lineHeight: 21, marginBottom: 10 },
+  note: { fontSize: 12, lineHeight: 18, marginBottom: 16 },
   primary: { borderRadius: 12, paddingVertical: 13, alignItems: 'center', marginBottom: 10 },
   primaryText: { color: '#FFFFFF', fontSize: 15, fontWeight: '700' },
   secondary: { borderRadius: 12, borderWidth: 1, paddingVertical: 13, alignItems: 'center' },

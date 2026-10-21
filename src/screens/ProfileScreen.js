@@ -8,11 +8,12 @@ import {
   ScrollView,
   TextInput,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import { Image } from 'expo-image';
-import { Palette, Settings, LogOut, User as UserIcon, ChevronRight, Trash2, Shield, Camera, Crown, UserX, FileText, Megaphone } from 'lucide-react-native';
+import { Palette, Settings, LogOut, User as UserIcon, ChevronRight, Trash2, Shield, Camera, Crown, UserX, FileText, Megaphone, Users } from 'lucide-react-native';
 import { AdsConsent } from 'react-native-google-mobile-ads';
-import { isUmpRegion, openAdConsentPreferences } from '../services/adConsentService';
+import { isMinorMode, isUmpRegion, openAdConsentPreferences } from '../services/adConsentService';
 import { useApp } from '../contexts/AppContext';
 import { getCountryFlag } from '../constants/countryFlags';
 import { useAuth } from '../contexts/AuthContext';
@@ -516,13 +517,34 @@ export default function ProfileScreen({ navigation }) {
           <ChevronRight color={colors.textSecondary} size={20} />
         </TouchableOpacity>
 
+        {/* Ebeveyn Bilgilendirme -- Yaş Doğrulama Yönetmeliği md.9/5, md.10 */}
+        <TouchableOpacity
+          style={[styles.settingItem, { backgroundColor: colors.card, borderColor: colors.border }]}
+          onPress={() => navigation.navigate('LegalText', { doc: 'parents' })}
+          accessibilityRole="button"
+          accessibilityLabel={translate('parentInfo')}
+        >
+          <View style={styles.settingLeft}>
+            <View style={[styles.iconContainer, { backgroundColor: colors.primary + '20' }]}>
+              <Users color={colors.primary} size={20} />
+            </View>
+            <Text style={[styles.settingTitle, { color: colors.text }]}>
+              {translate('parentInfo')}
+            </Text>
+          </View>
+          <ChevronRight color={colors.textSecondary} size={20} />
+        </TouchableOpacity>
+
         {/* Reklam Tercihleri -- KVKK: açık rıza her an geri alınabilmeli. AB/
             İngiltere'de rıza Google'ın UMP formunda, orada onun gizlilik
             seçenekleri formu açılır. */}
         <TouchableOpacity
           style={[styles.settingItem, { backgroundColor: colors.card, borderColor: colors.border }]}
           onPress={() => {
-            if (isUmpRegion()) {
+            if (isMinorMode()) {
+              // 15-17 yaş hesaplardan reklam rızası alınmaz (Yönetmelik md.8/5-h).
+              Alert.alert(translate('adPreferences'), translate('minorAdsInfo'));
+            } else if (isUmpRegion()) {
               AdsConsent.showPrivacyOptionsForm().catch(() => {});
             } else {
               openAdConsentPreferences();

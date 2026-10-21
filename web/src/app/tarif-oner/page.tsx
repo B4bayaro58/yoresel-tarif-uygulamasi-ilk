@@ -7,6 +7,8 @@ import { ArrowLeft, Send, CheckCircle2, LogIn } from 'lucide-react'
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
 import { db } from '@/config/firebase'
 import { useApp } from '@/contexts/AppContext'
+// @ts-ignore
+import { MINOR_PUBLIC_NAME } from '@shared/legalTexts'
 import { useAuth } from '@/contexts/AuthContext'
 // @ts-ignore
 import { CONTINENTS } from '@shared/continents'
@@ -25,7 +27,7 @@ const inputStyle = {
 export default function TarifOnerPage() {
   const router = useRouter()
   const { t } = useApp()
-  const { user } = useAuth()
+  const { user, ageBracket } = useAuth()
 
   const [name, setName] = useState('')
   const [country, setCountry] = useState('')
@@ -131,7 +133,8 @@ export default function TarifOnerPage() {
         // `recipes` is world-readable including pending/unmoderated docs, so no raw
         // email here (PendingRecipesScreen resolves the real identity via a
         // users/{uid} lookup instead, which requires being signed in).
-        authorName: user.displayName || 'Anonim',
+        // 15-17 hesaplarda gerçek ad yayınlanmaz (Yönetmelik md.8).
+        authorName: ageBracket === '15-17' ? MINOR_PUBLIC_NAME : (user.displayName || 'Anonim'),
         createdAt: serverTimestamp(),
       })
       setSubmitted(true)

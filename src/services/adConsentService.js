@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { MobileAds } from 'react-native-google-mobile-ads';
 
 // Kişiselleştirilmiş reklam için KVKK açık rızası (metin:
 // constants/legalTexts.js AD_CONSENT_TEXT). AB/İngiltere kullanıcılarında
@@ -7,21 +8,41 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // dahil) rıza yoksa veya reddedildiyse yalnızca kişiselleştirilmemiş reklam
 // istenir.
 const KEY = 'kvkkAdConsent';
+const MINOR_KEY = 'kvkkMinor';
 
 let consent = null; // 'granted' | 'denied' | null
 let umpApplies = false;
+// 15-17 yaş hesaplar (Yönetmelik md.8/5-h): rıza ne olursa olsun
+// kişiselleştirilmemiş reklam + AdMob'a "reşit değil" etiketi. Cihazda da
+// tutulur ki açılıştaki ilk reklam isteği de kısıtlı olsun.
+let minorMode = false;
 const listeners = new Set();
 let pendingResolve = null;
 let promptOpen = false; // modal henüz abone olmadan istenirse kaybolmasın
 
 export async function loadAdConsent() {
   try {
-    const v = await AsyncStorage.getItem(KEY);
+    const [v, m] = await Promise.all([AsyncStorage.getItem(KEY), AsyncStorage.getItem(MINOR_KEY)]);
     consent = v === 'granted' || v === 'denied' ? v : null;
+    if (m === '1') await setMinorMode(true);
   } catch {
     consent = null;
   }
   return consent;
+}
+
+export async function setMinorMode(value) {
+  minorMode = value;
+  try {
+    if (value) await AsyncStorage.setItem(MINOR_KEY, '1');
+    await MobileAds().setRequestConfiguration({ tagForUnderAgeOfConsent: value });
+  } catch {
+    // SDK henüz hazır değilse bile getAdRequestOptions() kısıtlı istek yapar.
+  }
+}
+
+export function isMinorMode() {
+  return minorMode;
 }
 
 export function setUmpApplies(value) {
@@ -39,6 +60,7 @@ export function getAdConsent() {
 // BannerAd `requestOptions`, InterstitialAd.createForAdRequest ve
 // useRewardedAd'e verilir. İstek anındaki rıza durumunu yansıtır.
 export function getAdRequestOptions() {
+  if (minorMode) return { requestNonPersonalizedAdsOnly: true };
   if (umpApplies) return {};
   return { requestNonPersonalizedAdsOnly: consent !== 'granted' };
 }

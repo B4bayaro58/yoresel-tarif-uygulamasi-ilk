@@ -38,16 +38,28 @@ export default function AgeGate() {
       <p className="font-display font-bold text-lg mb-2" style={{ color: 'var(--text)' }}>{AGE_GATE_TEXT.title}</p>
       <p className="text-sm leading-relaxed mb-2" style={{ color: 'var(--text-muted)' }}>{AGE_GATE_TEXT.body}</p>
       <p className="text-xs mb-4" style={{ color: 'var(--text-muted)' }}>
-        Ayrıntılar: <Link href="/kvkk" className="underline">KVKK Aydınlatma Metni</Link>
+        {AGE_GATE_TEXT.teenNote}{' '}
+        <Link href="/ebeveyn-bilgilendirme" className="underline">Ebeveyn Bilgilendirme</Link>
+        {' · '}
+        <Link href="/kvkk" className="underline">KVKK Aydınlatma Metni</Link>
       </p>
       <div className="flex flex-col gap-2">
         <button
           type="button"
           disabled={busy}
-          onClick={() => run(confirmAge)}
+          onClick={() => run(() => confirmAge('18+'))}
           className="btn-primary w-full py-2.5 rounded-xl text-sm font-semibold disabled:opacity-50"
         >
-          {AGE_GATE_TEXT.confirm}
+          {AGE_GATE_TEXT.adult}
+        </button>
+        <button
+          type="button"
+          disabled={busy}
+          onClick={() => run(() => confirmAge('15-17'))}
+          className="w-full py-2.5 rounded-xl text-sm font-semibold disabled:opacity-50"
+          style={{ backgroundColor: 'var(--card)', border: '1px solid var(--border)', color: 'var(--text)' }}
+        >
+          {AGE_GATE_TEXT.teen}
         </button>
         <button
           type="button"

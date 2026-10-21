@@ -26,6 +26,7 @@ import {
 import { db } from '../config/firebase';
 import { useApp } from '../contexts/AppContext';
 import { useAuth } from '../contexts/AuthContext';
+import { MINOR_PUBLIC_NAME } from '../constants/legalTexts';
 import { getBlockedReviewerIds, blockReviewer } from '../services/blockedReviewersService';
 
 function StarRating({ value, onChange, size = 28, readonly = false }) {
@@ -58,7 +59,7 @@ function StarRating({ value, onChange, size = 28, readonly = false }) {
 
 export default function ReviewsSection({ recipe }) {
   const { colors, translate } = useApp();
-  const { user } = useAuth();
+  const { user, ageBracket } = useAuth();
 
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -135,7 +136,9 @@ export default function ReviewsSection({ recipe }) {
       const reviewData = {
         recipeId: recipe.id,
         userId: user.uid,
-        userName: user.displayName || user.email?.split('@')[0] || 'Kullanıcı',
+        // Herkese açık ad: 15-17 hesaplarda gerçek ad yayınlanmaz (Yönetmelik
+        // md.8); e-posta öneki asla ad olarak kullanılmaz (kişisel veri).
+        userName: ageBracket === '15-17' ? MINOR_PUBLIC_NAME : (user.displayName || 'Kullanıcı'),
         rating,
         comment: comment.trim(),
         createdAt: serverTimestamp(),

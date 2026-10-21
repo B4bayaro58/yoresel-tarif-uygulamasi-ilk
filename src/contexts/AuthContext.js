@@ -14,7 +14,9 @@ import {
   sendPasswordResetEmail,
   revokeAccessToken,
 } from 'firebase/auth';
-import { doc, getDoc, setDoc, deleteDoc, collection, query, where, getDocs, writeBatch } from 'firebase/firestore';
+import { doc, getDoc, setDoc, deleteDoc, collection, query, where, getDocs, writeBatch, updateDoc } from 'firebase/firestore';
+import { MINOR_PUBLIC_NAME } from '../constants/legalTexts';
+import { setMinorMode } from '../services/adConsentService';
 import { auth, db } from '../config/firebase';
 import { useApp } from './AppContext';
 import { deleteImageByUrl } from '../services/imageUploadService';
@@ -41,6 +43,13 @@ export const AuthProvider = ({ children }) => {
   // 15 yaş beyanı (5651 ek 4 + Yaş Doğrulama Yönetmeliği). null = henüz
   // bilinmiyor / okunamadı -- bu durumda AgeGateModal engellemez.
   const [ageConfirmed, setAgeConfirmed] = useState(null);
+  // '18+' | '15-17' | null. '15-17' hesaplarda Yönetmelik md.8 korumaları
+  // uygulanır (kişiselleştirilmemiş reklam, herkese açık içerikte gerçek ad yok).
+  const [ageBracket, setAgeBracket] = useState(null);
+
+  useEffect(() => {
+    if (ageBracket === '15-17') setMinorMode(true);
+  }, [ageBracket]);
   const [appleSignInAvailable, setAppleSignInAvailable] = useState(false);
 
   useEffect(() => {
@@ -66,13 +75,20 @@ export const AuthProvider = ({ children }) => {
             if (snap.exists() && snap.data().isAdmin === true) {
               setIsAdmin(true);
             }
-            setAgeConfirmed(snap.exists() && snap.data().ageConfirmed15 === true);
+            const b = snap.exists() ? snap.data().ageBracket : null;
+            const bracket = b === '18+' || b === '15-17' ? b : null;
+            setAgeBracket(bracket);
+            setAgeConfirmed(bracket !== null);
           })
-          .catch(() => setAgeConfirmed(null));
+          .catch(() => {
+            setAgeBracket(null);
+            setAgeConfirmed(null);
+          });
       } else {
         setUser(null);
         setIsAdmin(false);
         setAgeConfirmed(null);
+        setAgeBracket(null);
         setCurrentUserId(null);
         setSentryUser(null);
         setLoading(false);
@@ -340,14 +356,23 @@ export const AuthProvider = ({ children }) => {
   // merge: kayıt/Google/Apple akışının oluşturduğu users/{uid} dokümanındaki
   // diğer alanlara dokunma (firestore.rules sahibin bu alanları yazmasına
   // izin veriyor; isAdmin/isBlocked değişmediği sürece).
-  const confirmAge = async () => {
+  const confirmAge = async (bracket) => {
     if (!auth.currentUser) return;
+    const uid = auth.currentUser.uid;
     await setDoc(
-      doc(db, 'users', auth.currentUser.uid),
-      { ageConfirmed15: true, ageConfirmedAt: new Date().toISOString() },
+      doc(db, 'users', uid),
+      { ageBracket: bracket, ageConfirmed15: true, ageConfirmedAt: new Date().toISOString() },
       { merge: true }
     );
+    setAgeBracket(bracket);
     setAgeConfirmed(true);
+    if (bracket === '15-17') {
+      // Beyandan önce yazılmış yorumlar da gerçek adla yayında kalmasın.
+      try {
+        const snap = await getDocs(query(collection(db, 'reviews'), where('userId', '==', uid)));
+        await Promise.all(snap.docs.map((d) => updateDoc(d.ref, { userName: MINOR_PUBLIC_NAME })));
+      } catch {}
+    }
   };
 
   const declineAge = async () => {
@@ -366,6 +391,7 @@ export const AuthProvider = ({ children }) => {
   const value = {
     user,
     ageConfirmed,
+    ageBracket,
     confirmAge,
     declineAge,
     isAdmin,

@@ -2024,6 +2024,18 @@ export const TRANSLATIONS = {
     fr: 'Vos données personnelles sont traitées conformément à la notice KVKK.',
     it: 'I tuoi dati personali sono trattati secondo l\'informativa KVKK.',
   },
+  parentInfo: {
+    tr: 'Ebeveyn Bilgilendirme ve Yaş Sınırı',
+    en: 'Parental Info & Age Limit',
+    fr: 'Infos parents et limite d’âge',
+    it: 'Info per genitori e limite di età',
+  },
+  minorAdsInfo: {
+    tr: '15-17 yaş arası hesaplara yalnızca kişiselleştirilmemiş reklam gösterilir; reklam rızası istenmez.',
+    en: 'Accounts aged 15-17 only see non-personalized ads; no ad consent is requested.',
+    fr: 'Les comptes de 15 à 17 ans ne voient que des publicités non personnalisées ; aucun consentement publicitaire n’est demandé.',
+    it: 'Gli account di 15-17 anni vedono solo annunci non personalizzati; non viene richiesto alcun consenso pubblicitario.',
+  },
   ppLastUpdated: {
     tr: 'Son güncelleme: 21 Ekim 2026',
     en: 'Last updated: October 21, 2026',

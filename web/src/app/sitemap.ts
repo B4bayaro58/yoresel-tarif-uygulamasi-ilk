@@ -19,7 +19,7 @@ const PUBLIC_STATUSES = ['published', 'approved']
 
 const STATIC_PAGES = [
   '', 'recipes', 'blog', 'arama', 'tarif-oner', 'gizlilik-politikasi', 'kullanim-kosullari',
-  'kvkk', 'acik-riza-metni', 'cerez-politikasi', 'icerik-politikasi', 'hakkimizda', 'sss', 'iletisim',
+  'kvkk', 'acik-riza-metni', 'ebeveyn-bilgilendirme', 'cerez-politikasi', 'icerik-politikasi', 'hakkimizda', 'sss', 'iletisim',
 ]
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

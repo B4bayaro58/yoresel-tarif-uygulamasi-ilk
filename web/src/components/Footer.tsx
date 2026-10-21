@@ -25,6 +25,7 @@ const FOOTER_LINKS = {
     { label: 'Kullanım Koşulları', href: '/kullanim-kosullari' },
     { label: 'KVKK Aydınlatma Metni', href: '/kvkk' },
     { label: 'Reklam Açık Rıza Metni', href: '/acik-riza-metni' },
+    { label: 'Ebeveyn Bilgilendirme', href: '/ebeveyn-bilgilendirme' },
     { label: 'Çerez Politikası', href: '/cerez-politikasi' },
     { label: 'İçerik Politikası', href: '/icerik-politikasi' },
   ],
