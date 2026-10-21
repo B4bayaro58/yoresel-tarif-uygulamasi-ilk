@@ -14,6 +14,8 @@ import { SubscriptionProvider } from './src/contexts/SubscriptionContext';
 import AppNavigator from './src/navigation/AppNavigator';
 import AlternativesModal from './src/components/AlternativesModal';
 import NotificationToast from './src/components/NotificationToast';
+import AdConsentModal from './src/components/AdConsentModal';
+import AgeGateModal from './src/components/AgeGateModal';
 import ErrorBoundary from './src/components/ErrorBoundary';
 import { initAdsConsentAndSdk } from './src/services/consentService';
 
@@ -29,6 +31,8 @@ function AppContent() {
       <AppNavigator />
       <AlternativesModal />
       <NotificationToast />
+      <AdConsentModal />
+      <AgeGateModal />
       <StatusBar style={theme === 'dark' ? 'light' : 'dark'} />
     </View>
   );

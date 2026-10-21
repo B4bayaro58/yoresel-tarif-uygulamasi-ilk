@@ -4,6 +4,7 @@ import {
   getTrackingPermissionsAsync,
   requestTrackingPermissionsAsync,
 } from 'expo-tracking-transparency';
+import { getAdConsent, loadAdConsent, promptAdConsent, setUmpApplies } from './adConsentService';
 
 // iOS, uygulama 'active' olmadan (ör. splash ekranı açıkken) yapılan ATT
 // isteğini hiçbir şey göstermeden yok sayıyor -- Apple review'da (iPadOS)
@@ -31,17 +32,32 @@ async function requestTrackingIfNeeded() {
 }
 
 // Uygulama açılışında bir kez çalışır: önce ATT (iOS), sonra gerekiyorsa UMP
-// consent formu gösterilir, en son Mobile Ads SDK başlatılır. Reklam isteği
-// bundan önce yapılmamalı (AdMob policy).
+// consent formu (AB/İngiltere), UMP kapsamı dışındaysa KVKK açık rıza
+// penceresi (AdConsentModal), en son Mobile Ads SDK başlatılır. Reklam
+// isteği bundan önce yapılmamalı (AdMob policy); yapılırsa
+// getAdRequestOptions() varsayılan olarak kişiselleştirilmemiş ister.
 export async function initAdsConsentAndSdk() {
+  await loadAdConsent();
   try {
     if (Platform.OS === 'ios') {
       await requestTrackingIfNeeded();
     }
 
-    const info = await AdsConsent.requestInfoUpdate();
-    if (info.isConsentFormAvailable && info.status === AdsConsentStatus.REQUIRED) {
-      await AdsConsent.showForm();
+    let umpApplies = false;
+    try {
+      const info = await AdsConsent.requestInfoUpdate();
+      if (info.isConsentFormAvailable && info.status === AdsConsentStatus.REQUIRED) {
+        await AdsConsent.showForm();
+      }
+      umpApplies =
+        info.status === AdsConsentStatus.REQUIRED || info.status === AdsConsentStatus.OBTAINED;
+    } catch {
+      // UMP'ye ulaşılamadı -- KVKK katmanı yine de çalışsın.
+    }
+    setUmpApplies(umpApplies);
+
+    if (!umpApplies && getAdConsent() === null) {
+      await promptAdConsent();
     }
 
     await MobileAds().initialize();

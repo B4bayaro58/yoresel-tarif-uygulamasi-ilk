@@ -13,6 +13,7 @@ import { useRewardedAd } from 'react-native-google-mobile-ads';
 import { useApp } from '../contexts/AppContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { REWARDED_AD_UNIT_ID } from '../constants/adUnits';
+import { getAdRequestOptions } from '../services/adConsentService';
 
 export default function AlternativesModal() {
   const {
@@ -28,7 +29,7 @@ export default function AlternativesModal() {
   // malzeme alternatifleri açık kalır -- her seferinde yeniden reklam istemek
   // yerine tek seferlik bir "kilit açma" deneyimi.
   const [unlockedByAd, setUnlockedByAd] = useState(false);
-  const { isLoaded, isEarnedReward, isClosed, load, show } = useRewardedAd(REWARDED_AD_UNIT_ID);
+  const { isLoaded, isEarnedReward, isClosed, load, show } = useRewardedAd(REWARDED_AD_UNIT_ID, getAdRequestOptions());
   const wasClosed = useRef(false);
 
   useEffect(() => {

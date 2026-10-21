@@ -1,11 +1,13 @@
 import Link from 'next/link'
 import { ArrowLeft, Mail, MapPin, Instagram, Youtube, Twitter } from 'lucide-react'
+// @ts-ignore
+import { CONTROLLER } from '@shared/legalTexts'
 
 export const metadata = { title: 'İletişim — Yöresel Tarif' }
 
 const CHANNELS = [
   { icon: Mail, label: 'E-posta', value: 'info@yoreseltarif.com', href: 'mailto:info@yoreseltarif.com' },
-  { icon: MapPin, label: 'Konum', value: 'Türkiye', href: undefined },
+  { icon: MapPin, label: 'Adres', value: CONTROLLER.address, href: undefined },
 ]
 
 const SOCIAL = [
@@ -84,6 +86,26 @@ export default function IletisimPage() {
             </a>
           )
         })}
+      </div>
+
+      {/* 5651 sayılı Kanun md.3 -- içerik ve yer sağlayıcının tanıtıcı bilgileri */}
+      <div
+        className="rounded-2xl p-6 sm:p-8 mb-8 text-sm legal-content"
+        style={{ backgroundColor: 'var(--card)', border: '1px solid var(--border)' }}
+      >
+        <h2>Künye</h2>
+        <ul>
+          <li>Site ve uygulama sahibi (içerik sağlayıcı, veri sorumlusu): {CONTROLLER.name}</li>
+          <li>Adres: {CONTROLLER.address}</li>
+          <li>E-posta: {CONTROLLER.email}</li>
+          <li>Barındırma (yer sağlayıcı): Vercel Inc. (web sitesi), Google LLC – Firebase (veritabanı ve dosyalar)</li>
+        </ul>
+        <p>
+          Hukuka aykırı olduğunu düşündüğünüz bir içerik için{' '}
+          <Link href="/icerik-politikasi" className="underline">İçerik Politikası</Link>&apos;ndaki bildirim yolunu kullanabilirsiniz.
+          Kişisel verilerinize ilişkin başvurular için{' '}
+          <Link href="/kvkk" className="underline">KVKK Aydınlatma Metni</Link>&apos;ne bakın.
+        </p>
       </div>
 
       <p className="text-sm" style={{ color: 'var(--text-muted)' }}>

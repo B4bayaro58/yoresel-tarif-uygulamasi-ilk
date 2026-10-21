@@ -32,6 +32,11 @@ interface AuthContextType {
   loginWithApple: () => Promise<void>
   logout: () => Promise<void>
   resetPassword: (email: string) => Promise<void>
+  // 15 yaş beyanı (5651 ek 4 + Yaş Doğrulama Yönetmeliği). null = henüz
+  // bilinmiyor / okunamadı -- bu durumda AgeGate engellemez.
+  ageConfirmed: boolean | null
+  confirmAge: () => Promise<void>
+  declineAge: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType | null>(null)
@@ -40,6 +45,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
   const [isAdmin, setIsAdmin] = useState(false)
+  const [ageConfirmed, setAgeConfirmed] = useState<boolean | null>(null)
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
@@ -51,11 +57,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           // Geçici fallback: ilk kurulum için — setup-admin sayfası ziyaret edildikten sonra kaldırılacak
           const emailFallback = firebaseUser.email === 'cagatylmz@gmail.com'
           setIsAdmin(firestoreAdmin || emailFallback)
+          setAgeConfirmed(snap.exists() && snap.data().ageConfirmed15 === true)
         } catch {
           setIsAdmin(false)
+          setAgeConfirmed(null)
         }
       } else {
         setIsAdmin(false)
+        setAgeConfirmed(null)
       }
       setLoading(false)
     })
@@ -126,8 +135,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await sendPasswordResetEmail(auth, email)
   }
 
+  // merge: kayıt/Google/Apple akışının oluşturduğu users/{uid} dokümanındaki
+  // diğer alanlara dokunma (firestore.rules sahibin bu alanları yazmasına izin
+  // veriyor; isAdmin/isBlocked değişmediği sürece).
+  const confirmAge = async () => {
+    if (!auth.currentUser) return
+    await setDoc(
+      doc(db, 'users', auth.currentUser.uid),
+      { ageConfirmed15: true, ageConfirmedAt: serverTimestamp() },
+      { merge: true },
+    )
+    setAgeConfirmed(true)
+  }
+
+  const declineAge = async () => {
+    if (!auth.currentUser) return
+    try {
+      await setDoc(
+        doc(db, 'users', auth.currentUser.uid),
+        { ageDeclaredUnder15: true, ageDeclaredAt: serverTimestamp() },
+        { merge: true },
+      )
+    } finally {
+      await signOut(auth)
+    }
+  }
+
   return (
-    <AuthContext.Provider value={{ user, loading, isAdmin, login, register, loginWithGoogle, loginWithApple, logout, resetPassword }}>
+    <AuthContext.Provider value={{ user, loading, isAdmin, login, register, loginWithGoogle, loginWithApple, logout, resetPassword, ageConfirmed, confirmAge, declineAge }}>
       {children}
     </AuthContext.Provider>
   )

@@ -188,7 +188,10 @@ service cloud.firestore {
     // yapmış (anonim/misafir değil), engellenmemiş kullanıcı kendi adına
     // yazabilir; okuma/silme sadece admin (e-posta içerdiği için).
     match /recipeErrorReports/{reportId} {
-      allow read, delete: if isAdmin();
+      // Sahibi de okuyup silebilir: hesap silinirken (AuthContext.js
+      // deleteAccount) uid+e-posta içeren bildirimler de silinmeli (KVKK md.7).
+      allow read, delete: if isAdmin()
+        || (isAuth() && resource.data.userId == request.auth.uid);
       allow create: if isAuth()
         && request.auth.token.firebase.sign_in_provider != 'anonymous'
         && !isBlocked()

@@ -2000,11 +2000,35 @@ export const TRANSLATIONS = {
   },
 
   // Privacy Policy
+  kvkkNotice: {
+    tr: 'KVKK Aydınlatma Metni',
+    en: 'Privacy Notice (KVKK)',
+    fr: 'Notice KVKK (protection des données)',
+    it: 'Informativa KVKK (protezione dati)',
+  },
+  adConsentText: {
+    tr: 'Reklam Açık Rıza Metni',
+    en: 'Ad Consent Text',
+    fr: 'Texte de consentement publicitaire',
+    it: 'Testo di consenso pubblicitario',
+  },
+  adPreferences: {
+    tr: 'Reklam Tercihleri',
+    en: 'Ad Preferences',
+    fr: 'Préférences publicitaires',
+    it: 'Preferenze pubblicitarie',
+  },
+  kvkkLoginNotice: {
+    tr: 'Kişisel verileriniz KVKK Aydınlatma Metni kapsamında işlenir.',
+    en: 'Your personal data is processed as described in the Privacy Notice (KVKK).',
+    fr: 'Vos données personnelles sont traitées conformément à la notice KVKK.',
+    it: 'I tuoi dati personali sono trattati secondo l\'informativa KVKK.',
+  },
   ppLastUpdated: {
-    tr: 'Son güncelleme: Ekim 2026',
-    en: 'Last updated: October 2026',
-    fr: 'Dernière mise à jour : Octobre 2026',
-    it: 'Ultimo aggiornamento: Ottobre 2026',
+    tr: 'Son güncelleme: 21 Ekim 2026',
+    en: 'Last updated: October 21, 2026',
+    fr: 'Dernière mise à jour : 21 octobre 2026',
+    it: 'Ultimo aggiornamento: 21 ottobre 2026',
   },
   ppIntro: {
     tr: 'Yöresel Tarif uygulaması ("Uygulama") kullanıcı gizliliğine önem verir. Bu politika, hangi verileri topladığımızı, nasıl kullandığımızı ve haklarınızı açıklar.',
@@ -2019,10 +2043,10 @@ export const TRANSLATIONS = {
     it: '1. Dati che Raccogliamo',
   },
   ppCollectedDataBody: {
-    tr: '• E-posta adresi ve kullanıcı adı (kayıt sırasında)\n• Favori tarifler ve alışveriş listesi (cihazda ve Firebase\'de)\n• Gönderdiğiniz tarif önerileri ve yorumlar\n• Tarif fotoğrafları (kamera veya fotoğraf galerinizden yüklediğiniz görseller)\n• Bildirim izni (pişirme sayacı için)\n• Anonim kullanım istatistikleri (Firebase Analytics aracılığıyla)',
-    en: '• Email address and display name (during registration)\n• Favorite recipes and shopping list (on device and Firebase)\n• Recipe suggestions and reviews you submit\n• Recipe photos (images uploaded via camera or photo library)\n• Notification permission (for cooking timer)\n• Anonymous usage statistics (via Firebase Analytics)',
-    fr: '• Adresse e-mail et nom d\'affichage (lors de l\'inscription)\n• Recettes favorites et liste de courses (sur l\'appareil et Firebase)\n• Suggestions de recettes et avis soumis\n• Photos de recettes (images téléchargées via la caméra ou la galerie)\n• Permission de notification (pour le minuteur de cuisson)\n• Statistiques d\'utilisation anonymes (via Firebase Analytics)',
-    it: '• Indirizzo email e nome visualizzato (durante la registrazione)\n• Ricette preferite e lista della spesa (sul dispositivo e Firebase)\n• Suggerimenti di ricette e recensioni inviate\n• Foto di ricette (immagini caricate tramite fotocamera o galleria)\n• Autorizzazione notifiche (per il timer di cottura)\n• Statistiche di utilizzo anonime (tramite Firebase Analytics)',
+    tr: '• E-posta adresi ve görünen ad (kayıtta veya Google/Apple hesabınızdan; profil fotoğrafı dahil)\n• Favoriler, alışveriş listesi ve menünüz (cihazda ve Firebase\'de)\n• Gönderdiğiniz tarifler, yorumlar, puanlar, fotoğraflar, hata bildirimleri ve şikâyetler\n• 15 yaşından büyük olduğunuza dair beyanınız\n• Premium abonelik durumu (ödeme Apple/Google tarafından alınır)\n• Hata kayıtları (cihaz modeli, işletim sistemi, uygulama sürümü, hesap kimliği)\n• Reklam tanımlayıcısı ve reklam etkileşim verileri (kişiselleştirilmiş reklam yalnızca açık rızanızla; iOS\'ta ayrıca izninizle)',
+    en: '• Email address and display name (at sign-up or from your Google/Apple account, including profile photo)\n• Favorites, shopping list and menu (on device and in Firebase)\n• Recipes, reviews, ratings, photos, error reports and reports you submit\n• Your declaration that you are at least 15 years old\n• Premium subscription status (payment is handled by Apple/Google)\n• Error logs (device model, OS, app version, account ID)\n• Advertising identifier and ad interaction data (personalized ads only with your explicit consent; on iOS also with your permission)',
+    fr: '• Adresse e-mail et nom d\'affichage (à l\'inscription ou via votre compte Google/Apple, y compris la photo de profil)\n• Favoris, liste de courses et menu (sur l\'appareil et dans Firebase)\n• Recettes, avis, notes, photos, signalements d\'erreur et signalements que vous envoyez\n• Votre déclaration d\'avoir au moins 15 ans\n• Statut de l\'abonnement Premium (paiement géré par Apple/Google)\n• Journaux d\'erreurs (modèle d\'appareil, système, version de l\'app, identifiant du compte)\n• Identifiant publicitaire et données d\'interaction publicitaire (publicités personnalisées uniquement avec votre consentement explicite ; sur iOS aussi avec votre autorisation)',
+    it: '• Indirizzo email e nome visualizzato (alla registrazione o dal tuo account Google/Apple, inclusa la foto profilo)\n• Preferiti, lista della spesa e menu (sul dispositivo e in Firebase)\n• Ricette, recensioni, valutazioni, foto, segnalazioni di errori e segnalazioni che invii\n• La tua dichiarazione di avere almeno 15 anni\n• Stato dell\'abbonamento Premium (il pagamento è gestito da Apple/Google)\n• Log degli errori (modello del dispositivo, sistema operativo, versione dell\'app, ID account)\n• Identificativo pubblicitario e dati di interazione con gli annunci (annunci personalizzati solo con il tuo consenso esplicito; su iOS anche con il tuo permesso)',
   },
   ppHowWeUse: {
     tr: '2. Verileri Nasıl Kullanırız',
@@ -2031,10 +2055,10 @@ export const TRANSLATIONS = {
     it: '2. Come Utilizziamo i Tuoi Dati',
   },
   ppHowWeUseBody: {
-    tr: '• Hesabınızı oluşturmak ve yönetmek\n• Favori ve alışveriş listelerinizi cihazlar arası senkronize etmek\n• Tarif önerilerinizi moderatörlerimize iletmek\n• Uygulama hatalarını tespit etmek (Sentry aracılığıyla, anonim)',
-    en: '• Create and manage your account\n• Sync your favorites and shopping list across devices\n• Forward your recipe suggestions to our moderators\n• Detect app errors (via Sentry, anonymously)',
-    fr: '• Créer et gérer votre compte\n• Synchroniser vos favoris et liste de courses entre appareils\n• Transmettre vos suggestions de recettes à nos modérateurs\n• Détecter les erreurs de l\'app (via Sentry, anonymement)',
-    it: '• Creare e gestire il tuo account\n• Sincronizzare preferiti e lista della spesa tra i dispositivi\n• Inviare i tuoi suggerimenti di ricette ai nostri moderatori\n• Rilevare errori dell\'app (tramite Sentry, in modo anonimo)',
+    tr: '• Hesabınızı oluşturmak ve yönetmek\n• Favori ve alışveriş listelerinizi cihazlar arası senkronize etmek\n• Tarif, yorum ve şikâyetleri incelemek; hukuka aykırı içeriği kaldırmak\n• Premium aboneliği yürütmek\n• Uygulama hatalarını tespit etmek ve güvenliği sağlamak (Sentry)\n• Reklam göstermek (rıza yoksa kişiselleştirilmemiş)\n• Yasal yükümlülükleri yerine getirmek',
+    en: '• Create and manage your account\n• Sync your favorites and shopping list across devices\n• Review recipes, reviews and reports; remove unlawful content\n• Run the Premium subscription\n• Detect app errors and keep the service secure (Sentry)\n• Show ads (non-personalized without your consent)\n• Comply with legal obligations',
+    fr: '• Créer et gérer votre compte\n• Synchroniser vos favoris et liste de courses entre appareils\n• Examiner les recettes, avis et signalements ; retirer les contenus illicites\n• Gérer l\'abonnement Premium\n• Détecter les erreurs et assurer la sécurité (Sentry)\n• Afficher des publicités (non personnalisées sans votre consentement)\n• Respecter nos obligations légales',
+    it: '• Creare e gestire il tuo account\n• Sincronizzare preferiti e lista della spesa tra i dispositivi\n• Esaminare ricette, recensioni e segnalazioni; rimuovere contenuti illeciti\n• Gestire l\'abbonamento Premium\n• Rilevare errori e garantire la sicurezza (Sentry)\n• Mostrare annunci (non personalizzati senza il tuo consenso)\n• Adempiere agli obblighi di legge',
   },
   ppDataSharing: {
     tr: '3. Veri Paylaşımı',
@@ -2043,10 +2067,10 @@ export const TRANSLATIONS = {
     it: '3. Condivisione dei Dati',
   },
   ppDataSharingBody: {
-    tr: 'Kişisel verilerinizi üçüncü taraflarla satmıyor veya kiralamıyoruz. Veriler yalnızca şu hizmet sağlayıcılarla paylaşılır:\n• Google Firebase Authentication (kimlik doğrulama)\n• Google Firestore (veritabanı)\n• Google Firebase Storage (tarif fotoğraflarının depolanması)\n• Google Firebase Analytics (anonim kullanım istatistikleri)\n• Sentry (anonim hata raporlama)\n• Expo (bildirim altyapısı)',
-    en: 'We do not sell or rent your personal data to third parties. Data is shared only with the following service providers:\n• Google Firebase Authentication (authentication)\n• Google Firestore (database)\n• Google Firebase Storage (storage of recipe photos)\n• Google Firebase Analytics (anonymous usage statistics)\n• Sentry (anonymous error reporting)\n• Expo (notification infrastructure)',
-    fr: 'Nous ne vendons ni ne louons vos données personnelles à des tiers. Les données sont partagées uniquement avec ces fournisseurs de services :\n• Google Firebase Authentication (authentification)\n• Google Firestore (base de données)\n• Google Firebase Storage (stockage des photos de recettes)\n• Google Firebase Analytics (statistiques d\'utilisation anonymes)\n• Sentry (rapport d\'erreur anonyme)\n• Expo (infrastructure de notification)',
-    it: 'Non vendiamo né affittiamo i tuoi dati personali a terzi. I dati vengono condivisi solo con i seguenti fornitori di servizi:\n• Google Firebase Authentication (autenticazione)\n• Google Firestore (database)\n• Google Firebase Storage (archiviazione foto ricette)\n• Google Firebase Analytics (statistiche di utilizzo anonime)\n• Sentry (segnalazione errori anonima)\n• Expo (infrastruttura notifiche)',
+    tr: 'Kişisel verilerinizi satmıyoruz. Veriler yalnızca şu hizmet sağlayıcılarla paylaşılır; sunucuları yurt dışında (başta ABD/AB) olduğundan aktarım KVKK md.9\'a uygun olarak yapılır:\n• Google — Firebase (kimlik doğrulama, veritabanı, dosya depolama), Google ile Giriş, AdMob (reklam)\n• Apple — Apple ile Giriş, App Store satın alma\n• RevenueCat — abonelik yönetimi (yalnızca hesap kimliği)\n• Sentry — hata raporlama (yalnızca hesap kimliği)\nOnaylanan tarifleriniz ve yorumlarınız görünen adınızla herkese açık yayınlanır. Ayrıntılar: Profil > KVKK Aydınlatma Metni.',
+    en: 'We do not sell your personal data. Data is shared only with the following service providers; their servers are abroad (mainly US/EU) and transfers are made in line with Article 9 of Turkey\'s data protection law (KVKK):\n• Google — Firebase (authentication, database, file storage), Google Sign-In, AdMob (ads)\n• Apple — Sign in with Apple, App Store purchases\n• RevenueCat — subscription management (account ID only)\n• Sentry — error reporting (account ID only)\nYour approved recipes and reviews are published with your display name. Details: Profile > Privacy Notice (KVKK).',
+    fr: 'Nous ne vendons pas vos données personnelles. Elles sont partagées uniquement avec les prestataires suivants ; leurs serveurs sont à l\'étranger (principalement États-Unis/UE) et les transferts respectent l\'article 9 de la loi turque KVKK :\n• Google — Firebase (authentification, base de données, stockage), connexion Google, AdMob (publicité)\n• Apple — connexion avec Apple, achats App Store\n• RevenueCat — gestion des abonnements (identifiant du compte uniquement)\n• Sentry — rapports d\'erreurs (identifiant du compte uniquement)\nVos recettes et avis approuvés sont publiés avec votre nom d\'affichage. Détails : Profil > Notice KVKK.',
+    it: 'Non vendiamo i tuoi dati personali. I dati sono condivisi solo con i seguenti fornitori; i loro server si trovano all\'estero (principalmente USA/UE) e i trasferimenti avvengono secondo l\'articolo 9 della legge turca KVKK:\n• Google — Firebase (autenticazione, database, archiviazione file), accesso con Google, AdMob (annunci)\n• Apple — accesso con Apple, acquisti App Store\n• RevenueCat — gestione abbonamenti (solo ID account)\n• Sentry — segnalazione errori (solo ID account)\nRicette e recensioni approvate sono pubblicate con il tuo nome visualizzato. Dettagli: Profilo > Informativa KVKK.',
   },
   ppDataRetention: {
     tr: '4. Veri Saklama',
@@ -2055,10 +2079,10 @@ export const TRANSLATIONS = {
     it: '4. Conservazione dei Dati',
   },
   ppDataRetentionBody: {
-    tr: 'Verileriniz hesabınız aktif olduğu sürece saklanır. Hesabınızı sildiğinizde tüm kişisel verileriniz kalıcı olarak silinir.',
-    en: 'Your data is stored as long as your account is active. When you delete your account, all your personal data is permanently deleted.',
-    fr: 'Vos données sont conservées tant que votre compte est actif. Lorsque vous supprimez votre compte, toutes vos données personnelles sont définitivement supprimées.',
-    it: 'I tuoi dati vengono conservati finché il tuo account è attivo. Quando elimini il tuo account, tutti i tuoi dati personali vengono eliminati definitivamente.',
+    tr: 'Verileriniz hesabınız açık olduğu sürece saklanır. Hesabınızı sildiğinizde (Profil > Hesabı Sil) hesap kaydınız, yorumlarınız, tarifleriniz, hata bildirimleriniz ve yüklediğiniz fotoğraflar silinir. Hizmet sağlayıcılardaki yedek ve kayıtlar kendi saklama sürelerinin sonunda silinir.',
+    en: 'Your data is kept while your account is open. When you delete your account (Profile > Delete Account), your account record, reviews, recipes, error reports and uploaded photos are deleted. Backups and logs at service providers are deleted at the end of their own retention periods.',
+    fr: 'Vos données sont conservées tant que votre compte est ouvert. Lorsque vous supprimez votre compte (Profil > Supprimer le compte), votre compte, vos avis, recettes, signalements d\'erreur et photos sont supprimés. Les sauvegardes et journaux des prestataires sont supprimés à la fin de leurs propres durées de conservation.',
+    it: 'I tuoi dati sono conservati finché il tuo account è aperto. Quando elimini l\'account (Profilo > Elimina account), vengono eliminati account, recensioni, ricette, segnalazioni di errori e foto caricate. Backup e log presso i fornitori vengono eliminati alla fine dei rispettivi periodi di conservazione.',
   },
   ppYourRights: {
     tr: '5. Haklarınız',
@@ -2067,10 +2091,10 @@ export const TRANSLATIONS = {
     it: '5. I Tuoi Diritti',
   },
   ppYourRightsBody: {
-    tr: '• Verilerinize erişme hakkı\n• Verilerinizin düzeltilmesini talep etme hakkı\n• Hesabınızı ve tüm verilerinizi silme hakkı (Profil > Hesabı Sil)\n• Veri taşınabilirliği hakkı',
-    en: '• Right to access your data\n• Right to request correction of your data\n• Right to delete your account and all data (Profile > Delete Account)\n• Right to data portability',
-    fr: '• Droit d\'accéder à vos données\n• Droit de demander la correction de vos données\n• Droit de supprimer votre compte et toutes les données (Profil > Supprimer le compte)\n• Droit à la portabilité des données',
-    it: '• Diritto di accedere ai tuoi dati\n• Diritto di richiedere la correzione dei tuoi dati\n• Diritto di eliminare il tuo account e tutti i dati (Profilo > Elimina account)\n• Diritto alla portabilità dei dati',
+    tr: 'KVKK md.11 kapsamında; verilerinizin işlenip işlenmediğini öğrenme, bilgi talep etme, işleme amacını öğrenme, aktarıldığı üçüncü kişileri bilme, düzeltme, silme, bu işlemlerin üçüncü kişilere bildirilmesini isteme, otomatik analiz sonucu aleyhinize çıkan sonuca itiraz etme ve zararın giderilmesini talep etme haklarına sahipsiniz. Hesabınızı Profil > Hesabı Sil ile kendiniz silebilirsiniz. Başvuru yöntemi: Profil > KVKK Aydınlatma Metni.',
+    en: 'Under Article 11 of KVKK you may learn whether your data is processed, request information, learn the purpose of processing, know the third parties it is transferred to, request correction or deletion and notification of these to third parties, object to adverse results of solely automated analysis, and claim compensation for damage. You can delete your account yourself via Profile > Delete Account. How to apply: Profile > Privacy Notice (KVKK).',
+    fr: 'Conformément à l\'article 11 de la KVKK, vous pouvez savoir si vos données sont traitées, demander des informations, connaître la finalité du traitement et les tiers destinataires, demander la rectification ou la suppression et leur notification aux tiers, vous opposer à un résultat défavorable issu d\'une analyse exclusivement automatisée et demander réparation d\'un préjudice. Vous pouvez supprimer votre compte via Profil > Supprimer le compte. Procédure : Profil > Notice KVKK.',
+    it: 'Ai sensi dell\'articolo 11 della KVKK puoi sapere se i tuoi dati sono trattati, chiedere informazioni, conoscere la finalità del trattamento e i terzi destinatari, chiedere rettifica o cancellazione e la loro notifica ai terzi, opporti a esiti sfavorevoli di analisi esclusivamente automatizzate e chiedere il risarcimento del danno. Puoi eliminare il tuo account da Profilo > Elimina account. Come presentare richiesta: Profilo > Informativa KVKK.',
   },
   ppSecurity: {
     tr: '6. Güvenlik',
@@ -2091,10 +2115,10 @@ export const TRANSLATIONS = {
     it: '7. Contatto',
   },
   ppContactBody: {
-    tr: 'Gizlilik ile ilgili sorularınız için: info@yoreseltarif.com',
-    en: 'For privacy-related questions: info@yoreseltarif.com',
-    fr: 'Pour toute question relative à la confidentialité : info@yoreseltarif.com',
-    it: 'Per domande sulla privacy: info@yoreseltarif.com',
+    tr: 'Veri sorumlusu: Çağatay YILMAZ\nAdres: Gültepe Mah. 11. Toptancılar Sk. No:23 Merkez/Sivas\nE-posta: info@yoreseltarif.com',
+    en: 'Data controller: Çağatay YILMAZ\nAddress: Gültepe Mah. 11. Toptancılar Sk. No:23 Merkez/Sivas, Türkiye\nEmail: info@yoreseltarif.com',
+    fr: 'Responsable du traitement : Çağatay YILMAZ\nAdresse : Gültepe Mah. 11. Toptancılar Sk. No:23 Merkez/Sivas, Turquie\nE-mail : info@yoreseltarif.com',
+    it: 'Titolare del trattamento: Çağatay YILMAZ\nIndirizzo: Gültepe Mah. 11. Toptancılar Sk. No:23 Merkez/Sivas, Turchia\nEmail: info@yoreseltarif.com',
   },
   termsOfService: {
     tr: 'Kullanım Koşulları',
@@ -2133,10 +2157,10 @@ export const TRANSLATIONS = {
     it: '2. Utilizzo dell\'Account',
   },
   tosSection2Body: {
-    tr: '• Hesabınızı yalnızca kendiniz kullanabilirsiniz.\n• Hesap bilgilerinizin gizliliğini korumak sizin sorumluluğunuzdadır.\n• Hesabınız üzerinden gerçekleştirilen tüm işlemlerden siz sorumlusunuz.\n• Sahte veya yanıltıcı bilgilerle hesap oluşturmak yasaktır.',
-    en: '• Your account is for your personal use only.\n• You are responsible for keeping your account credentials confidential.\n• You are responsible for all activity that occurs under your account.\n• Creating accounts with false or misleading information is prohibited.',
-    fr: '• Votre compte est destiné à votre usage personnel uniquement.\n• Vous êtes responsable de la confidentialité de vos identifiants de connexion.\n• Vous êtes responsable de toutes les activités qui se produisent sous votre compte.\n• La création de comptes avec de fausses informations est interdite.',
-    it: '• Il tuo account è per uso personale esclusivo.\n• Sei responsabile della riservatezza delle tue credenziali.\n• Sei responsabile di tutte le attività che si verificano sotto il tuo account.\n• La creazione di account con informazioni false è vietata.',
+    tr: '• Hesabınızı yalnızca kendiniz kullanabilirsiniz.\n• Hesap bilgilerinizin gizliliğini korumak sizin sorumluluğunuzdadır.\n• Hesabınız üzerinden gerçekleştirilen tüm işlemlerden siz sorumlusunuz.\n• Sahte veya yanıltıcı bilgilerle hesap oluşturmak yasaktır.\n• Hesap oluşturmak için 15 yaşından büyük olmanız gerekir.',
+    en: '• Your account is for your personal use only.\n• You are responsible for keeping your account credentials confidential.\n• You are responsible for all activity that occurs under your account.\n• Creating accounts with false or misleading information is prohibited.\n• You must be at least 15 years old to create an account.',
+    fr: '• Votre compte est destiné à votre usage personnel uniquement.\n• Vous êtes responsable de la confidentialité de vos identifiants de connexion.\n• Vous êtes responsable de toutes les activités qui se produisent sous votre compte.\n• La création de comptes avec de fausses informations est interdite.\n• Vous devez avoir au moins 15 ans pour créer un compte.',
+    it: '• Il tuo account è per uso personale esclusivo.\n• Sei responsabile della riservatezza delle tue credenziali.\n• Sei responsabile di tutte le attività che si verificano sotto il tuo account.\n• La creazione di account con informazioni false è vietata.\n• Devi avere almeno 15 anni per creare un account.',
   },
   tosSection3Title: {
     tr: '3. Kabul Edilemez Kullanım',
@@ -2205,10 +2229,10 @@ export const TRANSLATIONS = {
     it: '7. Contatto',
   },
   tosSection7Body: {
-    tr: 'Kullanım koşullarıyla ilgili sorularınız için: info@yoreseltarif.com',
-    en: 'For questions about the terms of service: info@yoreseltarif.com',
-    fr: 'Pour toute question relative aux conditions d\'utilisation : info@yoreseltarif.com',
-    it: 'Per domande sui termini di servizio: info@yoreseltarif.com',
+    tr: 'Hizmet sağlayıcı: Çağatay YILMAZ — Gültepe Mah. 11. Toptancılar Sk. No:23 Merkez/Sivas\nSorularınız ve hukuka aykırı içerik bildirimleri için: info@yoreseltarif.com',
+    en: 'Service provider: Çağatay YILMAZ — Gültepe Mah. 11. Toptancılar Sk. No:23 Merkez/Sivas, Türkiye\nFor questions and reports of unlawful content: info@yoreseltarif.com',
+    fr: 'Fournisseur du service : Çağatay YILMAZ — Gültepe Mah. 11. Toptancılar Sk. No:23 Merkez/Sivas, Turquie\nPour vos questions et signalements de contenus illicites : info@yoreseltarif.com',
+    it: 'Fornitore del servizio: Çağatay YILMAZ — Gültepe Mah. 11. Toptancılar Sk. No:23 Merkez/Sivas, Turchia\nPer domande e segnalazioni di contenuti illeciti: info@yoreseltarif.com',
   },
 
   ppAgeRestriction: {
@@ -2218,10 +2242,10 @@ export const TRANSLATIONS = {
     it: '8. Restrizione di Età',
   },
   ppAgeRestrictionBody: {
-    tr: 'Bu uygulama 13 yaşın altındaki kullanıcılara yönelik değildir. 13 yaşın altındaki bireylerden bilerek veri toplamıyoruz. 13 yaşın altında olduğunu düşündüğünüz bir kullanıcıya ait veriler hakkında bilgi sahibi olursanız lütfen bizimle iletişime geçin.',
-    en: 'This app is not intended for users under the age of 13. We do not knowingly collect data from individuals under 13. If you become aware of any data belonging to a user you believe is under 13, please contact us.',
-    fr: 'Cette application n\'est pas destinée aux utilisateurs de moins de 13 ans. Nous ne collectons pas sciemment de données auprès de personnes de moins de 13 ans. Si vous avez connaissance de données appartenant à un utilisateur que vous pensez avoir moins de 13 ans, veuillez nous contacter.',
-    it: 'Questa app non è destinata agli utenti di età inferiore ai 13 anni. Non raccogliamo consapevolmente dati da persone di età inferiore ai 13 anni. Se vieni a conoscenza di dati appartenenti a un utente che ritieni abbia meno di 13 anni, ti preghiamo di contattarci.',
+    tr: 'Hesap oluşturmak, yorum yapmak ve tarif paylaşmak için 15 yaşından büyük olmanız gerekir (5651 sayılı Kanun ek 4. madde); hesap kullanımından önce bu yönde beyanınız alınır. 15 yaşından küçük olduğu anlaşılan kullanıcıların hesapları kapatılır. Tarifler hesap olmadan görüntülenebilir.',
+    en: 'You must be at least 15 years old to create an account, post reviews or share recipes (Turkish Law No. 5651, Additional Article 4); we ask for your declaration before account use. Accounts of users found to be under 15 are closed. Recipes can be browsed without an account.',
+    fr: 'Vous devez avoir au moins 15 ans pour créer un compte, publier des avis ou partager des recettes (loi turque n° 5651, article additionnel 4) ; une déclaration vous est demandée avant l\'utilisation du compte. Les comptes des utilisateurs de moins de 15 ans sont fermés. Les recettes peuvent être consultées sans compte.',
+    it: 'Devi avere almeno 15 anni per creare un account, pubblicare recensioni o condividere ricette (legge turca n. 5651, articolo aggiuntivo 4); ti chiediamo una dichiarazione prima dell\'uso dell\'account. Gli account di utenti con meno di 15 anni vengono chiusi. Le ricette sono consultabili senza account.',
   },
 
   // Menu Tab

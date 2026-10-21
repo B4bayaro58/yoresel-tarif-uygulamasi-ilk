@@ -10,7 +10,9 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { Image } from 'expo-image';
-import { Palette, Settings, LogOut, User as UserIcon, ChevronRight, Trash2, Shield, Camera, Crown, UserX } from 'lucide-react-native';
+import { Palette, Settings, LogOut, User as UserIcon, ChevronRight, Trash2, Shield, Camera, Crown, UserX, FileText, Megaphone } from 'lucide-react-native';
+import { AdsConsent } from 'react-native-google-mobile-ads';
+import { isUmpRegion, openAdConsentPreferences } from '../services/adConsentService';
 import { useApp } from '../contexts/AppContext';
 import { getCountryFlag } from '../constants/countryFlags';
 import { useAuth } from '../contexts/AuthContext';
@@ -491,6 +493,50 @@ export default function ProfileScreen({ navigation }) {
             </View>
             <Text style={[styles.settingTitle, { color: colors.text }]}>
               {translate('privacyPolicy')}
+            </Text>
+          </View>
+          <ChevronRight color={colors.textSecondary} size={20} />
+        </TouchableOpacity>
+
+        {/* KVKK Aydınlatma Metni */}
+        <TouchableOpacity
+          style={[styles.settingItem, { backgroundColor: colors.card, borderColor: colors.border }]}
+          onPress={() => navigation.navigate('LegalText', { doc: 'kvkk' })}
+          accessibilityRole="button"
+          accessibilityLabel={translate('kvkkNotice')}
+        >
+          <View style={styles.settingLeft}>
+            <View style={[styles.iconContainer, { backgroundColor: colors.primary + '20' }]}>
+              <FileText color={colors.primary} size={20} />
+            </View>
+            <Text style={[styles.settingTitle, { color: colors.text }]}>
+              {translate('kvkkNotice')}
+            </Text>
+          </View>
+          <ChevronRight color={colors.textSecondary} size={20} />
+        </TouchableOpacity>
+
+        {/* Reklam Tercihleri -- KVKK: açık rıza her an geri alınabilmeli. AB/
+            İngiltere'de rıza Google'ın UMP formunda, orada onun gizlilik
+            seçenekleri formu açılır. */}
+        <TouchableOpacity
+          style={[styles.settingItem, { backgroundColor: colors.card, borderColor: colors.border }]}
+          onPress={() => {
+            if (isUmpRegion()) {
+              AdsConsent.showPrivacyOptionsForm().catch(() => {});
+            } else {
+              openAdConsentPreferences();
+            }
+          }}
+          accessibilityRole="button"
+          accessibilityLabel={translate('adPreferences')}
+        >
+          <View style={styles.settingLeft}>
+            <View style={[styles.iconContainer, { backgroundColor: colors.primary + '20' }]}>
+              <Megaphone color={colors.primary} size={20} />
+            </View>
+            <Text style={[styles.settingTitle, { color: colors.text }]}>
+              {translate('adPreferences')}
             </Text>
           </View>
           <ChevronRight color={colors.textSecondary} size={20} />

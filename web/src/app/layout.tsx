@@ -6,6 +6,8 @@ import { AuthProvider } from '@/contexts/AuthContext'
 import { AppProvider } from '@/contexts/AppContext'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import ConsentBanner from '@/components/ConsentBanner'
+import AgeGate from '@/components/AgeGate'
 
 // Yayıncı ID'si tanımlıysa AdSense script'i yüklenir (bkz. AdSlot.tsx).
 // Tanımlı değilse script hiç eklenmez -- boşuna network isteği/CSP uyarısı yok.
@@ -78,6 +80,8 @@ export default function RootLayout({
               </main>
               <Footer />
             </div>
+            <ConsentBanner />
+            <AgeGate />
           </AppProvider>
         </AuthProvider>
       </body>

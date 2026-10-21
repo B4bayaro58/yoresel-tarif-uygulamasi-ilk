@@ -1,13 +1,30 @@
 import LegalPageLayout from '@/components/LegalPageLayout'
+// @ts-ignore
+import { CONTROLLER, LEGAL_UPDATED_AT, MIN_AGE } from '@shared/legalTexts'
 
 export const metadata = { title: 'Kullanım Koşulları — Yöresel Tarif' }
 
 export default function KullanimKosullariPage() {
   return (
-    <LegalPageLayout emoji="📜" title="Kullanım Koşulları" updatedAt="11 Ekim 2026">
+    <LegalPageLayout emoji="📜" title="Kullanım Koşulları" updatedAt={LEGAL_UPDATED_AT}>
       <p>
         Yöresel Tarif sitesini (&quot;<strong>Site</strong>&quot;) kullanarak aşağıdaki koşulları kabul etmiş
         sayılırsınız. Lütfen siteyi kullanmadan önce bu koşulları dikkatlice okuyun.
+      </p>
+
+      <h2>Hizmet Sağlayıcı</h2>
+      <p>
+        Yöresel Tarif web sitesi ve mobil uygulaması {CONTROLLER.name} tarafından sunulmaktadır.
+        Adres: {CONTROLLER.address} — E-posta:{' '}
+        <a href={`mailto:${CONTROLLER.email}`} className="underline">{CONTROLLER.email}</a>
+      </p>
+
+      <h2>Yaş Sınırı</h2>
+      <p>
+        Hesap oluşturmak, yorum yapmak ve tarif paylaşmak için {MIN_AGE} yaşından büyük olmanız gerekir
+        (5651 sayılı Kanun ek 4. madde). Hesap kullanımından önce bu yönde beyan alınır; {MIN_AGE} yaşından
+        küçük olduğu anlaşılan kullanıcıların hesapları kapatılır. Tarifler üye olmadan herkes tarafından
+        görüntülenebilir.
       </p>
 
       <h2>Hesap Sorumluluğu</h2>
@@ -21,6 +38,8 @@ export default function KullanimKosullariPage() {
         &quot;Tarif Öner&quot; özelliği ile paylaştığınız tarifler, yayınlanmadan önce editör ekibimiz tarafından
         incelenir. Paylaştığınız içeriğin size ait olduğunu veya paylaşma hakkına sahip olduğunuzu kabul
         edersiniz. Uygunsuz, yanıltıcı veya telif hakkı ihlali içeren tarifler yayınlanmadan reddedilir.
+        Yorumlar ve diğer kullanıcı içerikleri <a href="/icerik-politikasi" className="underline">İçerik
+        Politikası</a>&apos;na tabidir; hukuka aykırı içerikler kaldırılır ve ilgili hesaplar engellenebilir.
       </p>
 
       <h2>Yasaklı Kullanımlar</h2>
@@ -49,6 +68,12 @@ export default function KullanimKosullariPage() {
         mevcut dönemin sonunda geçerli olur ve o tarihe kadar Premium özellikleri kullanmaya devam edersiniz.
         İade talepleri ilgili mağazanın (Apple veya Google) iade politikasına tabidir. Uygulamayı silmek
         aboneliği iptal etmez.
+      </p>
+
+      <h2>Kişisel Veriler</h2>
+      <p>
+        Kişisel verileriniz <a href="/kvkk" className="underline">KVKK Aydınlatma Metni</a> ve{' '}
+        <a href="/gizlilik-politikasi" className="underline">Gizlilik Politikası</a> kapsamında işlenir.
       </p>
 
       <h2>Değişiklikler</h2>

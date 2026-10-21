@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Eye, EyeOff, Mail, Lock, LogIn, UserPlus, User, X } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
@@ -229,6 +230,19 @@ export default function LoginPage() {
                   : t(isRegister ? 'registerButton' : 'loginButton')}
               </button>
             </form>
+
+            {/* Aydınlatma bir bilgilendirmedir, onaya bağlanamaz (KVKK İlke
+                Kararı 2026/347) -- bu yüzden onay kutusu yok, sadece bağlantı. */}
+            <p className="text-xs mt-3 leading-relaxed" style={{ color: 'var(--text-muted)' }}>
+              Kişisel verileriniz{' '}
+              <Link href="/kvkk" className="underline">KVKK Aydınlatma Metni</Link> kapsamında işlenir.
+              {isRegister && (
+                <>
+                  {' '}Kayıt olarak <Link href="/kullanim-kosullari" className="underline">Kullanım Koşulları</Link>&apos;nı
+                  kabul etmiş olursunuz.
+                </>
+              )}
+            </p>
 
             <div className="flex items-center gap-3 mt-4">
               <div className="flex-1 h-px" style={{ backgroundColor: 'var(--border)' }} />

@@ -4,6 +4,7 @@ import { BannerAd, BannerAdSize } from 'react-native-google-mobile-ads';
 import { useApp } from '../contexts/AppContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { BANNER_AD_UNIT_ID } from '../constants/adUnits';
+import { getAdRequestOptions } from '../services/adConsentService';
 
 const SIZE_MAP = {
   banner: BannerAdSize.BANNER,
@@ -24,6 +25,7 @@ export default function AdBanner({ size = 'banner', style }) {
       <BannerAd
         unitId={BANNER_AD_UNIT_ID}
         size={SIZE_MAP[size] || BannerAdSize.BANNER}
+        requestOptions={getAdRequestOptions()}
         onAdFailedToLoad={() => setFailed(true)}
       />
     </View>

@@ -299,7 +299,20 @@ export default function LoginScreen() {
               >
                 <Text style={styles.legalLinkText}>{translate('privacyPolicy')}</Text>
               </TouchableOpacity>
+              <Text style={styles.legalSeparator}>·</Text>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('LegalText', { doc: 'kvkk' })}
+                accessibilityRole="button"
+                accessibilityLabel={translate('kvkkNotice')}
+              >
+                <Text style={styles.legalLinkText}>{translate('kvkkNotice')}</Text>
+              </TouchableOpacity>
             </View>
+            {/* Aydınlatma bir bilgilendirmedir, onaya bağlanamaz (KVKK İlke
+                Kararı 2026/347) -- onay kutusu yok, sadece bilgi. */}
+            <Text style={[styles.legalLinkText, { textAlign: 'center', marginTop: 6, textDecorationLine: 'none' }]}>
+              {translate('kvkkLoginNotice')}
+            </Text>
 
           </View>
         </ScrollView>
@@ -528,6 +541,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 16,
     gap: 8,
+    flexWrap: 'wrap',
   },
   legalLinkText: {
     fontSize: 12,

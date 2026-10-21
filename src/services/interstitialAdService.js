@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AdEventType, InterstitialAd } from 'react-native-google-mobile-ads';
 import { INTERSTITIAL_AD_UNIT_ID } from '../constants/adUnits';
+import { getAdRequestOptions } from './adConsentService';
 
 const VIEW_COUNT_KEY = 'admobInterstitial_recipeViewCount';
 const SHOW_EVERY_N_VIEWS = 3; // her 3. tarif açılışında bir kez göster
@@ -9,7 +10,8 @@ let interstitial = null;
 let isLoaded = false;
 
 function preload() {
-  interstitial = InterstitialAd.createForAdRequest(INTERSTITIAL_AD_UNIT_ID);
+  // Her yeniden yüklemede güncel KVKK rıza durumu okunur.
+  interstitial = InterstitialAd.createForAdRequest(INTERSTITIAL_AD_UNIT_ID, getAdRequestOptions());
   isLoaded = false;
 
   const unsubLoaded = interstitial.addAdEventListener(AdEventType.LOADED, () => {

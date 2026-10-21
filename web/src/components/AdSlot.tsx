@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react'
 import clsx from 'clsx'
+import { getAdConsent } from '@/lib/adConsent'
 
 // Google AdSense hesabı henüz onaylanmadı/kurulmadı. Env değişkenleri
 // (NEXT_PUBLIC_ADSENSE_CLIENT_ID + slot ID'leri) ayarlanana kadar bu bileşen
@@ -24,7 +25,11 @@ export default function AdSlot({ slot, format = 'auto', className, label }: AdSl
     if (!ADSENSE_CLIENT_ID || !slot || pushedRef.current) return
     try {
       // @ts-ignore
-      ;(window.adsbygoogle = window.adsbygoogle || []).push({})
+      const queue = (window.adsbygoogle = window.adsbygoogle || [])
+      // KVKK açık rızası yoksa (seçim yapılmadı veya reddedildi)
+      // kişiselleştirilmemiş reklam iste -- bkz. lib/adConsent.ts
+      queue.requestNonPersonalizedAds = getAdConsent() === 'granted' ? 0 : 1
+      queue.push({})
       pushedRef.current = true
     } catch {
       // AdSense script henüz yüklenmemiş olabilir -- sessizce geç

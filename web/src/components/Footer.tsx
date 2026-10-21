@@ -4,6 +4,9 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useApp } from '@/contexts/AppContext'
 import { Instagram, Youtube, Twitter, Mail, MapPin, Phone } from 'lucide-react'
+import ConsentPreferencesButton from '@/components/ConsentPreferencesButton'
+// @ts-ignore
+import { CONTROLLER } from '@shared/legalTexts'
 
 const FOOTER_LINKS = {
   discover: [
@@ -21,6 +24,7 @@ const FOOTER_LINKS = {
     { label: 'Gizlilik Politikası', href: '/gizlilik-politikasi' },
     { label: 'Kullanım Koşulları', href: '/kullanim-kosullari' },
     { label: 'KVKK Aydınlatma Metni', href: '/kvkk' },
+    { label: 'Reklam Açık Rıza Metni', href: '/acik-riza-metni' },
     { label: 'Çerez Politikası', href: '/cerez-politikasi' },
     { label: 'İçerik Politikası', href: '/icerik-politikasi' },
   ],
@@ -105,7 +109,7 @@ export default function Footer() {
                 </a>
                 <span className="flex items-center gap-2">
                   <MapPin size={14} style={{ color: 'var(--primary)' }} />
-                  Türkiye
+                  {CONTROLLER.address}
                 </span>
               </div>
 
@@ -202,6 +206,8 @@ export default function Footer() {
                 <Link href="/cerez-politikasi" className="underline underline-offset-2 hover:opacity-80 transition-opacity">
                   Çerezler
                 </Link>
+                &nbsp;·&nbsp;
+                <ConsentPreferencesButton className="underline underline-offset-2 hover:opacity-80 transition-opacity" />
               </p>
             </div>
           </div>

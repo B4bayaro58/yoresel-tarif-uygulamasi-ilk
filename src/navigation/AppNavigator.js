@@ -19,6 +19,7 @@ import AdminPanelScreen from '../screens/AdminPanelScreen';
 import MenuScreen from '../screens/MenuScreen';
 import PrivacyPolicyScreen from '../screens/PrivacyPolicyScreen';
 import TermsOfServiceScreen from '../screens/TermsOfServiceScreen';
+import LegalTextScreen from '../screens/LegalTextScreen';
 import AddRecipeScreen from '../screens/AddRecipeScreen';
 import ManageRecipesScreen from '../screens/ManageRecipesScreen';
 import ManageUsersScreen from '../screens/ManageUsersScreen';
@@ -249,6 +250,17 @@ function AuthStack() {
           headerTintColor: colors.text,
         }}
       />
+      <Stack.Screen
+        name="LegalText"
+        component={LegalTextScreen}
+        options={({ route }) => ({
+          headerShown: true,
+          headerTitle: translate(route.params?.doc === 'adConsent' ? 'adConsentText' : 'kvkkNotice'),
+          headerBackTitle: translate('back'),
+          headerStyle: { backgroundColor: colors.background },
+          headerTintColor: colors.text,
+        })}
+      />
     </Stack.Navigator>
   );
 }
@@ -401,6 +413,14 @@ function MainStack() {
           headerTitle: translate('privacyPolicy'),
           headerBackTitle: translate('back'),
         }}
+      />
+      <Stack.Screen
+        name="LegalText"
+        component={LegalTextScreen}
+        options={({ route }) => ({
+          headerTitle: translate(route.params?.doc === 'adConsent' ? 'adConsentText' : 'kvkkNotice'),
+          headerBackTitle: translate('back'),
+        })}
       />
       <Stack.Screen
         name="TermsOfService"

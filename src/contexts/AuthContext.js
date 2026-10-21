@@ -38,6 +38,9 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isGuest, setIsGuest] = useState(false);
+  // 15 yaş beyanı (5651 ek 4 + Yaş Doğrulama Yönetmeliği). null = henüz
+  // bilinmiyor / okunamadı -- bu durumda AgeGateModal engellemez.
+  const [ageConfirmed, setAgeConfirmed] = useState(null);
   const [appleSignInAvailable, setAppleSignInAvailable] = useState(false);
 
   useEffect(() => {
@@ -63,11 +66,13 @@ export const AuthProvider = ({ children }) => {
             if (snap.exists() && snap.data().isAdmin === true) {
               setIsAdmin(true);
             }
+            setAgeConfirmed(snap.exists() && snap.data().ageConfirmed15 === true);
           })
-          .catch(() => {});
+          .catch(() => setAgeConfirmed(null));
       } else {
         setUser(null);
         setIsAdmin(false);
+        setAgeConfirmed(null);
         setCurrentUserId(null);
         setSentryUser(null);
         setLoading(false);
@@ -266,7 +271,15 @@ export const AuthProvider = ({ children }) => {
       const reviewsSnap = await getDocs(
         query(collection(db, 'reviews'), where('userId', '==', uid))
       );
+      const reviewPhotoUrls = reviewsSnap.docs.map(d => d.data().photoUrl).filter(Boolean);
       reviewsSnap.forEach(d => batch.delete(d.ref));
+
+      // Tarif hata bildirimleri uid + e-posta içeriyor -- hesapla birlikte
+      // silinmeli (KVKK md.7).
+      const errorReportsSnap = await getDocs(
+        query(collection(db, 'recipeErrorReports'), where('userId', '==', uid))
+      );
+      errorReportsSnap.forEach(d => batch.delete(d.ref));
 
       // Delete user's pending recipes
       const recipesSnap = await getDocs(
@@ -281,7 +294,7 @@ export const AuthProvider = ({ children }) => {
       // temizle (profil fotoğrafı + gönderilen tariflerin fotoğrafları) --
       // hesap silme politikasının "ilişkili tüm veriler" şartı Storage'ı da
       // kapsıyor (bkz. mağaza inceleme denetimi 2026-08-09).
-      await Promise.all([avatarUrl, ...recipePhotoUrls].map(deleteImageByUrl));
+      await Promise.all([avatarUrl, ...recipePhotoUrls, ...reviewPhotoUrls].map(deleteImageByUrl));
 
       // Apple ile giriş yapan hesaplarda uygulamanın Apple token'ı iptal
       // edilmeli (App Store kuralı 5.1.1(v)). Başarısız olursa silmeyi
@@ -324,8 +337,37 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // merge: kayıt/Google/Apple akışının oluşturduğu users/{uid} dokümanındaki
+  // diğer alanlara dokunma (firestore.rules sahibin bu alanları yazmasına
+  // izin veriyor; isAdmin/isBlocked değişmediği sürece).
+  const confirmAge = async () => {
+    if (!auth.currentUser) return;
+    await setDoc(
+      doc(db, 'users', auth.currentUser.uid),
+      { ageConfirmed15: true, ageConfirmedAt: new Date().toISOString() },
+      { merge: true }
+    );
+    setAgeConfirmed(true);
+  };
+
+  const declineAge = async () => {
+    if (!auth.currentUser) return;
+    try {
+      await setDoc(
+        doc(db, 'users', auth.currentUser.uid),
+        { ageDeclaredUnder15: true, ageDeclaredAt: new Date().toISOString() },
+        { merge: true }
+      );
+    } finally {
+      await signOut(auth);
+    }
+  };
+
   const value = {
     user,
+    ageConfirmed,
+    confirmAge,
+    declineAge,
     isAdmin,
     isGuest,
     loading,
