@@ -41,7 +41,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ])
     nativeRecipeEntries = publicSnap.docs
       .filter((d) => !d.data().overridesStaticId)
-      .map((d) => ({ url: `${SITE_URL}/recipes/${d.id}`, lastModified: new Date() }))
+      .map((d) => ({ url: `${SITE_URL}/recipes/${encodeURIComponent(d.id)}`, lastModified: new Date() }))
     overrideSnap.docs
       .filter((d) => !PUBLIC_STATUSES.includes(d.data().status))
       .forEach((d) => hiddenStaticIds.add(String(d.data().overridesStaticId)))
@@ -52,7 +52,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRecipeEntries: MetadataRoute.Sitemap = localRecipes
     .filter((r) => !hiddenStaticIds.has(String(r.id)))
     .map((r) => ({
-      url: `${SITE_URL}/recipes/${r.id}`,
+      url: `${SITE_URL}/recipes/${encodeURIComponent(String(r.id))}`,
       lastModified: new Date(),
     }))
 

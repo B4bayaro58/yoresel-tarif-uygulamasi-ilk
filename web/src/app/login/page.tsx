@@ -38,7 +38,7 @@ const inputBase: React.CSSProperties = {
 
 export default function LoginPage() {
   const router = useRouter()
-  const { user, login, register, loginWithGoogle, loginWithApple, loginAsGuest, resetPassword } = useAuth()
+  const { user, login, register, loginWithGoogle, loginWithApple, resetPassword } = useAuth()
   const { t } = useApp()
 
   const [isRegister, setIsRegister] = useState(false)
@@ -48,7 +48,6 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const [guestLoading, setGuestLoading] = useState(false)
   const [googleLoading, setGoogleLoading] = useState(false)
   const [appleLoading, setAppleLoading] = useState(false)
 
@@ -73,14 +72,6 @@ export default function LoginPage() {
     }
     catch (err: any) { setError(mapFirebaseError(err.code || '')) }
     finally { setLoading(false) }
-  }
-
-  const handleGuestLogin = async () => {
-    setError('')
-    setGuestLoading(true)
-    try { await loginAsGuest(); router.push('/') }
-    catch { setError('Bir hata oluştu. Lütfen tekrar deneyin.') }
-    finally { setGuestLoading(false) }
   }
 
   const handleGoogleSignIn = async () => {
@@ -281,9 +272,8 @@ export default function LoginPage() {
 
             <button
               type="button"
-              onClick={handleGuestLogin}
-              disabled={guestLoading}
-              className="w-full text-center text-sm mt-3 underline underline-offset-2 hover:opacity-70 transition-opacity disabled:opacity-50"
+              onClick={() => router.push('/')}
+              className="w-full text-center text-sm mt-3 underline underline-offset-2 hover:opacity-70 transition-opacity"
               style={{ color: 'var(--text-muted)' }}
             >
               {t('continueAsGuest')}

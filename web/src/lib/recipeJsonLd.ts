@@ -19,7 +19,7 @@ function toIsoDuration(minutes: number | undefined): string | undefined {
 // zengin sonuç kaybı) riski taşıyor. Gerçek bir `Reviews` koleksiyonundan
 // toplanan bir ratingCount elde edilirse o zaman eklenmeli.
 export function buildRecipeJsonLd(recipe: Recipe) {
-  const url = `${SITE_URL}/recipes/${recipe.id}`
+  const url = `${SITE_URL}/recipes/${encodeURIComponent(String(recipe.id))}`
 
   return {
     '@context': 'https://schema.org',

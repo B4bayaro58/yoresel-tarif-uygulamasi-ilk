@@ -16,7 +16,6 @@ import {
   GoogleAuthProvider,
   OAuthProvider,
   signOut,
-  signInAnonymously,
   updateProfile,
   sendPasswordResetEmail,
 } from 'firebase/auth'
@@ -32,7 +31,6 @@ interface AuthContextType {
   loginWithGoogle: () => Promise<void>
   loginWithApple: () => Promise<void>
   logout: () => Promise<void>
-  loginAsGuest: () => Promise<void>
   resetPassword: (email: string) => Promise<void>
 }
 
@@ -124,16 +122,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await signOut(auth)
   }
 
-  const loginAsGuest = async () => {
-    await signInAnonymously(auth)
-  }
-
   const resetPassword = async (email: string) => {
     await sendPasswordResetEmail(auth, email)
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading, isAdmin, login, register, loginWithGoogle, loginWithApple, logout, loginAsGuest, resetPassword }}>
+    <AuthContext.Provider value={{ user, loading, isAdmin, login, register, loginWithGoogle, loginWithApple, logout, resetPassword }}>
       {children}
     </AuthContext.Provider>
   )
