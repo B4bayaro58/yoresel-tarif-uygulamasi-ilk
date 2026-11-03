@@ -5,7 +5,10 @@
       "namespace": "android_app",
       "package_name": "com.cagatay58.yoreseltarifuygulamasi",
       "sha256_cert_fingerprints": [
-        "19:2E:9D:75:DC:17:FF:BC:FB:FE:45:87:C5:88:1D:55:68:2B:B1:8B:EC:5D:47:03:A4:20:D4:4F:A5:BB:73:0F"
+        "19:2E:9D:75:DC:17:FF:BC:FB:FE:45:87:C5:88:1D:55:68:2B:B1:8B:EC:5D:47:03:A4:20:D4:4F:A5:BB:73:0F",
+        "7A:5A:0D:69:74:16:52:21:7E:64:63:C4:66:8B:37:AC:D9:FB:28:32:AD:8E:FC:D1:CA:2B:8D:FF:22:2C:93:1F",
+        "8F:B4:FA:CC:BA:EE:2D:D4:5B:92:5A:42:80:B5:FE:9D:CB:8D:11:8F:D8:6F:28:13:E8:4D:25:F6:DB:FF:6D:AB",
+        "FA:C7:22:99:8F:A6:CE:C9:5D:5C:50:4D:2F:D3:59:64:CC:8D:AB:AF:4B:31:71:9D:7D:B5:09:64:3C:00:88:C7"
       ]
     }
   }
