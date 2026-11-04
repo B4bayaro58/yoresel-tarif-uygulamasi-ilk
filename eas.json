@@ -30,6 +30,12 @@
         "serviceAccountKeyPath": "C:/Users/FAZEON/Desktop/yoreselappleapıkey/yoresel-tarifler-dc95ffda2f6c.json",
         "track": "internal"
       }
+    },
+    "closed": {
+      "extends": "production",
+      "android": {
+        "track": "alpha"
+      }
     }
   }
 }
