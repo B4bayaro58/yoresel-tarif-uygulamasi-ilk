@@ -714,6 +714,146 @@ Manisa kebabını özel kılan, köftelerin ince ve yassı olması ve tabağın 
 
 Püf noktası: Köfte harcını dinlendirdikten sonra ince ve eşit kalınlıkta şekillendirin ki çabuk ve eşit pişsinler. Domates sosunu pideye servis anında, sıcakken dökün. Yoğurdu oda sıcaklığında kullanın. Tereyağını sofraya getirmeden hemen önce köpürtüp dökün.`,
   },
+  'cig-kofte': {
+    tr: `Çiğ köfte, Güneydoğu Anadolu'nun, özellikle Adıyaman ve Şanlıurfa'nın simge lezzetlerinden biri. Geleneksel tarifte çiğ et, ince bulgur ve isotla uzun uzun yoğrulur. Bugün yaygın olarak tüketilen etsiz versiyon ise Adıyaman'da bir esnaf geleneğine dönüşmüş ve ülkenin dört bir yanına buradan yayılmıştır.
+
+Çiğ köftenin lezzeti malzemeden çok emekten gelir. Bulgur, salçalar ve baharatlarla uzun süre yoğruldukça yumuşar, birbirine kaynaşır ve köfteye o tanıdık parlak, yapışkan dokusunu verir. Marul, limon ve nar ekşisi ise baharatın acısını dengeler.
+
+Püf noktası: Bulguru ıslatırken suyu fazla koymayın; bulgur yalnızca emebileceği kadar su almalı. Yoğurma süresinden kısmayın, isterseniz eldiven giyerek çalışın. Soğanın suyunu iyice sıkın, aksi halde köfte cıvıklaşır. Hazırladığınız gün tüketin.`,
+  },
+  'konya-etli-ekmegi': {
+    tr: `Konya etli ekmeği, şehrin coğrafi işaretle tescilli ve en çok bilinen lezzeti. İnce açılmış, upuzun bir hamurun üzerine yayılan kıymalı harç, taş fırında birkaç dakikada pişer. Konya'da etli ekmek bir öğle yemeğinden çok bir sofra kültürüdür; fırından çıkar çıkmaz, kenarı kıtırken kesilip yenir.
+
+Etli ekmeği pideden ayıran şey, hamurun ince ve uzun, harcın da hamurun tamamına ince bir tabaka halinde yayılmasıdır. Harçtaki kıyma, soğan, domates ve biberin dengesi, fırında etin kendi suyuyla pişmesini sağlar.
+
+Püf noktası: Harcı hamura ince yayın; kalın harç hamurun pişmesini engeller ve etli ekmeği ıslatır. Fırını mümkün olan en yüksek sıcaklıkta önceden iyice ısıtın, varsa pizza taşı kullanın. Etli ekmek beklemeye gelmez; fırından çıktığı anda maydanozla servis edin.`,
+  },
+  'konya-tandir-kebabi': {
+    tr: `Tandır, Orta Anadolu'nun en eski pişirme yöntemlerinden biri. Konya ve çevresinde kuzu, toprağa gömülü kuyu tandırlarda saatlerce, kendi yağı ve buharıyla pişirilir. Sonuç, kemikten kendiliğinden ayrılan, yumuşacık ve kokulu bir ettir. Konya mutfağında tandır ve fırın kebabı, düğünlerin ve bayram sofralarının baş köşesinde yer alır.
+
+Evde kuyu tandırı olmasa da aynı sonuca yakın bir lezzet elde etmek mümkün: sıkıca kapatılmış bir güveç ve düşük fırın ısısı, tandırın kapalı ortamını taklit eder. Et kendi buharında pişerken sarımsak ve baharatlar etin içine işler.
+
+Püf noktası: Güvecin ağzını folyoyla hava almayacak şekilde kapatın ve pişirme boyunca açmayın; buhar kaçarsa et kurur. Kemikli parça tercih edin, kemik hem lezzet verir hem eti dağılmaktan korur. Son kızartma aşamasını atlamayın, etin üzerine renk ve hafif bir kabuk kazandırır.`,
+  },
+  'malatya-kayisi-dolmasi': {
+    tr: `Malatya, dünyanın en önemli kuru kayısı üretim merkezlerinden biri ve kayısı bu şehrin mutfağında tatlılarla sınırlı kalmaz. Kuru kayısı dolması, kayısının tatlı ekşiliğini kıymalı iç harçla buluşturan, Malatya'ya özgü bir ana yemektir.
+
+Bu yemeği ilginç kılan tatlı ile tuzlunun dengesidir. Kayısı pişerken yumuşar, şeffaflaşır ve etin lezzetini emer. Yenibahar ve tarçın ise hafif tatlı, sıcak bir koku katar. Yanında yoğurtla servis edildiğinde bu denge daha da belirginleşir.
+
+Püf noktası: Kayısıları fazla bekletmeyin; şeklini kaybedecek kadar yumuşarsa doldururken yırtılır. Pirinç pişerken şişeceği için harcı az koyun. Dolmaları tencereye sıkı dizin ki pişerken açılmasınlar. Kükürtsüz, iri ve yumuşak kayısılar en iyi sonucu verir.`,
+  },
+  'mardin-sembusek': {
+    tr: `Sembusek, Mardin mutfağının yarım ay şeklindeki kıymalı hamur işi. Adı, Orta Doğu mutfaklarında yaygın olan "sambusek" ile akrabadır. Mardin'de sembusek geleneksel olarak fırında pişirilir; bu tarifte ise evde daha kolay uygulanabilecek kızartma yöntemi kullanılıyor.
+
+Sembuseki benzerlerinden ayıran, iç harçtaki ceviz ve sumaktır. Ceviz harca dolgunluk, sumak ise hafif ekşi ve ferah bir tat verir. Yenibahar ve tarçın Mardin mutfağının tanıdık baharatlarıdır.
+
+Püf noktası: İç harcı hamura koymadan önce tamamen soğutun; sıcak harç hamuru yumuşatır ve kapatırken yırtılmasına yol açar. Kenarları iyice bastırın ki kızarırken açılmasın. Yağın sıcaklığına dikkat edin: fazla sıcak yağda dışı yanar, içi çiğ kalır. Fırında pişirmek isterseniz üzerine yumurta sarısı sürün.`,
+  },
+  'afyon-kaymakli-kadayif': {
+    tr: `Afyonkarahisar kaymağıyla ünlü bir şehir ve Afyon kaymağı coğrafi işaretle tescillidir. Kaymaklı ekmek kadayıfı da bu şehrin adıyla anılan tatlıların başında gelir: şerbeti emmiş, tereyağında kızarmış ekmek ve üzerine bolca kaymak.
+
+Geleneksel ekmek kadayıfı, bu tatlı için özel olarak pişirilip kurutulan yuvarlak bir ekmekle yapılır ve hazır olarak da satılır. Bu tarif ise evdeki bayat somun ekmekle hazırlanan pratik bir versiyon. Sonuç yine şerbetini çekmiş, yumuşak ama dağılmayan bir tatlıdır.
+
+Püf noktası: Şerbetle ekmeğin sıcaklıkları birbirine zıt olmalı; sıcak ekmeğe soğuk şerbet dökülür ki ekmek şerbeti emsin ama hamurlaşmasın. Kaymağı servis anında, şerbet tamamen emildikten sonra koyun. Kaymak bulamazsanız süzme yoğurt ya da mascarpone ile hafif bir alternatif yapabilirsiniz.`,
+  },
+  'adana-bici-bici': {
+    tr: `Bici bici, Adana'nın kavurucu yazlarının serinletici tatlısı. Şehirde sokak arabalarından ve tatlıcılardan satılan bu tatlı, nişastayla pişirilip soğutulan şeffaf bir peltenin dövülmüş buz ve şerbetle buluşmasından oluşur. Adının nereden geldiğine dair farklı hikayeler anlatılır.
+
+Bici biciyi özel kılan, farklı dokuların bir arada olmasıdır: yumuşacık pelte, kırılmış buz ve üzerine gezdirilen gül şerbeti. Hem bir tatlı hem de sıcak havada bir serinlik kaynağıdır.
+
+Püf noktası: Nişastayı soğuk suda tamamen eritmeden ateşe almayın, aksi halde topaklanır. Pişirirken ocağın başından ayrılmayın ve sürekli karıştırın. Peltenin buzdolabında iyice sertleşmesini bekleyin. Buzu servis anında dövün ve tatlıyı hemen sunun; beklerse buz eriyip tatlı sulanır.`,
+  },
+  'adana-patlican-kebabi': {
+    tr: `Patlıcan kebabı, Adana ve Gaziantep başta olmak üzere Güneydoğu'nun yaz sofralarının vazgeçilmezi. Patlıcan mevsiminde mangal başında hazırlanan bu kebapta isotlu kıyma ile patlıcan aynı közde pişer; patlıcan közün aromasını, kıyma da kendi yağını tabağa taşır.
+
+Bölgede patlıcan kebabının farklı yapılış biçimleri vardır: kimi yerde patlıcan ve köfte aynı şişe sırayla dizilir, kimi yerde ayrı şişlerde pişirilip tabakta birleştirilir. Bu tarif ikinci yolu izliyor; böylece her ikisi de tam kıvamında pişirilebilir.
+
+Püf noktası: Patlıcanları alacalı soymak, közde daha eşit pişmelerini sağlar. Kıymayı yağlı seçin, yağsız kıyma közde kurur. Şişleri sık sık çevirin. Kızgın tereyağını servis anında dökün; lavaşı kebabın altına sererek yağını emdirmeyi unutmayın.`,
+  },
+  'ayvalik-tostu': {
+    tr: `Ayvalık tostu, Balıkesir'in bu sahil ilçesinin adını tüm Türkiye'ye duyuran sokak lezzeti. Sıradan bir kaşarlı tosttan çok farklıdır: kalın somun ekmeğinin arasına kaşar ve sucuğun yanında domates, turşu, biber ve sos konur, tost makinesinde bastırılarak kıtır kıtır pişirilir.
+
+Ayvalık tostunun cazibesi, malzemelerin bolluğu ve tuzlu, ekşi, acı tatların bir arada olmasıdır. Turşu ve sos, kaşarla sucuğun ağırlığını hafifletir. Ayvalık'ta her tostçunun kendi içerik kombinasyonu ve sos tarifi olduğu için iki tost birbirinin aynısı olmayabilir.
+
+Püf noktası: Ekmeği kalın kesin, ince ekmek bu kadar malzemeyi taşıyamaz. Kaşarı ekmeğe en yakın katmana koyun, eriyince diğer malzemeleri bir arada tutar. Turşu ve domatesin suyunu kağıt havluyla alın ki tost ıslanmasın. Tost makinesini iyice ısıttıktan sonra tostu yerleştirin.`,
+  },
+  'artvin-karalahana-corbasi': {
+    tr: `Karalahana, Doğu Karadeniz mutfağının temel sebzesi. Artvin'den Rize'ye kadar bölgenin bahçelerinde yetişen bu koyu yeşil, sert yapraklı lahana kışın soğuğuna dayanır ve sofralardan eksik olmaz. Karalahana çorbası da yörenin en bilinen kış yemeklerinden biridir.
+
+Bu çorbada karalahananın hafif buruk tadı, kuru fasulyenin doyuruculuğu ve mısır ununun verdiği kıvam bir araya gelir. Mısır unu Karadeniz mutfağının vazgeçilmez malzemesidir ve çorbaya hem yoğunluk hem de hafif tatlı bir lezzet katar.
+
+Püf noktası: Yaprakların sert orta damarlarını mutlaka ayıklayın, pişse de lifli kalır. Mısır ununu çorbaya eklemeden önce az soğuk suyla açın ki topaklanmasın. Çorba bekledikçe koyulaşır; ısıtırken biraz sıcak su ekleyin. Yanında mısır ekmeğiyle servis edin.`,
+  },
+  'artvin-mihlamasi': {
+    tr: `Mıhlama, Doğu Karadeniz'in kahvaltı sofralarının yıldızı. Trabzon'da kuymak, Rize ve Artvin'de mıhlama olarak bilinen bu yemek; mısır unu, tereyağı ve peynirin sahanda buluşmasından oluşan sade ama doyurucu bir lezzettir. Yayla tereyağının ve peynirin kalitesi mıhlamanın lezzetini doğrudan belirler.
+
+İyi bir mıhlamanın ölçüsü, kaşıkla alındığında peynirin tel tel uzamasıdır. Bunun için mısır unu tam kıvamında pişmeli, peynir ise en sonda eklenmelidir. Mıhlama genellikle ortaya konan sahandan, herkes ekmeğini banarak yenir.
+
+Püf noktası: Mısır ununu kaynar suya yavaş yavaş ekleyin ve sürekli karıştırın. Tereyağından kısmayın; mıhlamayı mıhlama yapan odur. Peynir tuzlu ise ayrıca tuz eklemeyin. Mıhlama soğudukça katılaşır; ocaktan alır almaz sofraya getirin.`,
+  },
+  'hopa-hamsi-tava': {
+    tr: `Hamsi Karadeniz'in balığıdır ve kış aylarında bölgede adeta bir mevsim kutlamasına dönüşür. Gürcistan sınırına yakın Hopa, Artvin'in denize açılan ilçelerinden biridir. Hamsi tava ise bu balığı pişirmenin en sevilen ve en yalın yoludur.
+
+Karadeniz usulü hamsi tavada balık buğday unu yerine mısır ununa bulanır. Mısır unu hamsinin dışında ince, kıtır bir kabuk oluştururken içini sulu bırakır. Bölgede hamsi tavanın yanında mısır ekmeği, soğan ve bolca limon olur.
+
+Püf noktası: Hamsiyi pişirmeden hemen önce una bulayın; beklerse un nemlenir ve kabuk kıtır olmaz. Yağı iyice kızdırın ve tavaya az balık koyun; kalabalık tavada yağ soğur, hamsi yağ çeker. Taze hamsinin gözleri parlak, solungaçları kırmızı olur.`,
+  },
+  'maras-tarhana-corbasi': {
+    tr: `Maraş tarhanası, Türkiye'nin bilinen tarhanalarından oldukça farklıdır. Yoğurt ve buğdayla hazırlanan hamur ince yapraklar halinde serilip güneşte kurutulur. Kahramanmaraş'ta bu tarhana yalnızca çorbada kullanılmaz, kuru haliyle çerez gibi de yenir. Çorbası ise kış aylarında yörenin en çok pişirilen yemeklerinden biridir.
+
+Tarhana, yazın bolluğunu kışa saklamanın eski bir yoludur. Yoğurdun ekşiliği ve kurutma sırasında gelişen aroma, çorbaya kendine özgü, hafif ekşi bir lezzet verir. Üzerine gezdirilen Maraş biberli tereyağı ise yörenin imzasıdır.
+
+Püf noktası: Yaprak tarhanayı ufalayıp önceden ıslatın, böylece daha kısa sürede ve pürüzsüz bir kıvamda pişer. Çorbayı kısık ateşte sık sık karıştırarak pişirin, tarhana tencerenin dibini kolayca tutar. Maraş biberini yakmadan kızdırın; yanan biber acılaşır.`,
+  },
+  'coban-salatasi': {
+    tr: `Çoban salatası, Anadolu'nun hemen her sofrasında karşınıza çıkan, en sade ve en tanıdık salatalardan biri. Adının, kırda sürüsünü güden çobanların yanlarında taşıdıkları birkaç basit sebzeyi doğrayıp karıştırmasından geldiği anlatılır. Kebapların, ızgaraların ve kuru fasulyenin yanında olmazsa olmazdır.
+
+Bu salatanın lezzeti tamamen malzemenin tazeliğine bağlıdır. Yaz mevsiminde olgunlaşmış domates, çıtır salatalık ve hafif acı sivri biber, bir tutam soğan ve iyi bir zeytinyağıyla birleştiğinde başka bir şeye ihtiyaç duymaz.
+
+Püf noktası: Sebzeleri küçük ve eşit boyda doğrayın ki her lokmada hepsinin tadı gelsin. Soğanı biraz tuzla ovup yıkarsanız keskinliği azalır. Tuzu ve sosu servis anında ekleyin; erken eklenen tuz domatesin ve salatalığın suyunu salar, salata sulanır.`,
+  },
+  'beypazari-guveci': {
+    tr: `Beypazarı, Ankara'nın tarihi evleri, kurusu ve mutfak kültürüyle tanınan ilçesi. Yörede yemekleri toprak güveçte, fırının yavaş ısısında pişirmek köklü bir alışkanlıktır. Beypazarı güveci de kuzu etinin sebzeler ve nohutla birlikte kendi suyunda piştiği doyurucu bir sofra yemeğidir.
+
+Toprak güveç ısıyı yavaş ve eşit dağıtır; bu sayede et sertleşmeden yumuşar, sebzeler etin suyunu çeker. Kapağın kapalı tutulması buharın içeride kalmasını, malzemelerin birbirinin lezzetini almasını sağlar.
+
+Püf noktası: Toprak güveci ilk kullanımdan önce suda bekletin ve soğuk fırına koyup fırınla birlikte ısıtın; ani sıcaklık değişimi güveci çatlatabilir. Eti soğanların üzerine yerleştirin ki dibi tutmasın. Son on beş dakikada kapağı açıp üstünün kızarmasına izin verin.`,
+  },
+  'konya-tirit': {
+    tr: `Tirit, Konya mutfağının en eski ve en sevilen yemeklerinden biri. Haşlanmış kuzu etinin suyuyla ıslatılmış ekmek; sarımsaklı yoğurt ve kızgın tereyağıyla buluşur. Bayatlayan ekmeği değerlendirmenin lezzetli bir yolu olan tirit, Anadolu'nun israfı sevmeyen mutfak anlayışının güzel bir örneğidir.
+
+Tiriti başarılı kılan, ekmeğin et suyunu tam kıvamında emmesidir: ne kuru kalmalı ne de lapa olmalı. Üzerine konan yumuşacık kuzu eti, serin yoğurt ve cızırdayan pul biberli tereyağı, sıcak ve soğuğu tek tabakta buluşturur.
+
+Püf noktası: Et suyunu ekmeğe tek seferde değil, kepçe kepçe dökün ve her seferinde ekmeğin suyu emmesini bekleyin. Ekmek olarak bayat pide ya da kuru yufka en iyi sonucu verir. Yoğurdu oda sıcaklığında kullanın ve tereyağını servis anında dökün.`,
+  },
+  'malatya-icli-kofte': {
+    tr: `Malatya köfte çeşitliliğiyle bilinen bir şehir; yöre mutfağında onlarca farklı köfte türünden söz edilir. İçli köfte bunların en zahmetli ama en ödüllendirici olanlarından biridir. İnce bulgurdan hazırlanan kabuk, cevizli ve kıymalı bir harcı sarar ve kızgın yağda altın rengine bürünür.
+
+İyi bir içli köftenin sırrı, kabuğun ince ama sağlam olmasıdır. Bulgura bir miktar kıyma ve un eklenip uzun süre yoğrulması hamurun esnekliğini artırır; böylece köfte şekillendirilirken çatlamaz, kızarırken açılmaz.
+
+Püf noktası: Hamuru şekillendirirken ellerinizi sık sık ıslatın. Kabuğu başparmağınızla döndürerek inceltin, ama dibini delmemeye dikkat edin. İç harcı tamamen soğuduktan sonra kullanın. Köfteleri kızartmadan önce birkaç dakika buzdolabında bekletirseniz şekillerini daha iyi korurlar.`,
+  },
+  'maras-yuksuk-corbasi': {
+    tr: `Yüksük çorbası, Kahramanmaraş ve çevresinde pişirilen, adını içindeki küçük hamur parçalarının biçiminden alan yoğurtlu bir çorba. Parmak ucuyla tek tek şekillendirilen bu minik hamurlar dikiş yüksüğüne benzediği için bu adla anılır. Yapımı sabır ister ve çoğu zaman evde birkaç kişi bir araya gelerek hazırlanır.
+
+Çorbanın tabanı et suyu ve yoğurttur. Yoğurdun ekşiliği, hamurun yumuşaklığı ve Maraş biberli tereyağı bir araya gelince hem doyurucu hem de ferah bir lezzet ortaya çıkar.
+
+Püf noktası: Yoğurdu doğrudan kaynayan çorbaya eklemeyin; önce yumurtayla çırpıp sıcak suyla yavaş yavaş ılıtın, aksi halde kesilir. Yoğurt eklendikten sonra çorbayı hep aynı yönde karıştırın. Yüksükleri kurumadan haşlayın ve çorbayı fazla bekletmeyin; hamurlar suyu çekip şişer.`,
+  },
+  'artvin-misir-ekmegi': {
+    tr: `Mısır ekmeği Karadeniz mutfağının temel taşı. Buğdayın yetişmesinin zor olduğu dik ve yağışlı yamaçlarda mısır, uzun zamandır bölgenin en önemli tahılıdır. Artvin'de mısır ekmeği; mıhlamanın, karalahana çorbasının ve hamsinin yanında sofraya konan günlük ekmektir.
+
+Bu ekmek mayasızdır ve yalnızca mısır unu, su ve tuzla yapılır. Kaynar suyla haşlanan mısır unu yoğrulabilir bir hamura dönüşür. Sacda ya da döküm tavada pişen ekmeğin dışı sert ve hafif kızarık, içi ise yoğun ve hafif tatlıdır.
+
+Püf noktası: Suyun mutlaka kaynar olması gerekir; ılık su mısır ununu bağlamaz, hamur dağılır. Hamuru ellerinizi ıslatarak şekillendirin. Sacı ya da tavayı önceden iyice ısıtın ve ekmeği altı sertleşmeden çevirmeyin. Sıcakken, üzerine tereyağı sürülerek yenir.`,
+  },
+  'adana-papara': {
+    tr: `Papara, Güneydoğu Anadolu ve Çukurova mutfağında bayat ekmeği değerlendirmenin geleneksel yollarından biri. Haşlanmış kuzu etinin suyuyla ıslatılan ekmek, salçalı ve baharatlı tereyağıyla buluşur, üzerine de etler dizilir. Özellikle Kurban Bayramı sofralarında sıkça pişirilen bir yemektir.
+
+Paparanın lezzeti, et suyunun kalitesinden ve ekmeğin bu suyu ne kadar iyi emdiğinden gelir. Kimyon ve pul biber yemeğe bölgenin baharatlı tadını, salça ise rengini ve derinliğini verir. Tirite benzese de yoğurt yerine salçalı bir tabanla hazırlanır.
+
+Püf noktası: Kemikli et kullanın; kemik et suyuna lezzet ve kıvam verir. Ekmeği kalın dilimler halinde ve bayat kullanın, taze ekmek et suyunda hemen dağılır. Et suyunu ekmeğin üzerine azar azar ekleyin. Kızgın tereyağını servis anında gezdirin.`,
+  },
 }
 
 export function getRecipeIntro(recipeId, lang = 'tr') {

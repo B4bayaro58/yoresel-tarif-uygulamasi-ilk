@@ -5,6 +5,8 @@ import { Recipe } from '@/types'
 import { getPublishedPostsServer } from '@/lib/blogServer'
 // @ts-ignore
 import { RECIPES_DATA } from '@shared/recipes'
+// @ts-ignore
+import { getRecipeIntro } from '@shared/recipeIntros'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://yoreseltarif.com'
 const localRecipes: Recipe[] = (RECIPES_DATA as any).tr || []
@@ -28,20 +30,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: new Date(),
   }))
 
-  // Statik kataloğun dışında, sadece Firestore'da yaşayan (admin panelinden
-  // sıfırdan eklenmiş, bir override olmayan) yayındaki tarifler
-  let nativeRecipeEntries: MetadataRoute.Sitemap = []
-  // Admin panelinden pasife alınmış statik tarifler (override'ı yayında olmayan)
-  // site haritasına girmemeli -- sayfaları ziyaretçiye gösterilmiyor.
+  // Tanıtım yazısı olmayan tarifler noindex (bkz. recipes/[id]/page.tsx) ve
+  // sitemap'e girmez. Intro'lar statik tarif id'sine bağlı; yalnızca
+  // Firestore'da yaşayan (admin/kullanıcı eklemesi) tariflerin intro'su yok.
+  // Admin panelinden pasife alınmış statik tarifler (override'ı yayında
+  // olmayan) da girmez -- sayfaları ziyaretçiye gösterilmiyor.
   const hiddenStaticIds = new Set<string>()
   try {
-    const [publicSnap, overrideSnap] = await Promise.all([
-      getDocs(query(collection(db, 'recipes'), where('status', 'in', PUBLIC_STATUSES))),
-      getDocs(query(collection(db, 'recipes'), where('overridesStaticId', '!=', null))),
-    ])
-    nativeRecipeEntries = publicSnap.docs
-      .filter((d) => !d.data().overridesStaticId)
-      .map((d) => ({ url: `${SITE_URL}/recipes/${encodeURIComponent(d.id)}`, lastModified: new Date() }))
+    const overrideSnap = await getDocs(query(collection(db, 'recipes'), where('overridesStaticId', '!=', null)))
     overrideSnap.docs
       .filter((d) => !PUBLIC_STATUSES.includes(d.data().status))
       .forEach((d) => hiddenStaticIds.add(String(d.data().overridesStaticId)))
@@ -50,7 +46,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }
 
   const staticRecipeEntries: MetadataRoute.Sitemap = localRecipes
-    .filter((r) => !hiddenStaticIds.has(String(r.id)))
+    .filter((r) => !hiddenStaticIds.has(String(r.id)) && getRecipeIntro(String(r.id)))
     .map((r) => ({
       url: `${SITE_URL}/recipes/${encodeURIComponent(String(r.id))}`,
       lastModified: new Date(),
@@ -63,5 +59,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: post.updatedAt ? new Date(post.updatedAt) : post.publishedAt ? new Date(post.publishedAt) : new Date(),
   }))
 
-  return [...staticEntries, ...blogEntries, ...staticRecipeEntries, ...nativeRecipeEntries]
+  return [...staticEntries, ...blogEntries, ...staticRecipeEntries]
 }

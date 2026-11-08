@@ -91,6 +91,11 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     title: `${recipe.name} Tarifi — Yöresel Tarif`,
     description,
     alternates: { canonical: `/recipes/${id}` },
+    // Tanıtım yazısı olmayan tarif sayfası yalnızca malzeme+adım (~150-250
+    // kelime); AdSense "düşük değerli içerik" reddinde (2026-11) bu ince
+    // sayfaların çokluğu sebep görüldü. Sayfa ziyaretçiye açık kalır, Google
+    // dizine almaz; intro eklenince otomatik indekslenir (sitemap.ts aynı kural).
+    robots: intro ? undefined : { index: false, follow: true },
     openGraph: {
       title: `${recipe.name} Tarifi`,
       description,
