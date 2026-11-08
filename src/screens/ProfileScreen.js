@@ -8,11 +8,13 @@ import {
   ScrollView,
   TextInput,
   ActivityIndicator,
+  Alert,
+  Linking,
 } from 'react-native';
 import { Image } from 'expo-image';
 import { Palette, Settings, LogOut, User as UserIcon, ChevronRight, Trash2, Shield, Camera, Crown, FileText, Megaphone } from 'lucide-react-native';
 import { AdsConsent } from 'react-native-google-mobile-ads';
-import { isUmpRegion, openAdConsentPreferences } from '../services/adConsentService';
+import { isTrackingAllowed, isUmpRegion, openAdConsentPreferences } from '../services/adConsentService';
 import { useApp } from '../contexts/AppContext';
 import { getCountryFlag } from '../constants/countryFlags';
 import { useAuth } from '../contexts/AuthContext';
@@ -488,6 +490,22 @@ export default function ProfileScreen({ navigation }) {
         <TouchableOpacity
           style={[styles.settingItem, { backgroundColor: colors.card, borderColor: colors.border }]}
           onPress={() => {
+            // iOS'ta ATT reddedildiyse burada tekrar takip izni istenmez
+            // (Apple 5.1.1(iv)); karar iOS Ayarlar'dan değiştirilir.
+            if (!isTrackingAllowed()) {
+              const tr = language === 'tr';
+              Alert.alert(
+                tr ? 'Reklam Tercihleri' : 'Ad Preferences',
+                tr
+                  ? 'Uygulamanın sizi takip etmemesini istediniz. Sizi takip etmiyoruz; yalnızca kişiselleştirilmemiş reklamlar gösteriliyor. Bu tercihi iOS Ayarlar > Gizlilik ve Güvenlik > Takip bölümünden değiştirebilirsiniz.'
+                  : 'You asked the app not to track you. We do not track you; only non-personalized ads are shown. You can change this in iOS Settings > Privacy & Security > Tracking.',
+                [
+                  { text: tr ? 'Tamam' : 'OK', style: 'cancel' },
+                  { text: tr ? 'Ayarlar' : 'Settings', onPress: () => Linking.openSettings().catch(() => {}) },
+                ]
+              );
+              return;
+            }
             if (isUmpRegion()) {
               AdsConsent.showPrivacyOptionsForm().catch(() => {});
             } else {

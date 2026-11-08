@@ -4,7 +4,13 @@ import {
   getTrackingPermissionsAsync,
   requestTrackingPermissionsAsync,
 } from 'expo-tracking-transparency';
-import { getAdConsent, loadAdConsent, promptAdConsent, setUmpApplies } from './adConsentService';
+import {
+  getAdConsent,
+  loadAdConsent,
+  promptAdConsent,
+  setTrackingAllowed,
+  setUmpApplies,
+} from './adConsentService';
 
 // iOS, uygulama 'active' olmadan (ör. splash ekranı açıkken) yapılan ATT
 // isteğini hiçbir şey göstermeden yok sayıyor -- Apple review'da (iPadOS)
@@ -22,13 +28,15 @@ function waitForActive() {
   });
 }
 
+// ATT sonucunu döner: true yalnızca kullanıcı takibe izin verdiyse.
 async function requestTrackingIfNeeded() {
   const current = await getTrackingPermissionsAsync();
-  if (current.status !== 'undetermined') return;
+  if (current.status !== 'undetermined') return current.status === 'granted';
   await waitForActive();
   await new Promise((r) => setTimeout(r, 1000));
   await waitForActive();
-  await requestTrackingPermissionsAsync();
+  const result = await requestTrackingPermissionsAsync();
+  return result.status === 'granted';
 }
 
 // Uygulama açılışında bir kez çalışır: önce ATT (iOS), sonra gerekiyorsa UMP
@@ -36,11 +44,28 @@ async function requestTrackingIfNeeded() {
 // penceresi (AdConsentModal), en son Mobile Ads SDK başlatılır. Reklam
 // isteği bundan önce yapılmamalı (AdMob policy); yapılırsa
 // getAdRequestOptions() varsayılan olarak kişiselleştirilmemiş ister.
+//
+// iOS'ta ATT reddedildiyse (veya kısıtlıysa) UMP/KVKK pencereleri HİÇ
+// gösterilmez -- Apple 5.1.1(iv) reddi: "Ask App Not to Track" sonrası
+// GDPR formu tekrar takip izni istiyordu. O durumda yalnızca
+// kişiselleştirilmemiş reklam istenir; kullanıcı fikrini iOS Ayarlar'dan
+// değiştirirse sonraki açılışta akış normal çalışır.
 export async function initAdsConsentAndSdk() {
   await loadAdConsent();
   try {
+    let trackingAllowed = true;
     if (Platform.OS === 'ios') {
-      await requestTrackingIfNeeded();
+      try {
+        trackingAllowed = await requestTrackingIfNeeded();
+      } catch {
+        trackingAllowed = false;
+      }
+    }
+    setTrackingAllowed(trackingAllowed);
+
+    if (!trackingAllowed) {
+      await MobileAds().initialize();
+      return true;
     }
 
     let umpApplies = false;

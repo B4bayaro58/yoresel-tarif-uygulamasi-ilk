@@ -10,6 +10,10 @@ const KEY = 'kvkkAdConsent';
 
 let consent = null; // 'granted' | 'denied' | null
 let umpApplies = false;
+// iOS'ta ATT izni verilmediyse (denied/restricted) takip yok: hiçbir rıza
+// penceresi tekrar takip izni istemez, yalnızca kişiselleştirilmemiş reklam
+// istenir (Apple 5.1.1(iv)). Android'de her zaman true.
+let trackingAllowed = true;
 const listeners = new Set();
 let pendingResolve = null;
 let promptOpen = false; // modal henüz abone olmadan istenirse kaybolmasın
@@ -29,6 +33,14 @@ export function setUmpApplies(value) {
   umpApplies = value;
 }
 
+export function setTrackingAllowed(value) {
+  trackingAllowed = value;
+}
+
+export function isTrackingAllowed() {
+  return trackingAllowed;
+}
+
 export function isUmpRegion() {
   return umpApplies;
 }
@@ -40,6 +52,7 @@ export function getAdConsent() {
 // BannerAd `requestOptions`, InterstitialAd.createForAdRequest ve
 // useRewardedAd'e verilir. İstek anındaki rıza durumunu yansıtır.
 export function getAdRequestOptions() {
+  if (!trackingAllowed) return { requestNonPersonalizedAdsOnly: true };
   if (umpApplies) return {};
   return { requestNonPersonalizedAdsOnly: consent !== 'granted' };
 }
