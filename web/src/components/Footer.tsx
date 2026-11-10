@@ -36,6 +36,9 @@ const FOOTER_LINKS = {
   ],
 }
 
+const PLAY_STORE_URL =
+  'https://play.google.com/store/apps/details?id=com.cagatay58.yoreseltarifuygulamasi'
+
 const SOCIAL = [
   { icon: <Instagram size={18} />, href: 'https://www.instagram.com/yoreseltarifcom/', label: 'Instagram' },
   { icon: <Youtube size={18} />, href: '#', label: 'YouTube' },
@@ -69,12 +72,21 @@ export default function Footer() {
             iOS ve Android için ücretsiz indirin
           </p>
           <div className="flex items-center justify-center gap-3 flex-wrap">
-            <span className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm border border-white/25 text-white text-sm font-semibold px-5 py-2.5 rounded-xl cursor-pointer hover:bg-white/25 transition-colors">
-              🍎 App Store
+            {/* iOS henüz App Store onayında; onaylanınca APP_STORE_URL ile linke çevrilecek */}
+            <span
+              aria-disabled="true"
+              className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white/70 text-sm font-semibold px-5 py-2.5 rounded-xl cursor-default"
+            >
+              🍎 App Store <span className="text-xs font-normal">(Yakında)</span>
             </span>
-            <span className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm border border-white/25 text-white text-sm font-semibold px-5 py-2.5 rounded-xl cursor-pointer hover:bg-white/25 transition-colors">
+            <a
+              href={PLAY_STORE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm border border-white/25 text-white text-sm font-semibold px-5 py-2.5 rounded-xl hover:bg-white/25 transition-colors"
+            >
               🤖 Google Play
-            </span>
+            </a>
           </div>
         </div>
       </div>
