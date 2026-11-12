@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, ActivityIndicator, Share, TouchableOpacity } from 'react-native';
+import { Share2 } from 'lucide-react-native';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useApp } from '../contexts/AppContext';
@@ -18,7 +19,29 @@ export default function BlogDetailScreen({ route, navigation }) {
 
   useEffect(() => {
     if (post) {
-      navigation.setOptions({ headerTitle: post.title });
+      const onShare = () => {
+        Share.share({
+          title: post.title,
+          // https linki her uygulamada tıklanabilir; Android'de App Link ile uygulamaya düşer.
+          message: `${post.title}
+https://yoreseltarif.com/blog/${post.slug}`,
+        }).catch(() => {});
+      };
+      navigation.setOptions({
+        headerTitle: post.title,
+        headerRight: () => (
+          <TouchableOpacity
+            onPress={onShare}
+            hitSlop={10}
+            // Başlık kapak fotoğrafının üstünde şeffaf: koyu zemin her fotoğrafta okunur.
+            style={{ width: 38, height: 38, borderRadius: 19, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.5)' }}
+            accessibilityRole="button"
+            accessibilityLabel="Yazıyı paylaş"
+          >
+            <Share2 size={20} color="#FFFFFF" />
+          </TouchableOpacity>
+        ),
+      });
     }
   }, [post, navigation]);
 

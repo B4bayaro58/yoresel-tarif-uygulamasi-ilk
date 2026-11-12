@@ -7,6 +7,7 @@ import { getPostBySlugServer, formatPostDate } from '@/lib/blogServer'
 import { isPreOptimized } from '@/lib/image'
 import BlogStaticContent, { blogPlainText } from '@/components/blog/BlogStaticContent'
 import BlogViewTracker from '@/components/blog/BlogViewTracker'
+import ShareButtons from '@/components/ShareButtons'
 
 // Sunucuda üretiliyor -- yazının tam metni HTML'de hazır gelir (eskiden
 // client'ta yükleniyordu, arama motorları boş sayfa görüyordu).
@@ -82,6 +83,9 @@ export default async function BlogDetailPage({ params }: Props) {
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10">
         <BlogStaticContent content={post.content} />
+        <div className="mt-10 pt-6" style={{ borderTop: '1px solid var(--border)' }}>
+          <ShareButtons url={`https://yoreseltarif.com/blog/${post.slug}`} title={post.title} />
+        </div>
       </div>
     </div>
   )

@@ -29,6 +29,7 @@ import { useApp } from '@/contexts/AppContext'
 import { Recipe, ShoppingItem } from '@/types'
 import ReviewsSection from '@/components/ReviewsSection'
 import AdSlot from '@/components/AdSlot'
+import ShareButtons from '@/components/ShareButtons'
 import { isPreOptimized } from '@/lib/image'
 import { getOverrideRecipe } from '@/lib/overridePhoto'
 import { trackView } from '@/lib/viewStats'
@@ -566,6 +567,13 @@ export default function RecipeDetailClient({ initialRecipe, intro }: RecipeDetai
           </div>
         )}
       </section>
+
+      {/* ── Paylaş ─────────────────────────────── */}
+      <ShareButtons
+        url={`${process.env.NEXT_PUBLIC_SITE_URL || 'https://yoreseltarif.com'}/recipes/${id}`}
+        title={recipe.name}
+        className="mb-8"
+      />
 
       {/* ── Reklam ─────────────────────────────── */}
       <div className="mb-6">
