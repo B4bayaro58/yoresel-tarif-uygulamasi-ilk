@@ -13,7 +13,7 @@ import {
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import { db, storage } from '@/config/firebase'
 import { Recipe } from '@/types'
-import { isPreOptimized } from '@/lib/image'
+import { isPreOptimized, isPublicPhotoUrl } from '@/lib/image'
 // @ts-ignore
 import { RECIPES_DATA } from '@shared/recipes'
 // @ts-ignore
@@ -264,6 +264,11 @@ export default function AdminRecipeDetailPage() {
 
   // ── Save ─────────────────────────────────────────────────
   const handleSave = async () => {
+    if (!isPublicPhotoUrl(form.photo)) {
+      setUploadError('Fotoğraf URL’si geçersiz: yalnızca https:// ile başlayan herkese açık adresler kaydedilebilir (blob:, data:, localhost olmaz). Fotoğrafı “Fotoğraf Yükle” ile yükleyin.')
+      return
+    }
+    setUploadError(null)
     setSaving(true)
     try {
       const data = formToRecipe(form)
@@ -427,7 +432,11 @@ export default function AdminRecipeDetailPage() {
                 <label className={labelCls} style={labelStyle}>veya URL girin</label>
                 <input
                   value={form.photo}
-                  onChange={(e) => setForm((f) => ({ ...f, photo: e.target.value, photoThumb: '' }))}
+                  onChange={(e) => {
+                    const v = e.target.value
+                    setForm((f) => ({ ...f, photo: v, photoThumb: '' }))
+                    setUploadError(isPublicPhotoUrl(v) ? null : 'Bu adres kaydedilemez: yalnızca https:// ile başlayan herkese açık bir URL girin.')
+                  }}
                   placeholder="https://..."
                   className={inputCls}
                   style={inputStyle}

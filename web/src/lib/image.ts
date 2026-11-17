@@ -7,6 +7,21 @@ export function isPreOptimized(url: string | undefined | null): boolean {
   return !!url && url.includes('firebasestorage.googleapis.com')
 }
 
+// Tarif fotoğrafı alanına yalnızca herkese açık https adresi kaydedilebilir.
+// `blob:` / `data:` / `file:` / localhost adresleri sadece o tarayıcıda çalışır,
+// Firestore'a yazılırsa tüm ziyaretçilerde kırık görsel olur (Büryan Kebabı vakası).
+export function isPublicPhotoUrl(url: string | undefined | null): boolean {
+  if (!url) return true // boş = fotoğraf yok, geçerli
+  try {
+    const u = new URL(url.trim())
+    if (u.protocol !== 'https:') return false
+    const h = u.hostname
+    return !(h === 'localhost' || h === '127.0.0.1' || h.endsWith('.local') || /^(10|192\.168)\./.test(h))
+  } catch {
+    return false
+  }
+}
+
 // Kullanıcı tarafından yüklenen serbest formatlı fotoğrafları (ör. yorum
 // fotoğrafları) sabit bir en-boy oranına kırpmadan, yalnızca uzun kenarını
 // `maxDim`'e küçültüp JPEG'e çevirir — admin panelindeki tarif kapak

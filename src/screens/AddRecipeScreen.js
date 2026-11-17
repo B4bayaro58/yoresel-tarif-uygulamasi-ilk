@@ -201,9 +201,11 @@ export default function AddRecipeScreen({ navigation, route }) {
 
     setLoading(true);
 
-    // Upload image if a new local URI was selected
+    // Upload image if a new local URI was selected. Anything that isn't already a
+    // public https URL (file://, content://, ph://, blob:) is device-local and must be
+    // uploaded — saving it raw would show a broken photo to every other user.
     let photoUrl = photoUri;
-    if (photoUri && photoUri.startsWith('file')) {
+    if (photoUri && !/^https:\/\//i.test(photoUri)) {
       setUploading(true);
       const uploadResult = await uploadRecipeImage(photoUri, recipeName.trim());
       setUploading(false);
