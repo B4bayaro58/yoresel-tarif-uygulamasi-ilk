@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState, useMemo } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, X, Search, Save, CalendarDays } from 'lucide-react'
+import { ArrowLeft, X, Search, Save, CalendarDays, RotateCcw } from 'lucide-react'
 import {
   doc, getDoc, setDoc, getDocs, collection, query, where, orderBy, limit, startAfter, documentId,
   QueryDocumentSnapshot, DocumentData, serverTimestamp,
@@ -11,6 +11,8 @@ import { db } from '@/config/firebase'
 import { Recipe } from '@/types'
 // @ts-ignore
 import { RECIPES_DATA } from '@shared/recipes'
+// @ts-ignore
+import { getActiveManualMenuIds, pickAutoDailyMenu, canonicalRecipeId, getMenuDateKey } from '@shared/dailyMenu'
 
 const staticRecipes: Recipe[] = (RECIPES_DATA as any).tr || []
 
@@ -46,13 +48,21 @@ export default function AdminDailyMenuPage() {
   const [saved, setSaved] = useState(false)
   const [saveError, setSaveError] = useState(false)
   const [search, setSearch] = useState('')
+  // true: bugün için elle kaydedilmiş menü yayında; false: otomatik menü
+  const [isManual, setIsManual] = useState(false)
+  // Elle menü yoksa listeyi bugünün otomatik menüsüyle (tarifler yüklenince) doldur
+  const [needsAutoFill, setNeedsAutoFill] = useState(false)
+  const [dirty, setDirty] = useState(false)
 
   useEffect(() => {
     const init = async () => {
       try {
         const menuSnap = await getDoc(doc(db, 'settings', 'dailyMenu'))
-        const ids: string[] = menuSnap.exists() ? menuSnap.data().recipeIds || [] : []
+        const manualIds: string[] | null = getActiveManualMenuIds(menuSnap.exists() ? menuSnap.data() : null)
+        const ids: string[] = manualIds || []
         setMenuIds(ids)
+        setIsManual(!!manualIds)
+        setNeedsAutoFill(!manualIds)
 
         const queries = [
           getDocs(query(
@@ -124,6 +134,12 @@ export default function AdminDailyMenuPage() {
     return Array.from(map.values())
   }, [firestoreRecipes])
 
+  useEffect(() => {
+    if (loading || !needsAutoFill) return
+    setMenuIds((pickAutoDailyMenu(allRecipes) as Recipe[]).map((r) => canonicalRecipeId(r)))
+    setNeedsAutoFill(false)
+  }, [loading, needsAutoFill, allRecipes])
+
   // Override edilmiş statik tarifler allRecipes'te kendi Firestore ID'siyle
   // duruyor, statik slug (ör. "lasagna") artık haritada yok — overridesStaticId
   // fallback'i olmadan bu tarifler "kayıp" görünüyordu (bkz. 2026-07-10 canlı
@@ -150,20 +166,28 @@ export default function AdminDailyMenuPage() {
       ? String((recipe as any).overridesStaticId)
       : String(recipe.id)
     setMenuIds((prev) => [...prev, canonicalId])
+    setDirty(true)
   }
 
   const removeFromMenu = (id: string) => {
     setMenuIds((prev) => prev.filter((i) => i !== id))
+    setDirty(true)
   }
 
-  const save = async () => {
+  // ids boş = otomatik menüye dön. menuDate: elle menü yalnızca bugünün menü
+  // günü için geçerli, yarın 10:00'da otomatik menü geri gelir.
+  const save = async (ids: string[] = menuIds) => {
     setSaving(true)
     setSaveError(false)
     try {
       await setDoc(doc(db, 'settings', 'dailyMenu'), {
-        recipeIds: menuIds,
+        recipeIds: ids,
+        menuDate: getMenuDateKey(),
         updatedAt: serverTimestamp(),
       })
+      setIsManual(ids.length > 0)
+      setDirty(false)
+      if (ids.length === 0) setNeedsAutoFill(true)
       setSaved(true)
       setTimeout(() => setSaved(false), 2500)
     } catch (e) {
@@ -185,11 +209,25 @@ export default function AdminDailyMenuPage() {
           </Link>
           <div>
             <h1 className="text-xl font-bold" style={{ color: 'var(--text)' }}>Günlük Menü</h1>
-            <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Öne çıkan tarifleri belirleyin</p>
+            <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+              Her gün 10:00&apos;da otomatik değişir (çorba, ana yemek, salata, tatlı). Elle kaydedilen menü yarın 10:00&apos;a kadar geçerlidir.
+            </p>
           </div>
         </div>
+        <div className="flex items-center gap-2">
+        {isManual && (
+          <button
+            onClick={() => save([])}
+            disabled={saving || loading}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-opacity disabled:opacity-50"
+            style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text)' }}
+          >
+            <RotateCcw size={14} />
+            Otomatiğe dön
+          </button>
+        )}
         <button
-          onClick={save}
+          onClick={() => save()}
           disabled={saving || loading}
           className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white transition-opacity disabled:opacity-50"
           style={
@@ -203,6 +241,7 @@ export default function AdminDailyMenuPage() {
           <Save size={14} />
           {saveError ? '✗ Hata oluştu' : saved ? '✓ Kaydedildi' : saving ? 'Kaydediliyor...' : 'Kaydet'}
         </button>
+        </div>
       </div>
 
       {loading ? (
@@ -218,6 +257,12 @@ export default function AdminDailyMenuPage() {
               <h2 className="text-sm font-bold" style={{ color: 'var(--text)' }}>
                 Günlük Menüde ({menuRecipes.length} tarif)
               </h2>
+              <span
+                className="text-xs px-2 py-0.5 rounded-full"
+                style={{ backgroundColor: 'var(--primary-dim)', color: 'var(--primary)' }}
+              >
+                {dirty ? 'Kaydedilmedi' : isManual ? 'Elle seçildi' : 'Otomatik'}
+              </span>
             </div>
             {menuRecipes.length === 0 ? (
               <div

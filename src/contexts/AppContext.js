@@ -20,7 +20,8 @@ import { getEarnedBadges } from '../constants/badges';
 import { DEFAULT_GROCERY_CATEGORY } from '../constants/groceryCategories';
 import { categorizeIngredient } from '../utils/groceryCategorizer';
 import { deleteImageByUrl } from '../services/imageUploadService';
-import { Alert, Linking, Platform } from 'react-native';
+import { Alert, AppState, Linking, Platform } from 'react-native';
+import { resolveDailyMenu, canonicalRecipeId, getMenuDateKey, getMenuDayNumber, msUntilNextMenuRollover } from '../constants/dailyMenu';
 
 const AppContext = createContext();
 
@@ -137,8 +138,12 @@ export const AppProvider = ({ children }) => {
   const [notification, setNotification] = useState(null);
 
   // Daily Menu State
-  const [dailyMenuIds, setDailyMenuIds] = useState([]);
+  // settings/dailyMenu dokümanı (elle menü + menuDate); boşsa otomatik menü.
+  const [dailyMenuSettings, setDailyMenuSettings] = useState(null);
   const [dailyMenuLoading, setDailyMenuLoading] = useState(true);
+  // Menü günü İstanbul 10:00'da değişir; uygulama açık kalırsa (ya da arka
+  // plandan dönerse) menü yeniden hesaplansın diye gün numarası state'te.
+  const [menuDayNumber, setMenuDayNumber] = useState(() => getMenuDayNumber());
 
   // Popular Recipes State
   const [popularRecipeIds, setPopularRecipeIds] = useState([]);
@@ -341,9 +346,7 @@ export const AppProvider = ({ children }) => {
     setDailyMenuLoading(true);
     try {
       const snap = await getDoc(doc(db, 'settings', 'dailyMenu'));
-      if (snap.exists()) {
-        setDailyMenuIds(snap.data().recipeIds || []);
-      }
+      setDailyMenuSettings(snap.exists() ? snap.data() : null);
     } catch (error) {
       console.error('Daily menu load error:', error);
     } finally {
@@ -353,11 +356,14 @@ export const AppProvider = ({ children }) => {
 
   const saveDailyMenu = async (recipeIds) => {
     try {
+      // menuDate: elle menü yalnızca bu menü günü için geçerli (ertesi gün
+      // 10:00'da otomatik menüye dönülür). Boş liste = otomatik menüye dön.
+      const data = { recipeIds, menuDate: getMenuDateKey() };
       await setDoc(doc(db, 'settings', 'dailyMenu'), {
-        recipeIds,
+        ...data,
         updatedAt: serverTimestamp(),
       });
-      setDailyMenuIds(recipeIds);
+      setDailyMenuSettings(data);
       return { success: true };
     } catch (error) {
       console.error('Daily menu save error:', error);
@@ -584,10 +590,33 @@ export const AppProvider = ({ children }) => {
     recipes.find(r => r.id === id) || recipes.find(r => r.overridesStaticId === id);
 
   // Daily menu resolved recipes
-  const dailyMenu = useMemo(() => {
-    if (!dailyMenuIds.length) return [];
-    return dailyMenuIds.map(findByIdOrOverride).filter(Boolean);
-  }, [dailyMenuIds, recipes]);
+  // Bugüne ait elle menü varsa o, yoksa otomatik çorba/ana yemek/salata/tatlı
+  // (src/constants/dailyMenu.js). Ayarlar yüklenmeden otomatik menü
+  // hesaplanmıyor ki elle menü varken bir an otomatik menü yanıp sönmesin.
+  const dailyMenuResolved = useMemo(() => {
+    if (dailyMenuLoading) return { recipes: [], isManual: false };
+    return resolveDailyMenu(recipes, dailyMenuSettings);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dailyMenuLoading, dailyMenuSettings, recipes, menuDayNumber]);
+  const dailyMenu = dailyMenuResolved.recipes;
+  const dailyMenuIsManual = dailyMenuResolved.isManual;
+  // Admin ekranı (DailyMenuScreen) mevcut menüyü önceden seçili gösteriyor.
+  const dailyMenuIds = useMemo(() => dailyMenu.map(canonicalRecipeId), [dailyMenu]);
+
+  useEffect(() => {
+    let timer;
+    const refresh = () => setMenuDayNumber(getMenuDayNumber());
+    const schedule = () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => { refresh(); schedule(); }, msUntilNextMenuRollover());
+    };
+    schedule();
+    // Arka planda setTimeout güvenilir değil — öne gelince yeniden kontrol et.
+    const sub = AppState.addEventListener('change', (state) => {
+      if (state === 'active') { refresh(); schedule(); }
+    });
+    return () => { clearTimeout(timer); sub.remove(); };
+  }, []);
 
   const popularRecipes = useMemo(() => {
     if (!popularRecipeIds.length) return [];
@@ -995,6 +1024,7 @@ export const AppProvider = ({ children }) => {
     // Daily Menu
     dailyMenu,
     dailyMenuIds,
+    dailyMenuIsManual,
     dailyMenuLoading,
     saveDailyMenu,
     loadDailyMenu,

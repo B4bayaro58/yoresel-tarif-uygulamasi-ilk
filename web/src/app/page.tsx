@@ -6,6 +6,8 @@ import HomeClient from './HomeClient'
 import { RECIPES_DATA } from '@shared/recipes'
 // @ts-ignore
 import { getRecipeTags } from '@shared/recipeTags'
+// @ts-ignore
+import { resolveDailyMenu } from '@shared/dailyMenu'
 
 const localRecipes: Recipe[] = (RECIPES_DATA as any).tr || []
 
@@ -75,13 +77,20 @@ function toPlainRecipe(id: string, data: Record<string, unknown>): Recipe {
   return { id, ...plain } as Recipe
 }
 
+type DailyMenuSettings = { recipeIds: string[]; menuDate: string | null }
+
 async function fetchHomeData() {
   try {
     const [menuSnap, popularSnap] = await Promise.all([
       getDoc(doc(db, 'settings', 'dailyMenu')),
       getDoc(doc(db, 'settings', 'popularRecipes')),
     ])
-    const dailyIds: string[] = menuSnap.exists() ? menuSnap.data().recipeIds || [] : []
+    const menuData = menuSnap.exists() ? menuSnap.data() : null
+    const dailyIds: string[] = menuData?.recipeIds || []
+    // Elle kaydedilmiş menü (yalnızca menuDate günü geçerli) — bkz. @shared/dailyMenu
+    const dailyMenuSettings = menuData
+      ? { recipeIds: dailyIds.map(String), menuDate: typeof menuData.menuDate === 'string' ? menuData.menuDate : null }
+      : null
     const popularIds: string[] = popularSnap.exists() ? popularSnap.data().recipeIds || [] : []
 
     const queries = [
@@ -113,10 +122,10 @@ async function fetchHomeData() {
     const merged = new Map<string, Recipe>()
     snaps.forEach((snap) => snap.docs.forEach((d) => merged.set(d.id, toPlainRecipe(d.id, d.data()))))
 
-    return { firestoreRecipes: Array.from(merged.values()), dailyIds, popularIds }
+    return { firestoreRecipes: Array.from(merged.values()), dailyMenuSettings, popularIds }
   } catch {
     // Firebase not configured or no connection — use local only
-    return { firestoreRecipes: [] as Recipe[], dailyIds: [] as string[], popularIds: [] as string[] }
+    return { firestoreRecipes: [] as Recipe[], dailyMenuSettings: null as DailyMenuSettings | null, popularIds: [] as string[] }
   }
 }
 
@@ -154,7 +163,7 @@ function toCardRecipe(r: Recipe): Recipe {
 }
 
 export default async function HomePage() {
-  const { firestoreRecipes, dailyIds, popularIds } = await getHomeData()
+  const { firestoreRecipes, dailyMenuSettings, popularIds } = await getHomeData()
 
   const overriddenIds = new Set(
     firestoreRecipes
@@ -169,12 +178,10 @@ export default async function HomePage() {
   displayableFirestore.forEach((r) => allMap.set(r.id, r))
   const allRecipes = Array.from(allMap.values())
 
-  const dailyMenuRecipes = dailyIds
-    .map((id) =>
-      allRecipes.find((r) => String(r.id) === String(id)) ||
-      allRecipes.find((r) => String((r as any).overridesStaticId) === String(id))
-    )
-    .filter(Boolean) as Recipe[]
+  // Günün Menüsü: bugüne ait elle menü yoksa otomatik çorba/ana yemek/salata/
+  // tatlı, İstanbul 10:00'da değişir. Sayfa 1 saat önbellekte kaldığı için
+  // HomeClient aynı hesabı tarayıcıda tekrarlayıp 10:00 geçişini anında yansıtır.
+  const dailyMenuRecipes = resolveDailyMenu(allRecipes, dailyMenuSettings).recipes as Recipe[]
 
   const popularRecipes = popularIds
     .map((id) =>
@@ -196,6 +203,7 @@ export default async function HomePage() {
     <HomeClient
       recipes={shuffled.map(toCardRecipe)}
       dailyMenuRecipes={dailyMenuRecipes.map(toCardRecipe)}
+      dailyMenuSettings={dailyMenuSettings}
       popularRecipes={popularRecipes.map(toCardRecipe)}
     />
   )

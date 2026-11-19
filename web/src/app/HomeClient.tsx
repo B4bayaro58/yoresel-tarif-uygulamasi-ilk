@@ -18,6 +18,8 @@ import { BlogPost } from '@/types'
 import AdSlot from '@/components/AdSlot'
 // @ts-ignore
 import { QUICK_FILTERS, getRecipeTags } from '@shared/recipeTags'
+// @ts-ignore
+import { resolveDailyMenu, msUntilNextMenuRollover } from '@shared/dailyMenu'
 
 const PAGE_SIZE = 20
 
@@ -31,6 +33,7 @@ interface QuickFilter {
 interface HomeClientProps {
   recipes: Recipe[]
   dailyMenuRecipes: Recipe[]
+  dailyMenuSettings: { recipeIds: string[]; menuDate: string | null } | null
   popularRecipes: Recipe[]
 }
 
@@ -41,7 +44,7 @@ function getGreeting(hour: number) {
   return 'Hızlı bir akşam yemeğine ne dersin?'
 }
 
-export default function HomeClient({ recipes, dailyMenuRecipes, popularRecipes }: HomeClientProps) {
+export default function HomeClient({ recipes, dailyMenuRecipes: serverDailyMenu, dailyMenuSettings, popularRecipes }: HomeClientProps) {
   const { t, favorites, toggleFavorite, preferredQuickFilters, onboardingPrefsSet, saveOnboardingPreferences } = useApp()
   const { user } = useAuth()
   const router = useRouter()
@@ -59,6 +62,23 @@ export default function HomeClient({ recipes, dailyMenuRecipes, popularRecipes }
   useEffect(() => {
     setGreeting(getGreeting(new Date().getHours()))
   }, [])
+
+  // Sunucuda üretilen menü 1 saate kadar önbellekte kalabiliyor; 10:00 (TR)
+  // geçişini kaçırmamak için tarayıcıda aynı deterministik hesap tekrarlanıyor
+  // ve sekme açık kalırsa bir sonraki geçişte yeniden çalışıyor.
+  const [dailyMenuRecipes, setDailyMenuRecipes] = useState<Recipe[]>(serverDailyMenu)
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout>
+    const refresh = () => {
+      const next = resolveDailyMenu(recipes, dailyMenuSettings).recipes as Recipe[]
+      setDailyMenuRecipes((prev) =>
+        prev.length === next.length && prev.every((r, i) => r.id === next[i].id) ? prev : next
+      )
+      timer = setTimeout(refresh, msUntilNextMenuRollover())
+    }
+    refresh()
+    return () => clearTimeout(timer)
+  }, [recipes, dailyMenuSettings])
 
   useEffect(() => {
     getLatestBlogPosts(4).then(setLatestPosts)
