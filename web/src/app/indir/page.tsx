@@ -21,7 +21,7 @@ const ANDROID_PACKAGE = 'com.cagatay58.yoreseltarifuygulamasi'
 const APP_STORE_ID = '6801889814'
 // App Store Connect > Uygulama Analizi > Kampanya oluşturucu'daki "pt" değeri.
 // Boşken link yine çalışır, sadece kampanya kırılımı App Store Connect'te görünmez.
-const APP_STORE_PROVIDER_TOKEN = ''
+const APP_STORE_PROVIDER_TOKEN = '129299133'
 
 const PLAY_BASE = `https://play.google.com/store/apps/details?id=${ANDROID_PACKAGE}`
 const APP_STORE_BASE = `https://apps.apple.com/tr/app/id${APP_STORE_ID}`
