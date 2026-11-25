@@ -994,6 +994,146 @@ Bulgur, kıyma ve soğandan yoğrulan minik köfteler çorbanın suyunu çekerek
 
 Püf noktası: Köfte hamurunu iyice yoğurun ki pişerken dağılmasın. Köfteleri küçük yapın; büyük köftenin ortası geç pişer. Köfteleri suya kaynarken ekleyin ve sonra ateşi kısın. Ekşiyi pişirmenin sonunda ekleyip tadına bakarak ayarlayın, çünkü nar ekşilerinin ekşiliği birbirinden farklıdır.`,
   },
+  'edirne-badem-ezmesi': {
+    tr: `Badem ezmesi, Edirne'nin Osmanlı döneminden bu yana süregelen şekerleme geleneğinin en bilinen ürünü. Öğütülmüş badem, şeker şerbeti ve gül suyuyla pişirilip yoğrulan bu ezme, Edirne'de meyve ve çiçek biçimlerinde şekillendirilip hediye kutularında sunulur. Şehre gelenlerin dönüşte yanında götürdüğü başlıca hediyelerden biridir.
+
+Badem ezmesinin kalitesi doğrudan bademe bağlıdır. Yağlı ve aromalı bademler ezmeye hem yumuşak bir doku hem de kendine özgü bir tat verir; gül suyu ise bu tadı hafifçe tamamlar.
+
+Püf noktası: Bademi haşlayıp kabuğunu soyduktan sonra iyice kurulayın; nemli badem öğütülürken hamurlaşır. Şerbetin kıvamı her şeyi belirler, bu yüzden bir şeker termometresi kullanmak işinizi çok kolaylaştırır. Ezmeyi yoğururken pudra şekerini azar azar ekleyin. Hava almayan bir kutuda saklarsanız uzun süre taze kalır.`,
+  },
+  'diyarbakir-ciger-kebabi': {
+    tr: `Ciğer kebabı, Diyarbakır'ın sokak lezzetlerinin başında gelir. Şehirde ciğer yalnızca öğle ve akşam değil, sabahın erken saatlerinde kahvaltı olarak da yenir. Küçük parçalar halinde kesilen kuzu ciğeri, aralarına kuyruk yağı dizilerek şişe geçirilir ve közde birkaç dakikada pişirilir.
+
+Bu kebabın sırrı kuyruk yağıdır: közde eriyen yağ ciğere işler, onu hem yumuşatır hem de lezzetlendirir. Pişen şişler lavaşa alınır, yanında sumaklı soğan ve maydanozla servis edilir. Hafifçe ezilmiş kişniş tanesi ise bu tarife kendine özgü bir koku katar.
+
+Püf noktası: Ciğerin taze olması şarttır. Közün çok kuvvetli ve şişlerin ateşe yakın olması gerekir; ciğer kısa sürede pişmeli, uzun pişen ciğer sertleşir. Tuzu pişirmeden hemen önce ya da pişirdikten sonra ekleyin. Ciğer kebabı beklemez, şişten alınır alınmaz yenmelidir.`,
+  },
+  'erzurum-ketesi': {
+    tr: `Kete, Doğu Anadolu ve Kafkasya mutfağının sevilen mayalı çöreği. Erzurum'da ketenin en bilinen hali, içine tereyağında kavrulmuş un ve şekerden yapılan "iç" konan sürümüdür. Hamurun içine kapatılan bu iç, fırında pişerken hafifçe karamelleşir ve kete her ısırıkta yumuşak hamurla tatlı, kumsu bir dolguyu bir arada sunar.
+
+Erzurum'da kete, kahvaltıda ve çay saatinde ikram edilen, misafir sofralarının vazgeçilmez hamur işlerindendir. Uzun süre bayatlamadığı için yolculuklarda da yanınıza alabileceğiniz bir çörektir.
+
+Püf noktası: Unu tereyağında kısık ateşte, sürekli karıştırarak kavurun; acele ederseniz dibi yanar ve iç acılaşır. Kavrulan unun rengi açık kahve olmalı. İç harcını hamura koymadan önce soğutun. Hamuru kapatıp tekrar açarken nazik olun, aksi halde iç dışarı taşar.`,
+  },
+  'gaziantep-sobiyet': {
+    tr: `Şöbiyet, Gaziantep'in baklava ustalarının ustalığını gösteren şerbetli tatlılardan biri. İnce yufkaların arasına kaymak ve bol Antep fıstığı konarak hazırlanır, tereyağıyla fırında pişirilip soğuk şerbetle tatlandırılır. Antep'te baklava ile birlikte en çok tercih edilen tatlılar arasındadır.
+
+Şöbiyeti baklavadan ayıran, içindeki kaymaktır. Kaymak fırında yumuşak bir kıvam alır ve fıstıkla birleşerek her lokmada kremamsı bir dolgu oluşturur. Bu yüzden şöbiyet baklavaya göre daha yumuşak ve doyurucudur.
+
+Püf noktası: Yufkaların arasına tereyağını cömertçe sürün, kuru kalan katlar kızarmaz. Kaymağı çok kalın sürmeyin; pişerken kenarlardan taşabilir. Şerbetin soğuk, tatlının sıcak olması gerekir, böylece yufka çıtırlığını korur. Şöbiyeti servis etmeden önce şerbetini iyice çekmesi için bekletin.`,
+  },
+  'gaziantep-bulbuluvasi': {
+    tr: `Bülbül yuvası, adını yuvaya benzeyen görünüşünden alan, Gaziantep'in fıstıklı şerbetli tatlılarından biri. İnce yufka bir çubuğa sarılıp büzülerek halka biçimi verilir, ortasındaki çukura bol miktarda Antep fıstığı konur. Tereyağıyla fırında pişirilir ve soğuk şerbetle tatlandırılır.
+
+Bu tatlının görselliği kadar dokusu da önemlidir. Büzülen yufka katmanları fırında çıtırlaşır, ortadaki fıstık ise şerbetle birleşerek yoğun bir lezzet oluşturur. Antep'te bayram ve özel gün sofralarında baklavanın yanında sıkça yer alır.
+
+Püf noktası: Yufkayı çubuğa sararken çok sıkmayın; büzme sırasında yırtılabilir. Fıstığı çok ince çekmek yerine iri dövün, böylece doku daha belirgin olur. Tereyağını her yuvaya iyice sürün ki katlar eşit kızarsın. Şerbeti tatlı fırından çıkar çıkmaz, sıcakken dökün.`,
+  },
+  'hatay-muhammara': {
+    tr: `Muhammara, Hatay mutfağının en sevilen mezelerinden biri ve Halep mutfağıyla ortak bir mirasın parçası. Adı Arapçada "kızartılmış, kızıla boyanmış" anlamına gelen bir kelimeden gelir; rengini de közlenmiş kırmızı biberden alır. Ceviz, nar ekşisi, sarımsak ve baharatlarla birleşen biber, yoğun ve hafif ekşi bir ezmeye dönüşür.
+
+Hatay sofralarında muhammara, humus ve diğer mezelerle birlikte servis edilir ve ekmekle yenir. Közlenmiş biberin dumanlı tadı, cevizin dolgunluğu ve nar ekşisinin ekşiliği bu mezenin dengesini kurar.
+
+Püf noktası: Biberleri kabukları kararana kadar közleyin ve bir kapta ya da poşette dinlendirin; kabukları kolayca soyulur. Cevizi hafifçe kavurursanız aroması belirginleşir. Mutfak robotunda tamamen pürüzsüz bir ezme yerine hafif dokulu bir kıvam bırakmak daha geleneksel bir sonuç verir.`,
+  },
+  'hatay-haytali': {
+    tr: `Haytalı, Adana, Mersin ve Hatay'da yaz aylarının serinletici sokak tatlısı. Nişastayla pişirilip soğutulan, gül suyu kokulu muhallebi küçük parçalar halinde kesilir, dövülmüş buzun üzerine konur ve tatlandırılarak servis edilir. Sıcak Çukurova ve Hatay yazlarında özellikle akşamüstleri ve Ramazan iftarlarından sonra sevilerek yenir.
+
+Haytalının özelliği hafifliğidir: yumurta ve süt içermediği için ağır bir tatlı değildir. Gül suyunun kokusu, buzun serinliği ve üzerine eklenen tatlandırıcının uyumu basit malzemelerden etkileyici bir tatlı ortaya çıkarır.
+
+Püf noktası: Nişastayı mutlaka soğuk suyla açın, sıcak suya doğrudan eklenen nişasta topaklanır. Karışım saydamlaşıp koyulaşana kadar pişirin; az pişen nişasta un tadı verir. Kalıbı soğuk suyla ıslatırsanız soğuyan muhallebi kolay çıkar. Buzu servis anında ekleyin.`,
+  },
+  'isparta-gul-receli': {
+    tr: `Isparta, yağ gülünün Türkiye'deki merkezi ve dünyanın en önemli gül yağı üretim bölgelerinden biri. Mayıs ve haziran aylarında gül bahçelerinde hasat başlar; çiçekler kokusunu en çok koruduğu sabahın erken saatlerinde toplanır. Bu güllerin yaprakları gül yağı ve gül suyunun yanı sıra kendine özgü kokusuyla gül reçeline de dönüşür.
+
+Gül reçeli, hem tadı hem de kokusuyla diğer reçellerden ayrılır. Yaprakların şekerle bir gece bekletilmesi kokuyu ve rengi açığa çıkarır; limon ise hem rengi canlı tutar hem de tatlılığı dengeler.
+
+Püf noktası: Yalnızca ilaçlanmamış, kokulu gül yapraklarını kullanın. Yaprakların beyaz dip kısımlarını mutlaka kesin, acılık verir. Şekerle ovarken yaprakları ezmeden, hafifçe bastırın. Gül suyunu ocaktan aldıktan sonra ekleyin; pişirilirse kokusu uçar.`,
+  },
+  'mersin-cezerye': {
+    tr: `Cezerye, Mersin'in simgesi haline gelmiş, havuçla yapılan bir şekerleme. Adını Arapçada havuç anlamına gelen "cezer" kelimesinden alır. Havuç şekerle uzun süre pişirilerek koyulaştırılır, içine ceviz eklenir, kesilen parçalar da hindistancevizine bulanır. Mersin'e gelenlerin dönüşte yanında götürdüğü başlıca hediyelerdendir.
+
+Cezeryenin tadı havucun doğal tatlılığından ve uzun pişirme sırasında oluşan hafif karamel notasından gelir. Ceviz doku katar, hindistancevizi ise parçaların birbirine yapışmasını önler.
+
+Püf noktası: Havuçlar suyunu tamamen çekene kadar sabırla karıştırarak pişirin; erken alınan karışım kesildiğinde dağılır. Tencerenin dibi kolay yandığı için ateşi kısık tutun. Karışımı kalıba döküp iyice soğuyup sertleşmesini bekleyin, ondan sonra kesin. Kuru ve serin bir yerde saklayın.`,
+  },
+  'izmir-kumru': {
+    tr: `Kumru, İzmir'in ve özellikle Çeşme'nin simgesi haline gelmiş sıcak bir sandviç. Ona adını veren, kendine özgü oval ve susamlı kumru ekmeğidir; bu ekmek geleneksel olarak nohut mayasıyla yapılır. Ekmeğin içine kaşar peyniri, sucuk, salam ya da sosis ve domates konur, tost makinesinde bastırılarak pişirilir.
+
+Kumru ayaküstü bir atıştırmalık gibi görünse de İzmir'de neredeyse bir kültürdür. Çeşme'ye yolu düşen birçok kişi, plaj dönüşü kumrucularda mola verir.
+
+Püf noktası: Ekmeğin içini hafifçe yağlayıp sıcak sac ya da tost makinesinde bastırarak pişirin; dışı çıtırlaşırken peynir erimeli. Sucuk ve sosisi önceden ızgarada kısa süre pişirmek lezzetini artırır. Kumru ekmeği bulamazsanız sıkı dokulu, susamlı bir sandviç ekmeği en yakın sonucu verir.`,
+  },
+  'izmir-gevrek': {
+    tr: `İzmir'de simide simit değil, gevrek denir. İzmir gevreği İstanbul simidine göre genellikle daha ince, daha çıtır ve daha bol susamlıdır. Sabah erken saatlerde fırından çıkan gevrek, boyoz ve haşlanmış yumurtayla birlikte İzmir'in ayaküstü kahvaltısının vazgeçilmez parçasıdır.
+
+Gevreğin rengini ve hafif tatlı kabuğunu, susama bulanmadan önce batırıldığı sulandırılmış pekmez verir. Fırında yüksek ısıda pişen gevrek kızıl bir renk alır ve dışı çıtır çıtır olur.
+
+Püf noktası: Hamuru iyi yoğurun ve dinlendirin; esnek hamur ince ve uzun şekilde açılabilir. Halkaları büktükten sonra pekmezli suya kısa süre batırın, fazlasını süzün. Susamı bol kullanın ve her tarafı kaplayın. Fırını iyice ısıtın; düşük ısıda pişen gevrek çıtırlaşmaz, yumuşak kalır.`,
+  },
+  'nevsehir-testi-kebabi': {
+    tr: `Testi kebabı, Kapadokya'nın en tanınan yemeği. Et ve sebzeler toprak bir testinin içine yerleştirilir, testinin ağzı kapatılır ve saatlerce fırında pişirilir. Pişen testi sofrada kırılarak açılır ve bu gösteri yemeğin bir parçası haline gelir. Kızılırmak'ın kiliyle yapılan çömleklerle ünlü Avanos, bu geleneğin bölgedeki köklerini de hatırlatır.
+
+Kapalı testide pişen et, sebzelerin ve kendi suyunun içinde yavaş yavaş yumuşar. Buhar dışarı çıkamadığı için tüm aroma testinin içinde kalır.
+
+Püf noktası: Testiyi kullanmadan önce suda bekletin; ıslak toprak kap fırında çatlamaya karşı daha dayanıklıdır. Testiyi soğuk fırına koyup fırınla birlikte ısıtın, ani ısı değişimi testiyi çatlatabilir. Ağzını hamur ya da folyoyla iyice kapatın. Testiyi kırarken bir bezle tutun ve parçalara dikkat edin.`,
+  },
+  'buryan-kebabi-siirt': {
+    tr: `Büryan, Siirt ve Bitlis'in en ünlü kuzu yemeği. Geleneksel yöntemde kuzu, toprağa açılmış derin tandır kuyusuna asılır, kuyunun ağzı kapatılır ve et saatlerce kendi buharında pişer. Siirt'te büryan çoğu zaman sabahın erken saatlerinde, tandırdan yeni çıkmışken yenir.
+
+Uzun ve yavaş pişirme, etin bağ dokusunu eritir ve kuzu kemikten kendiliğinden ayrılacak kadar yumuşar. Bu tarif, aynı etkiyi ev fırınında, sıkıca kapatılmış bir güveçte düşük ısıyla uzun süre pişirerek yakalar.
+
+Püf noktası: Eti pişirmeden önce baharatla ovup bir süre dinlendirin. Güveci folyoyla ve kapağıyla sıkıca kapatın; buhar kaçarsa et kurur. Isıyı düşük tutup sabırlı olun. Son yarım saatte kapağı açıp ısıyı yükseltmek etin üstüne renk verir. Etin kendi suyunu lavaşa dökerek servis edin.`,
+  },
+  'rize-laz-boregi': {
+    tr: `Laz böreği, adına rağmen tuzlu değil tatlı bir börek: ince yufka katmanlarının arasına muhallebi konarak yapılan, Rize ve Doğu Karadeniz'in sevilen tatlısıdır. Fırında tereyağıyla kızaran yufkalar dışta çıtır bir kabuk oluştururken içerideki muhallebi yumuşak ve kremamsı kalır.
+
+Laz böreğinin özelliği, sütlü tatlı ile hamur işini tek bir tepside birleştirmesidir. Bazı tariflerde üzerine şerbet dökülür; bu tarifte ise şerbet yerine tarçınla servis edilir, böylece daha hafif bir tat elde edilir.
+
+Püf noktası: Muhallebiyi yufkaya yaymadan önce tamamen soğutun; sıcak muhallebi yufkayı ıslatıp hamurlaştırır. Yumurta sarılarını muhallebiye eklerken önce biraz sıcak muhallebiyle ılıtın, yoksa pişip topaklanır. Yufkaların arasına tereyağını eksik etmeyin. Dilimlemeden önce böreği biraz dinlendirin.`,
+  },
+  'kastamonu-banduma': {
+    tr: `Banduma, Kastamonu ve çevresinde pişirilen, ekmeği et suyuyla buluşturan bir sofra yemeği. Bayat ekmek, haşlanmış etin suyuyla ıslatılır, üzerine salçalı ve domatesli bir sosla kavrulmuş et yayılır. Tiride benzeyen bu yemek, ekmeği israf etmeme anlayışından doğmuş köklü bir Anadolu geleneğini yansıtır.
+
+Banduma'nın lezzeti, et suyunun kalitesinden ve ekmeğin bu suyu ne kadar iyi emdiğinden gelir. Naneli, pul biberli tereyağı yemeğe renk ve koku katar, yanında servis edilen soğuk yoğurt ise sıcak tabağı dengeler.
+
+Püf noktası: Kemikli et kullanın; et suyuna lezzet ve kıvam kemikten gelir. Ekmeği bayat kullanın, taze ekmek et suyunda hemen dağılır. Et suyunu ekmeğin üzerine azar azar dökün, ekmek ıslanmalı ama çamurlaşmamalı. Tereyağını servis anında gezdirin ve yemeği bekletmeden sofraya getirin.`,
+  },
+  'samsun-nokul': {
+    tr: `Nokul, Samsun, Amasya ve Tokat çevresinde sevilen, cevizli ve tarçınlı iç harçla doldurulan mayalı bir hamur işi. Hamur ince açılır, üzerine tereyağı sürülüp ceviz serpilir, rulo yapılıp dilimlenerek fırında pişirilir. Kahvaltıda ve çay saatinde ikram edilir.
+
+Nokulun tadı, cevizin dolgunluğu ile tarçının sıcak kokusundan gelir. Dilimlerin kesik yüzleri yukarı bakacak şekilde pişmesi, içteki spiral dokunun görünmesini sağlar ve nokula kendine özgü görüntüsünü verir.
+
+Püf noktası: Hamuru mayalandırırken sıcak ve hava akımı olmayan bir yerde bekletin. Ruloyu sıkı sarın ki dilimler pişerken açılmasın. Ruloyu kesmek için keskin bir bıçak kullanın ve bastırmadan kesin. Dilimlere tekrar dinlenme süresi verin; ikinci mayalanma nokulu daha yumuşak yapar.`,
+  },
+  'giresun-findikli-sutlac': {
+    tr: `Giresun, dünyaca ünlü fındığının yetiştiği şehir; fındık burada tatlıdan yemeğe pek çok tarifte kullanılır. Fındıklı sütlaç, klasik fırın sütlacına kavrulmuş Giresun fındığı eklenerek hazırlanan, Karadeniz'in hafif ve sevilen tatlılarından biri.
+
+Fındık hem sütlacın içine karışarak tatlıya aroma verir hem de üzerine serpildiğinde çıtır bir doku katar. Fırında kızarmış üst katman, sütlacın klasik görünümünü ve hafif karamelimsi tadını tamamlar.
+
+Püf noktası: Fındığı ekleme öncesinde hafifçe kavurun; çiğ fındık aynı aromayı vermez. Pirinci önce iyice pişirin, sütün içinde tam yumuşamayan pirinç sert kalır. Nişastayı soğuk suyla eritip ekleyin ve dibi tutmasın diye sürekli karıştırın. Fırında yalnızca üst ısıyı kullanın ve kaseleri yakından takip edin.`,
+  },
+  'urfa-kebabi': {
+    tr: `Urfa kebabı, adını aldığı şehrin kebap kültürünün temsilcisi. Kıyma ve kuyruk yağı isot, sarımsak ve kimyonla yoğrulup yassı şişlere sarılır ve közde pişirilir. Adana kebabına benzese de daha az acıdır ve karakterini Urfa'nın kendine özgü biberi isottan alır.
+
+İsot, kırmızı biberin gündüz güneşte kurutulup gece örtülerek "terletilmesiyle" elde edilir. Bu işlem bibere koyu, neredeyse siyaha çalan bir renk ve dumanlı, hafif tatlı bir aroma verir. Urfa kebabını acıdan çok bu aromayla tanırsınız.
+
+Püf noktası: Kıyma harcını uzun süre, yapışkan bir kıvam alana kadar yoğurun; iyi yoğrulmayan harç şişten düşer. Harcı pişirmeden önce soğukta dinlendirin. Şişlere geçirirken ellerinizi ıslatın. Közün alevsiz olması gerekir. Kebabı közlenmiş domates, biber ve lavaşla servis edin.`,
+  },
+  'trabzon-kuymak': {
+    tr: `Kuymak, Trabzon başta olmak üzere Doğu Karadeniz'in kahvaltı sofralarının yıldızı. Bölgenin bazı yerlerinde mıhlama olarak da bilinir. Mısır unu tereyağında pişirilir, içine eriyip uzayan bir peynir eklenir ve bakır sahanda, sıcacık sofraya getirilir.
+
+Kuymağın lezzeti, kullanılan malzemenin kalitesinden gelir: taze ve kokulu Karadeniz tereyağı, ince öğütülmüş mısır unu ve eridiğinde ipeksi bir şekilde uzayan kolot peyniri. Ekmekle ya da kaşıkla, ortak sahandan yenmesi de geleneğin bir parçasıdır.
+
+Püf noktası: Mısır ununu suya azar azar ve sürekli karıştırarak ekleyin, yoksa topaklanır. Tereyağından tasarruf etmeyin; kuymağın kıvamını ve tadını yağ belirler. Peyniri en son ekleyin ve uzayana kadar karıştırın. Kuymak soğudukça katılaşır, bu yüzden pişer pişmez servis edin.`,
+  },
+  'van-kahvaltisi': {
+    tr: `Van kahvaltısı, Türkiye'nin en ünlü kahvaltı sofralarından biri. Van'da kahvaltı bir öğünden çok, saatlerce süren bir ikram geleneğidir. Şehirde kahvaltı salonlarının sıralandığı sokaklar bile vardır. Sofrada onlarca küçük tabak bulunur, ama bu sofranın simgesi Van otlu peyniridir.
+
+Otlu peynir, içine sirmo, mendi ve benzeri yabani dağ otları katılarak yapılır ve aromasını bu otlardan alır. Yanına petek bal, kaymak, tereyağında ısıtılmış kavut, sahanda yumurta, taze sebzeler ve reçeller eşlik eder. Demli çay bu sofranın ayrılmaz parçasıdır.
+
+Püf noktası: Van kahvaltısının ruhu çeşitliliktir; az miktarlarda ama çok çeşitli tabaklar hazırlayın. Otlu peyniri buzdolabından erken çıkarın, oda sıcaklığında aroması daha iyi ortaya çıkar. Yumurtayı en son, herkes sofraya oturunca pişirin. Çayı taze demleyin ve sık sık tazeleyin.`,
+  },
 }
 
 export function getRecipeIntro(recipeId, lang = 'tr') {
