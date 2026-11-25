@@ -33,7 +33,7 @@ interface QuickFilter {
 interface HomeClientProps {
   recipes: Recipe[]
   dailyMenuRecipes: Recipe[]
-  dailyMenuSettings: { recipeIds: string[]; menuDate: string | null } | null
+  dailyMenuSettings: { recipeIds: string[]; menuDate: string | null; auto?: boolean } | null
   popularRecipes: Recipe[]
 }
 

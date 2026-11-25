@@ -77,7 +77,7 @@ function toPlainRecipe(id: string, data: Record<string, unknown>): Recipe {
   return { id, ...plain } as Recipe
 }
 
-type DailyMenuSettings = { recipeIds: string[]; menuDate: string | null }
+type DailyMenuSettings = { recipeIds: string[]; menuDate: string | null; auto?: boolean }
 
 async function fetchHomeData() {
   try {
@@ -89,7 +89,11 @@ async function fetchHomeData() {
     const dailyIds: string[] = menuData?.recipeIds || []
     // Elle kaydedilmiş menü (yalnızca menuDate günü geçerli) — bkz. @shared/dailyMenu
     const dailyMenuSettings = menuData
-      ? { recipeIds: dailyIds.map(String), menuDate: typeof menuData.menuDate === 'string' ? menuData.menuDate : null }
+      ? {
+          recipeIds: dailyIds.map(String),
+          menuDate: typeof menuData.menuDate === 'string' ? menuData.menuDate : null,
+          auto: menuData.auto === true,
+        }
       : null
     const popularIds: string[] = popularSnap.exists() ? popularSnap.data().recipeIds || [] : []
 
