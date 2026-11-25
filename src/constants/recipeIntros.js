@@ -1134,6 +1134,160 @@ Otlu peynir, içine sirmo, mendi ve benzeri yabani dağ otları katılarak yapı
 
 Püf noktası: Van kahvaltısının ruhu çeşitliliktir; az miktarlarda ama çok çeşitli tabaklar hazırlayın. Otlu peyniri buzdolabından erken çıkarın, oda sıcaklığında aroması daha iyi ortaya çıkar. Yumurtayı en son, herkes sofraya oturunca pişirin. Çayı taze demleyin ve sık sık tazeleyin.`,
   },
+  'tire-koftesi': {
+    tr: `Tire köftesi, İzmir'in Tire ilçesinin adını taşıyan, sunumuyla diğer ızgara köftelerden ayrılan bir lezzet. İnce ve uzun şekilde şişe sarılan köfteler közde pişirilir, ardından küp doğranmış pidenin üzerine dizilir. Üzerine domates sosu ve en son kızgın tereyağı dökülür.
+
+Köfte harcı oldukça sadedir: kıyma, soğan ve birkaç baharat. Lezzetin asıl kaynağı etin kalitesi ve közün dumanıdır. Sosu emen pide ile tereyağının cızırtısı, yemeği İskender'e benzer ama kendine özgü bir tabağa dönüştürür.
+
+Püf noktası: Harcı uzun süre yoğurup dinlendirin ki şişte tutunsun. Köfteleri ince şekillendirin; kalın köfte közde dışı yanarken içi geç pişer. Pideyi servisten hemen önce ısıtın, sos ve tereyağı dökülene kadar ıslanmasın. Tereyağını köpürene kadar kızdırıp sofrada dökün.`,
+  },
+  'konya-arabasi-corbasi': {
+    tr: `Arabaşı, İç Anadolu'nun kış gecelerine özgü, alışılmışın dışında bir çorba. Acılı ve salçalı tavuk çorbası, ayrıca pişirilip tepside soğutularak katılaştırılan bir hamurla birlikte yenir. Bir kaşık sıcak çorbayla bir parça soğuk hamur aynı anda ağza alınır; gelenekte hamur çiğnenmeden yutulur.
+
+Konya ve çevresinde arabaşı, uzun kış gecelerinde komşuların ve akrabaların bir araya geldiği sohbet toplantılarının yemeğidir. Sıcak çorba ile serin hamur arasındaki zıtlık, yemeğin hem keyfini hem de geleneğini oluşturur.
+
+Püf noktası: Hamuru topaksız olması için unu soğuk tavuk suyuyla çırparak açın ve pişirirken hiç durmadan karıştırın. Hamur kaşıktan zor düşecek kadar koyulaşmalı. Tepsiyi önceden ıslatırsanız katılaşan hamur kolay kesilir. Çorbayı servis anına kadar sıcak tutun.`,
+  },
+  'mardin-kusleme': {
+    tr: `Küşleme, kuzunun en yumuşak kısmı olan bonfile etinden, yörede "lokum" denen bölümden yapılan bir kebap. Mardin, Diyarbakır ve Urfa'da sevilen küşleme, sade bir hazırlıkla közde kısa sürede pişirilir. Baharat neredeyse hiç kullanılmaz, çünkü bu kebapta etin kendisi ön plandadır.
+
+Küşlemenin başarısı doğru etten ve doğru pişirmeden gelir. Kemiksiz, yağsız ve lifleri ince olan bu et, közde birkaç dakikada pişer ve ağızda dağılacak kadar yumuşak kalır. Lavaş, közlenmiş biber, domates ve sumaklı soğanla servis edilir.
+
+Püf noktası: Etin zarlarını ve sinirlerini dikkatlice temizleyin. Pişirmeden önce eti oda sıcaklığına getirin, soğuk et közde eşit pişmez. Tuzu pişirmenin sonunda serpin, önceden tuzlanan et suyunu kaybeder. Fazla pişirmeyin; içi hafif pembe kalan küşleme en lezzetlisidir.`,
+  },
+  'babaganush': {
+    tr: `Babagannuş, Hatay ve Doğu Akdeniz mutfağının közlenmiş patlıcanla yapılan mezelerinden biri. Hatay usulünde patlıcan ezilip püre yapılmaz, iri doğranır ve domates, biber, taze soğan ve maydanozla birleştirilir. Nar ekşisi, limon ve zeytinyağı salataya ekşi, ferah bir tat verir.
+
+Babagannuş sık sık mütebbel ile karıştırılır. Mütebbelde közlenmiş patlıcan tahin ve yoğurtla ezilir; babagannuş ise tahinsizdir ve daha çok bir salataya benzer. Her ikisi de Hatay sofralarında birlikte bulunabilir.
+
+Püf noktası: Patlıcanları fırında değil, doğrudan ateşte közleyin; dumanlı tadın kaynağı budur. Kabuklarını soyduktan sonra patlıcanı süzgeçte bekletin, fazla suyu salatayı sulandırır. Patlıcanı bıçakla doğrayın, blender kullanmayın. Salatayı servis etmeden kısa süre önce karıştırın ki sebzeler diri kalsın.`,
+  },
+  'adana-anali-kizli': {
+    tr: `Analı kızlı, Güneydoğu Anadolu ve Çukurova mutfağında, adını iki farklı köfteden alan bir çorba. "Ana" denen büyük köftelerin içi kıyma ve cevizle doldurulur; "kız" denen küçük köfteler ise içi boş, nohut büyüklüğünde bulgur toplarıdır. İkisi birlikte nohutlu, salçalı ve ekşili bir et suyunda pişer.
+
+Bu çorba emek ister ve çoğu zaman özel günlerde, kalabalık sofralar için hazırlanır. Ekşiliği limon ya da nar ekşisinden, ferahlığı en son gezdirilen naneli tereyağından gelir.
+
+Püf noktası: Bulgur hamurunu uzun süre yoğurun, ince açıldığında çatlamayacak esneklikte olmalı. Analara iç harcı koyarken ellerinizi ıslatın ve köfteleri sıkıca kapatın. Anaları kızlardan önce tencereye atın, çünkü büyük köftelerin pişmesi daha uzun sürer. Ekşiyi en sonda ekleyin.`,
+  },
+  'harput-mantisi': {
+    tr: `Harput mantısı, adında mantı geçmesine rağmen hamur içermeyen, Elazığ mutfağına özgü bir yemek. Küçük kıyma köfteleri önce fırında kızartılır, ardından salçalı bir sosla pişirilir ve sarımsaklı yoğurt ile kızgın tereyağıyla servis edilir. Sunumu mantıyı andırdığı için bu adla anılır.
+
+Elazığ'ın eski yerleşim yeri Harput, zengin mutfak kültürüyle bilinir ve bu yemek de bölgenin kıymalı yemek geleneğinin bir parçasıdır. Hamur açma zahmeti olmadığı için mantıya göre daha pratik, ama en az onun kadar doyurucudur.
+
+Püf noktası: Köfteleri küçük ve aynı büyüklükte yapın ki eşit pişsinler. Fırında önce sossuz kızartmak köftelerin şeklini korumasını sağlar. Sosu ekledikten sonra fazla pişirmeyin; hafifçe koyulaşması yeterlidir. Yoğurdu oda sıcaklığında kullanın ve tereyağını servis anında gezdirin.`,
+  },
+  'diyarbakir-meftune': {
+    tr: `Meftune, Diyarbakır mutfağının bol sarımsaklı ve ekşili sulu yemeği. Kuzu eti ve kızartılmış patlıcan, domatesli ve biber salçalı bir sosta birlikte pişirilir. Yemeğe karakterini veren, sumak ekşisinin ekşiliği ile cömertçe kullanılan sarımsaktır.
+
+Diyarbakır'da meftune, patlıcanın bol olduğu yaz ve sonbahar aylarında sıkça pişirilir. Bazı evlerde et yerine köfteyle de yapılır. Bulgur pilavıyla birlikte, suyuna ekmek banılarak yenir.
+
+Püf noktası: Patlıcanları önce tuzlu suda bekletip acılığını alın, ardından kızartın; kızarmış patlıcan pişerken dağılmaz ve sosa lezzet katar. Sarımsağı bolca kullanmaktan çekinmeyin, meftunenin kimliği budur. Sumak ekşisini sona doğru ekleyin ve tadına bakarak ayarlayın.`,
+  },
+  'gaziantep-yuvarlama': {
+    tr: `Yuvarlama, Gaziantep'te özellikle Ramazan Bayramı sofralarında pişirilen geleneksel bir yemek. Bulgur ve kıymadan yoğrulan nohut büyüklüğündeki minicik köfteler, kuşbaşı et ve nohutla birlikte yoğurtlu bir sosta pişirilir. Bayram öncesinde aile bireylerinin bir araya gelip köfteleri birlikte yuvarlaması da geleneğin bir parçasıdır.
+
+Yuvarlamanın emek isteyen yanı köftelerin küçüklüğüdür. Bu minik köfteler yoğurt sosunun her kaşıkta eşit dağılmasını sağlar. Üzerine gezdirilen naneli tereyağı yemeğin kokusunu tamamlar.
+
+Püf noktası: Yoğurdu yumurta ve nişastayla çırpın ve tencereye eklemeden önce sıcak suyla ılıtın, böylece kesilmez. Yoğurt eklendikten sonra hep aynı yöne karıştırın ve kaynatmayın. Köfteleri ne kadar küçük yaparsanız yemek o kadar geleneksel olur. Yanında pirinç pilavı servis edin.`,
+  },
+  'erzurum-kadayifi': {
+    tr: `Kadayıf dolması, Erzurum'un en bilinen tatlısı. Tereyağıyla ovulan tel kadayıfın içine ceviz konur, avuçta sıkıştırılarak top şekli verilir, kızartılır ve soğuk şerbete batırılır. Dışı çıtır, içi şerbetli ve cevizli olan bu tatlı, Erzurum'da özellikle Ramazan sofralarında ve misafir ağırlamada öne çıkar.
+
+Kadayıf dolmasını tepside pişen kadayıf tatlılarından ayıran şey hem şekli hem de pişirme yöntemidir. Kızartma, kadayıfın dışını hızla kızartır ve şerbeti çektiğinde bile çıtırlığını bir süre korur.
+
+Püf noktası: Kadayıfı tereyağıyla iyice ovun ki her tel yağlansın. Dolmaları avucunuzda sıkıca bastırın, gevşek kalan dolma kızarırken dağılır. Yağın çok sıcak olmaması gerekir; dışı yanmadan içi de ısınmalı. Şerbet soğuk, dolma sıcak olmalı. Üzerine bolca dövülmüş ceviz serpin.`,
+  },
+  'amasya-mantisi': {
+    tr: `Mantı, Anadolu'nun hemen her bölgesinde farklı biçimlerde yapılan bir hamur işi ve Amasya'nın da kendi mantı geleneği vardır. Amasya mantısında hamur Kayseri mantısına göre biraz daha kalın açılır ve mantılar biraz daha iri kesilir. Bu da mantıyı daha doyurucu ve hazırlanması daha pratik bir yemek haline getirir.
+
+Kıymalı iç harç, sarımsaklı yoğurt ve pul biberli tereyağı mantının klasik üçlüsünü oluşturur. Bu tarifte yoğurdun üzerine ince bir domates sosu da gezdirilir.
+
+Püf noktası: Hamuru açmadan önce en az yarım saat dinlendirin, böylece kolay açılır ve geri çekmez. Mantıları kapatırken köşeleri sıkıca birleştirin ki haşlarken açılmasın. Bol tuzlu suda haşlayın ve fazla pişirmeyin. Sarımsaklı yoğurdu oda sıcaklığında hazırlayın, soğuk yoğurt sıcak mantıyı hemen soğutur.`,
+  },
+  'izmir-kemal-pasa-tatlisi': {
+    tr: `Kemalpaşa tatlısı, adını Bursa'nın Mustafakemalpaşa ilçesinden alan, tuzsuz taze peynirle yapılan şerbetli bir tatlı. İlçede tatlı fırında pişirilip kurutulmuş halde satılır; evde kaynayan şerbette pişirilerek hazırlanır. Kuru hali uzun süre bozulmadan saklanabildiği için Bursa'dan hediye olarak da götürülür.
+
+Peynir, irmik ve unla yoğrulan hamur fırında açık altın rengine kadar pişer. Şerbette kaynadığında şişer, yumuşar ve süngerimsi bir doku kazanır. Kaymakla servis edildiğinde hafif ve ferah bir tatlı olur.
+
+Püf noktası: Peynirin tuzsuz ve taze olması şart; tuzlu peynir tatlının tadını bozar. Hamur ele yapışmayacak kıvamda olmalı, gerekirse biraz daha un ekleyin. Tatlıları fırında fazla kızartmayın, açık renk yeterlidir. Şerbette kısık ateşte pişirin ve tatlıların şerbeti tamamen çekmesini bekleyin.`,
+  },
+  'bursa-kestane-sekeri': {
+    tr: `Kestane şekeri, Bursa'nın en bilinen hediyelik lezzeti. Uludağ eteklerindeki kestane ağaçlarından toplanan iri kestaneler, kabukları soyulduktan sonra şekerli şerbette uzun süre pişirilir ve kurutulur. Bursa'ya yolu düşenlerin dönüşte yanında götürdüğü başlıca hediyelerdendir.
+
+Kestane şekerinin başarısı, kestanenin şerbeti iç kısmına kadar çekmesine ve bu sırada dağılmamasına bağlıdır. Doğru pişirilmiş kestane dışta parlak, içte yumuşak ve tatlıdır.
+
+Püf noktası: Kestanelerin hem dış kabuğunu hem de içteki ince zarı mutlaka soyun; zar kalırsa acı bir tat bırakır. Kestaneler sıcakken daha kolay soyulur. Şerbette kısık ateşte ve nazikçe pişirin, sık karıştırmak kestaneleri parçalar. Kurutma süresini kısaltmayın; iyi kurumamış kestane şekeri yapışır.`,
+  },
+  'gemlik-zeytinli-meze': {
+    tr: `Gemlik zeytini, Bursa'nın Gemlik ilçesinin adını taşıyan, Türkiye'nin en bilinen sofralık siyah zeytinlerinden biri. Eti dolgun, kabuğu ince ve yağ oranı yüksek olan bu zeytin, kahvaltı sofralarının vazgeçilmezidir. Bu tarifte zeytin, sarımsak, kekik ve limonla ılık bir mezeye dönüşür.
+
+Zeytinyağında hafifçe ısıtılan sarımsak ve kekik, zeytinin aromasını öne çıkarır; limon kabuğu ise tuzlu ve yağlı tadı ferahlatır. Ekmekle, kahvaltıda ya da bir meze tabağının parçası olarak servis edilebilir.
+
+Püf noktası: Sarımsağı zeytinyağında kısık ateşte, kızartmadan yalnızca pembeleşene kadar ısıtın; yanan sarımsak acılaşır. Zeytinleri uzun süre pişirmeyin, yalnızca ısınmaları yeterlidir. Zeytinler çok tuzluysa kullanmadan önce birkaç saat suda bekletin. Taze kekik dalı sunuma güzel bir koku katar.`,
+  },
+  'kars-kazi': {
+    tr: `Kaz, Kars ve Ardahan'ın kış mutfağının simgesidir. Yaz boyunca otlaklarda beslenen kazlar sonbaharda kesilir, eti tuzlanıp kurutulur ya da tütsülenir ve uzun kış boyunca saklanır. Kars'ta kaz eti, soğuk kış günlerinde aile sofralarının ve misafir ağırlamanın baş yemeğidir.
+
+Tuzla kürlenen ve ardından pişirilen kaz eti, yoğun ve kendine özgü bir tat kazanır. Bu tarif, geleneksel yöntemi ev mutfağına uyarlar: et önce baharatlı tuzla kürlenir, sonra haşlanır, fırında kızartılır ve isteğe göre kısa süre tütsülenir.
+
+Püf noktası: Kürleme süresini kısaltmayın; tuz etin derinlerine işlemeli. Kürlenen eti haşlamadan önce iyice yıkayın, yoksa fazla tuzlu olur. Kaz eti yağlıdır, fırında kızartırken eriyen yağı ayrı bir kaba alıp pilav ya da patates pişirmek için kullanabilirsiniz. Eti ince dilimleyerek servis edin.`,
+  },
+  'gaziantep-ciger-kebabi': {
+    tr: `Ciğer kebabı, Gaziantep'te günün her saatinde yenen bir sokak lezzeti; şehirde pek çok kişi güne ciğer kebabıyla başlar. Küçük parçalara kesilen kuzu ciğeri, aralarına kuyruk yağı dizilerek şişe geçirilir ve közde dakikalar içinde pişirilir.
+
+Antep ciğer kebabının lezzeti tazelik ve sadelikten gelir. Pul biber ve kimyonla hafifçe baharatlanan ciğer, eriyen kuyruk yağıyla yumuşar. Sıcak lavaşın üzerine alınır; yanında közlenmiş domates ve biber, soğan ve maydanozla yenir.
+
+Püf noktası: Ciğeri mümkün olduğunca taze alın ve kesmeden önce zarını soyun. Közün yüksek ısıda ve şişlerin ateşe yakın olması gerekir; ciğer hızlı pişmeli. İçi hafif pembe kaldığında ateşten alın, fazla pişen ciğer sertleşir ve kurur. Kebabı bekletmeden, şişten çıkar çıkmaz servis edin.`,
+  },
+  'rize-karalahana-corbasi': {
+    tr: `Karalahana çorbası, Rize ve Doğu Karadeniz'in en sevilen kış çorbası. Bölgenin dik yamaçlarında yetişen karalahana, bu çorbada tereyağıyla kavrulur, et suyunda yumuşatılır ve mısır unuyla koyulaştırılır. Karadeniz mutfağının iki temel malzemesi olan karalahana ve mısır aynı tencerede buluşur.
+
+Mısır unu çorbaya hem kıvam hem de hafif tatlı bir tat verir. Üzerine gezdirilen pul biberli tereyağı ise karalahananın hafif acımsı tadını dengeler. Yanında mısır ekmeğiyle servis edilir.
+
+Püf noktası: Karalahananın kalın saplarını çıkarın, yaprakları iyice yıkayın; yapraklarda toprak kalabilir. Mısır ununu doğrudan çorbaya eklemeyin, önce soğuk suyla pürüzsüz bir şekilde açın, yoksa topaklanır. Mısır unu ekledikten sonra çorbayı kısık ateşte karıştırarak pişirin, dibi kolay tutar.`,
+  },
+  'giresun-muhlama': {
+    tr: `Mıhlama, Giresun ve Doğu Karadeniz'in kahvaltı sofralarının yıldızı. Bakır sahanda eritilen yayık tereyağında mısır unu kavrulur, su ile pişirilip koyulaştırılır ve içine eriyip uzayan bir peynir eklenir. Bölgenin bazı yerlerinde kuymak adıyla da bilinir.
+
+Mıhlamanın lezzeti malzemenin kalitesine bağlıdır: taze, kokulu tereyağı, iri çekilmiş mısır unu ve eriyince tel tel uzayan peynir. Ortak sahandan, ekmekle ya da kaşıkla yenmesi de geleneğin bir parçasıdır.
+
+Püf noktası: Mısır ununu tereyağında hafif renk alana kadar kavurun; bu adım yemeğin aromasını belirler. Suyu ekledikten sonra hızlı karıştırın ki topak oluşmasın. Peyniri en son ekleyin ve uzayıp ipe çekene kadar karıştırın. Mıhlama soğudukça katılaşır; pişer pişmez, sahanıyla birlikte sofraya getirin.`,
+  },
+  'erzurum-ayran-asi': {
+    tr: `Ayran aşı, Erzurum ve Doğu Anadolu'nun uzun ve soğuk kışlarında sofradan eksik olmayan yoğurtlu bir çorba. Yoğurt, yumurta ve unla terbiye edilir, içine bulgur ya da pirinç ve isteğe göre nohut eklenir. Hafif ekşi, kremamsı ve doyurucu bir çorbadır.
+
+Doğu Anadolu'da hayvancılığın yaygın olması, yoğurdu bölge mutfağının temel malzemelerinden biri yapmıştır; ayran aşı da bu mutfağın en sade örneklerindendir. Üzerine gezdirilen naneli ve pul biberli tereyağı çorbaya hem renk hem koku katar.
+
+Püf noktası: Yoğurdu yumurta ve unla çok iyi çırpın; bu karışım yoğurdun ısınırken kesilmesini önler. Çorbayı ısıtırken hiç durmadan ve hep aynı yöne karıştırın. Kaynamaya başladığında ateşi hemen kısın. Bulgurun pişme süresi çorbanın kıvamını belirler, gerekirse biraz sıcak su ekleyin.`,
+  },
+  'kars-tutmac-corbasi': {
+    tr: `Tutmaç, adı 11. yüzyılda Kaşgarlı Mahmud'un Divanü Lügati't-Türk'ünde de geçen, Türk mutfağının en eski yemeklerinden biri. El açması ince hamurun küçük parçalar halinde kesilmesiyle yapılan bu çorba, Orta Asya'dan Anadolu'ya uzanan bir geleneğin izini taşır. Kars'ta tutmaç, mercimek, nohut ve yoğurtla zenginleştirilir.
+
+Tutmacın lezzeti ev yapımı hamurdan gelir. İnce açılıp kesilen hamur parçaları çorbada pişerken suyu koyulaştırır, yoğurt ise hafif bir ekşilik katar. Naneli tereyağı çorbanın kokusunu tamamlar.
+
+Püf noktası: Hamuru sert yoğurun ve olabildiğince ince açın. Kesilen parçaları unlayıp biraz kurutun, böylece çorbada birbirine yapışmazlar. Yoğurdu doğrudan kaynayan çorbaya eklemeyin; önce bir kepçe sıcak çorbayla ılıtın. Yoğurt eklendikten sonra çorbayı kısık ateşte tutun.`,
+  },
+  'trabzon-pita': {
+    tr: `Trabzon pidesi, uzun ve kayık biçimiyle tanınan, Karadeniz'in fırın kültürünün simgesi. Mayalı hamur oval açılır, ortasına harç konur, kenarları içe katlanarak kayık şekli verilir ve taş fırında pişirilir. Trabzon'da pide, kıymalı olduğu kadar peynirli ve yumurtalı çeşitleriyle de sevilir.
+
+Bu tarif sade kıymalı versiyondur. Kıyma, soğan, biber ve domatesle hazırlanan harç fırında pişerken hamura işler. Fırından çıkınca üzerine sürülen tereyağı pideye parlaklık ve koku katar.
+
+Püf noktası: Hamuru yumuşak tutun ve iyice mayalandırın; sert hamur fırında kabarmaz. Harcı ince bir tabaka halinde yayın, kalın harç hamurun pişmesini engeller. Kenarları sıkıca katlayın ki pişerken açılmasın. Fırını iyice ısıtın; mümkünse taş ya da ters tepsi üzerinde pişirin. Tereyağını pide sıcakken sürün.`,
+  },
+  'trabzon-hurma-tatlisi': {
+    tr: `Trabzon hurması, adı hurma olsa da hurmayla akrabalığı olmayan, kaki olarak da bilinen bir meyve. Karadeniz'in ılıman ikliminde yetişir ve sonbaharda olgunlaşır. Ham haliyle buruk olan meyve, iyice olgunlaştığında reçel kıvamında yumuşak ve bal gibi tatlı bir hale gelir.
+
+Bu tatlı, Trabzon hurmasının doğal tatlılığını süzme yoğurt, bal ve cevizle buluşturan, pişirme gerektirmeyen hafif bir sonbahar tatlısı. Limon kabuğu ve nane ferahlık, tarçın ise sıcak bir koku katar.
+
+Püf noktası: Meyvenin tamamen olgunlaşmış olması şart; ham Trabzon hurması ağzı buruşturur. Sert meyveleri oda sıcaklığında, elma ya da muzun yanında bekletirseniz daha hızlı olgunlaşırlar. Yoğurdu çok fazla tatlandırmayın, meyve zaten tatlıdır. Tatlıyı servis etmeden hemen önce hazırlayın.`,
+  },
+  'sinop-boyabat-keşkeği': {
+    tr: `Boyabat, Sinop'un iç kesimlerinde, Kızılırmak vadisinde yer alan bir ilçe ve keşkeğiyle tanınır. Boyabat'ta keşkek, düğünlerde ve hayır yemeklerinde büyük kazanlarda, saatlerce karıştırılıp dövülerek pişirilir. Hazırlığı çoğu zaman topluca yapılır ve kazanın başında nöbetleşe karıştırılır.
+
+Dövme buğday ve etin uzun pişirme sonunda birbirine karışmasıyla ortaya çıkan keşkek, lif lif ve yapışkan bir kıvam alır. Üzerine gezdirilen pul biberli ve naneli tereyağı, bu sade yemeğe renk ve koku verir.
+
+Püf noktası: Buğdayı bir gece önceden ıslatın ve pişirirken suyunu eksik etmeyin, gerekirse sıcak su ekleyin. Eti tamamen yumuşayıp liflerine ayrılana kadar pişirin. Dövme aşamasında sabırlı olun; keşkek tek parça gibi görünene dek devam edin. Tereyağını servis anında kızdırıp gezdirin.`,
+  },
 }
 
 export function getRecipeIntro(recipeId, lang = 'tr') {
