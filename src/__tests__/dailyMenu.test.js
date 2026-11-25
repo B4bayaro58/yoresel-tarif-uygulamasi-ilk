@@ -67,3 +67,14 @@ describe('günün menüsü', () => {
     expect(pickAutoDailyMenu(overridden, now)[0].id).toBe('fb123');
   });
 });
+
+describe('cron tarafından yazılan otomatik kayıt (auto: true)', () => {
+  // eslint-disable-next-line global-require
+  const { getActiveManualMenuIds, getMenuDateKey } = require('../constants/dailyMenu');
+  test('yeni istemciler auto kaydı elle menü saymaz', () => {
+    const now = Date.UTC(2026, 10, 25, 12);
+    const settings = { recipeIds: ['lasagna'], menuDate: getMenuDateKey(now), auto: true };
+    expect(getActiveManualMenuIds(settings, now)).toBe(null);
+    expect(getActiveManualMenuIds({ ...settings, auto: false }, now)).toEqual(['lasagna']);
+  });
+});

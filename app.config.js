@@ -7,7 +7,9 @@ export default ({ config }) => ({
   ...config,
   name: 'Yöresel Tarif',
   slug: 'yoresel-tarif-uygulamasi',
-  version: '1.0.0',
+  // Her mağaza sürümünde artırın: uygulama içi güncelleme kontrolü
+  // (settings/appConfig, src/constants/appVersion.js) bu değeri karşılaştırır.
+  version: '1.1.0',
   orientation: 'portrait',
   icon: './assets/icon.png',
   userInterfaceStyle: 'light',
@@ -108,6 +110,14 @@ export default ({ config }) => ({
       },
     ],
     'expo-dev-client',
+    [
+      'expo-notifications',
+      {
+        // Pişirme zamanlayıcısı alarm sesi (scripts/generate-timer-alarm.js).
+        // notificationService.js'de 'timer_alarm.wav' adıyla kullanılıyor.
+        sounds: ['./assets/sounds/timer_alarm.wav'],
+      },
+    ],
   ],
   extra: {
     eas: {

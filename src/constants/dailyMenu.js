@@ -79,8 +79,13 @@ export function pickAutoDailyMenu(recipes, now = Date.now()) {
 }
 
 // Elle kaydedilmiş menü bugüne aitse onun kimliklerini, değilse null döner.
+// `auto: true` kayıtlar web'deki günlük cron'un (web/src/app/api/cron/daily-menu)
+// yalnızca eski mobil sürümler (≤1.0.0, menüyü kendisi hesaplamayan) için
+// yazdığı otomatik menüdür; yeni istemciler bunu elle menü saymaz, aynı menüyü
+// kendileri hesaplar.
 export function getActiveManualMenuIds(settings, now = Date.now()) {
-  if (!settings || !Array.isArray(settings.recipeIds) || settings.recipeIds.length === 0) return null;
+  if (!settings || settings.auto === true) return null;
+  if (!Array.isArray(settings.recipeIds) || settings.recipeIds.length === 0) return null;
   if (settings.menuDate !== getMenuDateKey(now)) return null;
   return settings.recipeIds.map(String);
 }

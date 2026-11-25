@@ -20,7 +20,7 @@ import { getEarnedBadges } from '../constants/badges';
 import { DEFAULT_GROCERY_CATEGORY } from '../constants/groceryCategories';
 import { categorizeIngredient } from '../utils/groceryCategorizer';
 import { deleteImageByUrl } from '../services/imageUploadService';
-import { Alert, AppState, Linking, Platform } from 'react-native';
+import { Alert, AppState, Linking, Platform, Vibration } from 'react-native';
 import { resolveDailyMenu, canonicalRecipeId, getMenuDateKey, getMenuDayNumber, msUntilNextMenuRollover } from '../constants/dailyMenu';
 
 const AppContext = createContext();
@@ -160,7 +160,6 @@ export const AppProvider = ({ children }) => {
   const [timerActive, setTimerActive] = useState(false);
   const [timerPaused, setTimerPaused] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState(0);
-  const [timerNotificationId, setTimerNotificationId] = useState(null);
   const [timerRecipeName, setTimerRecipeName] = useState('');
 
   // Load persisted data and Firebase recipes on mount
@@ -595,7 +594,12 @@ export const AppProvider = ({ children }) => {
   // hesaplanmıyor ki elle menü varken bir an otomatik menü yanıp sönmesin.
   const dailyMenuResolved = useMemo(() => {
     if (dailyMenuLoading) return { recipes: [], isManual: false };
-    return resolveDailyMenu(recipes, dailyMenuSettings);
+    // Web (web/src/app/page.tsx) ile birebir aynı havuz: statik tarifler +
+    // yalnızca status'ü yayında olan Firebase tarifleri. `recipes` status'süz
+    // Firebase dokümanlarını da içeriyor; o fark menünün web ile mobilde
+    // farklı çıkmasına yol açabiliyordu.
+    const pool = recipes.filter(r => !r.isFirebase || PUBLIC_STATUSES.includes(r.status));
+    return resolveDailyMenu(pool, dailyMenuSettings);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dailyMenuLoading, dailyMenuSettings, recipes, menuDayNumber]);
   const dailyMenu = dailyMenuResolved.recipes;
@@ -931,51 +935,125 @@ export const AppProvider = ({ children }) => {
   }, [selectedContinent, selectedCategory, selectedCountry, selectedQuickFilter, searchQuery]);
 
   // Timer Functions
+  // Geri sayım bitiş zamanına (endAt) göre hesaplanıyor: uygulama arka plana
+  // alınınca JS interval'ı duruyor, eskiden geri gelince süre kaldığı yerden
+  // devam ediyordu (gerçek süreden geride). Asıl alarm, bitiş anına planlanan
+  // sesli bildirim -- uygulama kapalı/arka planda olsa da çalar.
+  const timerEndAtRef = useRef(null);
+  const timerRemainingRef = useRef(0); // duraklatıldığında kalan saniye
+  const timerNotifIdRef = useRef(null);
+  const timerRecipeNameRef = useRef('');
+  const languageRef = useRef(language);
+  languageRef.current = language;
+
+  const timerNotificationContent = (recipeName) => ({
+    title: '⏰ ' + t('timerFinished', languageRef.current),
+    body: t('timerFinishedBody', languageRef.current, {
+      recipe: recipeName || t('cookingTimer', languageRef.current),
+    }),
+  });
+
+  const cancelTimerNotification = () => {
+    const id = timerNotifIdRef.current;
+    timerNotifIdRef.current = null;
+    if (id) cancelNotification(id);
+  };
+
+  const planTimerNotification = async (seconds) => {
+    cancelTimerNotification();
+    const id = await scheduleTimerNotification(seconds, timerNotificationContent(timerRecipeNameRef.current));
+    // Bu arada durdurulduysa/duraklatıldıysa planlanan bildirimi geri al.
+    if (!timerEndAtRef.current) {
+      if (id) cancelNotification(id);
+      return;
+    }
+    timerNotifIdRef.current = id;
+  };
+
   const startTimer = useCallback(async (minutes, recipeName = '') => {
-    setTimeRemaining(minutes * 60);
+    const seconds = Math.max(1, Math.round(minutes * 60));
+    timerEndAtRef.current = Date.now() + seconds * 1000;
+    timerRecipeNameRef.current = recipeName;
+    setTimeRemaining(seconds);
     setTimerActive(true);
     setTimerPaused(false);
     setTimerRecipeName(recipeName);
-    const notifId = await scheduleTimerNotification(minutes, recipeName);
-    setTimerNotificationId(notifId);
+    await planTimerNotification(seconds);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const pauseTimer = useCallback(() => {
-    setTimerPaused(prev => !prev);
+    if (timerEndAtRef.current) {
+      // Duraklat: kalan süreyi sakla, planlı alarmı iptal et (yoksa duraklatılmış
+      // zamanlayıcı için alarm zamansız çalıyordu).
+      const remaining = Math.max(1, Math.ceil((timerEndAtRef.current - Date.now()) / 1000));
+      timerRemainingRef.current = remaining;
+      timerEndAtRef.current = null;
+      cancelTimerNotification();
+      setTimeRemaining(remaining);
+      setTimerPaused(true);
+    } else {
+      // Devam ettir: kalan süreyle yeniden planla.
+      const remaining = timerRemainingRef.current || 1;
+      timerEndAtRef.current = Date.now() + remaining * 1000;
+      setTimerPaused(false);
+      planTimerNotification(remaining);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const stopTimer = useCallback(() => {
+    timerEndAtRef.current = null;
+    timerRemainingRef.current = 0;
+    cancelTimerNotification();
     setTimerActive(false);
     setTimerPaused(false);
     setTimeRemaining(0);
-    setTimerNotificationId(prev => {
-      cancelNotification(prev);
-      return null;
-    });
     setTimerRecipeName('');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Timer countdown — single interval for the full duration (not recreated each second)
-  useEffect(() => {
-    if (!timerActive || timerPaused) return;
-    const interval = setInterval(() => {
-      setTimeRemaining(prev => {
-        if (prev <= 1) {
-          setTimerActive(false);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [timerActive, timerPaused]);
-
-  // Show notification when timer finishes naturally
-  useEffect(() => {
-    if (!timerActive && timeRemaining === 0 && timerRecipeName) {
-      showNotification(t('timerFinished', language));
+  const finishTimer = () => {
+    timerEndAtRef.current = null;
+    timerRemainingRef.current = 0;
+    // Bildirim (alarm sesiyle) zaten bu anda sistem tarafından gösteriliyor;
+    // id'yi bırakıyoruz ki iptal edilip ekrandan silinmesin.
+    timerNotifIdRef.current = null;
+    setTimerActive(false);
+    setTimerPaused(false);
+    setTimeRemaining(0);
+    const lang = languageRef.current;
+    const name = timerRecipeNameRef.current;
+    setTimerRecipeName('');
+    if (AppState.currentState === 'active') {
+      Vibration.vibrate([0, 600, 300, 600, 300, 600]);
+      Alert.alert(
+        '⏰ ' + t('timerFinished', lang),
+        t('timerFinishedBody', lang, { recipe: name || t('cookingTimer', lang) }),
+        [{ text: t('ok', lang), onPress: () => Vibration.cancel() }],
+      );
     }
-  }, [timerActive]);
+  };
+  const finishTimerRef = useRef(finishTimer);
+  finishTimerRef.current = finishTimer;
+
+  // Ekrandaki geri sayım: her saniye ve uygulama ön plana dönünce endAt'ten
+  // yeniden hesaplanır.
+  useEffect(() => {
+    if (!timerActive || timerPaused) return undefined;
+    const tick = () => {
+      if (!timerEndAtRef.current) return;
+      const remaining = Math.ceil((timerEndAtRef.current - Date.now()) / 1000);
+      if (remaining <= 0) finishTimerRef.current();
+      else setTimeRemaining(remaining);
+    };
+    tick();
+    const interval = setInterval(tick, 1000);
+    const sub = AppState.addEventListener('change', (state) => {
+      if (state === 'active') tick();
+    });
+    return () => { clearInterval(interval); sub.remove(); };
+  }, [timerActive, timerPaused]);
 
   // Header logo'ya basınca anasayfayı en üste kaydırmak için: HomeScreen kendi
   // scroll fonksiyonunu mount olduğunda bu ref'e yazar, header (AppNavigator

@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -114,8 +114,25 @@ export default function SearchModal({ navigation }) {
     setShowFilters(false);
   };
 
+  // Tarif detayından geri dönünce kullanıcı anasayfaya değil, bıraktığı arama
+  // sonuçlarına dönmeli. Modal navigasyon yığınının parçası olmadığı için
+  // tarife giderken yalnızca gizleniyor (sorgu/filtreler korunuyor) ve
+  // anasayfa yeniden odaklandığında (detaydan geri gelindiğinde) tekrar açılıyor.
+  const returnToSearchRef = useRef(false);
+
+  useEffect(() => {
+    if (!navigation?.addListener) return undefined;
+    return navigation.addListener('focus', () => {
+      if (returnToSearchRef.current) {
+        returnToSearchRef.current = false;
+        setShowSearch(true);
+      }
+    });
+  }, [navigation, setShowSearch]);
+
   const handleRecipePress = (recipe) => {
-    handleClose();
+    returnToSearchRef.current = true;
+    setShowSearch(false);
     navigation.navigate('RecipeDetail', { recipe });
   };
 
@@ -134,7 +151,8 @@ export default function SearchModal({ navigation }) {
               placeholderTextColor={colors.textSecondary}
               value={query}
               onChangeText={setQuery}
-              autoFocus
+              // Sonuçlara geri dönülürken klavye açılıp listeyi örtmesin.
+              autoFocus={!query && !hasActiveFilters}
               autoCorrect={false}
               spellCheck={false}
               autoCapitalize="none"

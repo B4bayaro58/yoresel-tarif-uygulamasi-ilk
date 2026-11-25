@@ -15,8 +15,13 @@ try {
 try {
   if (Notifications) {
     Notifications.setNotificationHandler({
+      // Uygulama açıkken de bildirim ekranın üstünde görünsün ve sesi çalsın
+      // (zamanlayıcı bitince kullanıcı tarif ekranında olabilir).
+      // shouldShowAlert SDK 54'te eskidi; banner/list yeni karşılığı.
       handleNotification: async () => ({
         shouldShowAlert: true,
+        shouldShowBanner: true,
+        shouldShowList: true,
         shouldPlaySound: true,
         shouldSetBadge: false,
       }),
@@ -39,11 +44,7 @@ export const requestNotificationPermissions = async () => {
     }
 
     if (Platform.OS === 'android') {
-      await Notifications.setNotificationChannelAsync('timer', {
-        name: 'Pişirme Zamanlayıcısı',
-        importance: Notifications.AndroidImportance.MAX,
-        vibrationPattern: [0, 250, 250, 250],
-      });
+      await ensureTimerChannel();
       await Notifications.setNotificationChannelAsync('suggestions', {
         name: 'Tarif Önerileri',
         importance: Notifications.AndroidImportance.DEFAULT,
@@ -57,19 +58,69 @@ export const requestNotificationPermissions = async () => {
   }
 };
 
-export const scheduleTimerNotification = async (minutes, recipeName) => {
+// Alarm sesi: assets/sounds/timer_alarm.wav (app.config.js'deki
+// expo-notifications eklentisiyle uygulamaya gömülür; yeni native build gerekir).
+const TIMER_SOUND = 'timer_alarm.wav';
+// Android'de bir kanalın sesi oluşturulduktan sonra değiştirilemiyor; eski
+// 'timer' kanalı varsayılan "ding" sesiyle oluşturulmuştu, bu yüzden alarm
+// sesli yeni bir kanal açılıp eskisi siliniyor.
+const TIMER_CHANNEL_ID = 'timer_alarm';
+
+const ensureTimerChannel = async () => {
+  if (!Notifications || Platform.OS !== 'android') return;
+  try {
+    await Notifications.setNotificationChannelAsync(TIMER_CHANNEL_ID, {
+      name: 'Pişirme Zamanlayıcısı',
+      importance: Notifications.AndroidImportance.MAX,
+      sound: TIMER_SOUND,
+      vibrationPattern: [0, 500, 250, 500, 250, 500],
+      enableVibrate: true,
+      lockscreenVisibility: Notifications.AndroidNotificationVisibility.PUBLIC,
+      bypassDnd: false,
+    });
+    await Notifications.deleteNotificationChannelAsync('timer').catch(() => {});
+  } catch (e) {
+    console.warn('Timer channel setup failed:', e.message);
+  }
+};
+
+// Zamanlayıcı başlatılırken çağrılır: açılıştaki izin istemi atlanmış/ertelenmişse
+// kullanıcı ilk zamanlayıcıyı kurduğunda tekrar sorulur (reddedildiyse sistem
+// tekrar sormaz, sessizce false döner).
+const ensureNotificationPermission = async () => {
+  try {
+    const { status, canAskAgain } = await Notifications.getPermissionsAsync();
+    if (status === 'granted') return true;
+    if (!canAskAgain) return false;
+    const res = await Notifications.requestPermissionsAsync();
+    return res.status === 'granted';
+  } catch {
+    return false;
+  }
+};
+
+/**
+ * Zamanlayıcı bitişi için alarm sesli bildirim planlar.
+ * @param {number} seconds  Kalan süre (saniye) — duraklat/devam ettir'de kalan süreyle yeniden planlanır.
+ * @param {{title: string, body: string}} content
+ */
+export const scheduleTimerNotification = async (seconds, { title, body }) => {
   if (!Notifications) return null;
   try {
+    await ensureNotificationPermission();
+    await ensureTimerChannel();
     const id = await Notifications.scheduleNotificationAsync({
       content: {
-        title: '⏰ Süre Doldu!',
-        body: `${recipeName || 'Tarifin'} pişme süresi tamamlandı.`,
-        sound: true,
-        channelId: 'timer',
+        title,
+        body,
+        sound: TIMER_SOUND,
+        priority: Notifications.AndroidNotificationPriority.MAX,
+        data: { type: 'cooking_timer' },
       },
       trigger: {
         type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
-        seconds: minutes * 60,
+        seconds: Math.max(1, Math.round(seconds)),
+        channelId: TIMER_CHANNEL_ID,
       },
     });
     return id;
@@ -106,10 +157,10 @@ export const scheduleFavoriteReminder = async (recipeName) => {
         title: '❤️ Favori Tarifin Seni Bekliyor',
         body: `"${recipeName}" tarifini bugün denemek ister misin?`,
         data: { type: 'favorite_reminder' },
-        channelId: 'suggestions',
       },
       trigger: {
         type: Notifications.SchedulableTriggerInputTypes.WEEKLY,
+        channelId: 'suggestions',
         weekday: 5, // Thursday
         hour: 18,
         minute: 30,
@@ -135,10 +186,10 @@ export const scheduleWeeklyRecipeSuggestion = async (recipeName) => {
         title: '🍽️ Bu Hafta Ne Pişirsek?',
         body: `${recipeName} tarifini denediniz mi? Hemen bakın!`,
         data: { type: 'weekly_suggestion' },
-        channelId: 'suggestions',
       },
       trigger: {
         type: Notifications.SchedulableTriggerInputTypes.WEEKLY,
+        channelId: 'suggestions',
         weekday: 1, // Monday
         hour: 10,
         minute: 0,

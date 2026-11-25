@@ -11,6 +11,7 @@ import AppNavigator from './src/navigation/AppNavigator';
 import AlternativesModal from './src/components/AlternativesModal';
 import NotificationToast from './src/components/NotificationToast';
 import AdConsentModal from './src/components/AdConsentModal';
+import UpdatePrompt from './src/components/UpdatePrompt';
 import ErrorBoundary from './src/components/ErrorBoundary';
 import { initAdsConsentAndSdk } from './src/services/consentService';
 
@@ -27,6 +28,7 @@ function AppContent() {
       <AlternativesModal />
       <NotificationToast />
       <AdConsentModal />
+      <UpdatePrompt />
       <StatusBar style={theme === 'dark' ? 'light' : 'dark'} />
     </View>
   );

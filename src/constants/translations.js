@@ -374,12 +374,56 @@ export const TRANSLATIONS = {
     it: 'Video in caricamento, riprova a breve',
   },
 
+  // Uygulama içi güncelleme (UpdatePrompt.js)
+  updateAvailableTitle: {
+    tr: 'Yeni sürüm hazır!',
+    en: 'A new version is available!',
+    fr: 'Une nouvelle version est disponible !',
+    it: 'È disponibile una nuova versione!',
+  },
+  updateAvailableBody: {
+    tr: 'Yeni özellikler ve iyileştirmeler için uygulamayı güncelleyin.',
+    en: 'Update the app to get the latest features and improvements.',
+    fr: "Mettez à jour l'application pour profiter des nouveautés et améliorations.",
+    it: "Aggiorna l'app per ottenere le ultime novità e miglioramenti.",
+  },
+  updateRequiredTitle: {
+    tr: 'Güncelleme gerekli',
+    en: 'Update required',
+    fr: 'Mise à jour requise',
+    it: 'Aggiornamento necessario',
+  },
+  updateRequiredBody: {
+    tr: 'Bu sürüm artık desteklenmiyor. Devam etmek için lütfen uygulamayı güncelleyin.',
+    en: 'This version is no longer supported. Please update the app to continue.',
+    fr: "Cette version n'est plus prise en charge. Veuillez mettre à jour l'application pour continuer.",
+    it: "Questa versione non è più supportata. Aggiorna l'app per continuare.",
+  },
+  updateNow: {
+    tr: 'Şimdi Güncelle',
+    en: 'Update Now',
+    fr: 'Mettre à jour',
+    it: 'Aggiorna ora',
+  },
+  updateLater: {
+    tr: 'Daha Sonra',
+    en: 'Later',
+    fr: 'Plus tard',
+    it: 'Più tardi',
+  },
+
   // Timer
   timerFinished: {
     tr: 'Süre doldu!',
     en: 'Timer finished!',
     fr: 'Minuteur terminé!',
     it: 'Timer terminato!',
+  },
+  timerFinishedBody: {
+    tr: '{recipe} için ayarladığınız süre tamamlandı.',
+    en: 'The time you set for {recipe} is up.',
+    fr: 'Le temps réglé pour {recipe} est écoulé.',
+    it: 'Il tempo impostato per {recipe} è scaduto.',
   },
   setTimer: {
     tr: 'Zamanlayıcı Kur',
