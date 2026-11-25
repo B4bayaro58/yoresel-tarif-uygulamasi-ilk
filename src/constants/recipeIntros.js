@@ -854,6 +854,146 @@ Paparanın lezzeti, et suyunun kalitesinden ve ekmeğin bu suyu ne kadar iyi emd
 
 Püf noktası: Kemikli et kullanın; kemik et suyuna lezzet ve kıvam verir. Ekmeği kalın dilimler halinde ve bayat kullanın, taze ekmek et suyunda hemen dağılır. Et suyunu ekmeğin üzerine azar azar ekleyin. Kızgın tereyağını servis anında gezdirin.`,
   },
+  'kuzu-tandir': {
+    tr: `Tandır, Anadolu'da toprağa gömülü kuyu fırınlarda saatlerce pişen etin genel adıdır. Afyon başta olmak üzere İç Anadolu'nun pek çok yerinde kuzu, bu yavaş pişirme sayesinde kemikten kendiliğinden ayrılacak kadar yumuşar. Evde tandır kuyusu olmasa da kapağı sıkıca kapatılmış bir güveç ve düşük fırın ısısı aynı etkiyi büyük ölçüde verir.
+
+Bu tarifte kuzu kol, soğan yatağının üzerinde patates, havuç ve domatesle birlikte kendi buharında pişer. Sebzeler etin suyunu çeker; ayrı bir garnitüre gerek kalmaz.
+
+Püf noktası: Folyoyu kabın kenarlarına iyice bastırın; buhar kaçarsa et kurur. Fırın ısısını yükseltip süreyi kısaltmaya çalışmayın, tandırın sırrı sabırdır. Folyoyu yalnızca son yarım saatte açın ve eti servis etmeden önce kendi suyunda birkaç dakika dinlendirin.`,
+  },
+  'cine-cokertme-kebabi': {
+    tr: `Çökertme kebabı, Ege'nin güneyinde, Aydın ve Muğla çevresinde sevilen, katmanlı yapısıyla tanınan bir et yemeği. Tabağın en altında kibrit çöpü gibi ince kızartılmış patates, üzerinde sarımsaklı yoğurt, onun üstünde domatesle sotelenmiş ince et dilimleri ve en tepede pul biberli tereyağı bulunur.
+
+Yemeğin keyfi, her çatalda çıtır patatesle yumuşak eti ve serin yoğurdu bir arada almaktan gelir. Bu yüzden katmanlar karıştırılmadan, hazırlanır hazırlanmaz sofraya konur.
+
+Püf noktası: Patatesleri servise en yakın zamanda kızartın; bekleyen patates yoğurdun altında hemen yumuşar. Eti tavaya az az atın ve yüksek ateşte kısa sürede kavurun, kalabalık tavada et su salıp haşlanır. Yoğurdu oda sıcaklığında kullanın ki sıcak eti soğutmasın.`,
+  },
+  'malatya-kayisili-et': {
+    tr: `Malatya, dünyanın en önemli kuru kayısı üretim merkezlerinden biri; kayısı bu şehirde yalnızca tatlıda değil, et yemeklerinde de kullanılır. Kayısılı et yahnisi, etin tuzlu lezzetiyle meyvenin tatlı ekşiliğini buluşturan, Anadolu'daki meyveli et yemekleri geleneğinin güzel bir örneğidir.
+
+Tarçın ve yenibahar yemeğe hafif sıcak bir koku verir, salça ise sosa renk katar. Uzun süre kısık ateşte pişen kuzu eti yumuşarken kayısılar sosu hafifçe koyulaştırır ve parlak bir görünüm kazandırır.
+
+Püf noktası: Kayısıları en başta eklemeyin; et neredeyse piştikten sonra eklenirse şekillerini korurlar. Kükürtsüz, koyu renkli gün kurusu kayısı daha yoğun bir aroma verir. Bademleri ayrı bir tavada kavurup servis anında serpin ki çıtırlığını kaybetmesin. Yanına sade pirinç pilavı çok yakışır.`,
+  },
+  'malatya-patlican-kebabi': {
+    tr: `Malatya mutfağı köfte ve patlıcan yemekleriyle ünlüdür; patlıcan kebabı da bu iki sevgiyi bir araya getirir. Bu tarifte kalın patlıcan dilimlerinin üzerine baharatlı kuzu kıyma yerleştirilir ve hepsi domates ile biberle birlikte salçalı bir sosun içinde fırında pişer.
+
+Pişerken kıymanın yağı patlıcana işler, patlıcan da sosu emerek ağızda dağılacak kadar yumuşar. Sonuç, bir tepside hazırlanan, kalabalık sofralar için pratik ve doyurucu bir yemektir.
+
+Püf noktası: Patlıcanları tuzlu suda bekletmek acılığını alır ve daha az yağ çekmelerini sağlar; ardından iyice kurulayın. Fırına vermeden önce patlıcanları ön pişirme ile biraz yumuşatmak, dilimlerin kıymayla aynı anda pişmesini sağlar. Kıyma için hafif yağlı et seçin, yağsız kıyma fırında kurur. Bulgur pilavıyla servis edin.`,
+  },
+  'antalya-piyazi': {
+    tr: `Antalya piyazı, Türkiye'nin dört bir yanında yapılan piyazdan tek bir malzemeyle ayrılır: tahin. Fasulye, tahin, sirke ve zeytinyağından oluşan kremamsı bir sosla harmanlanır. Antalya'da şiş köfteyle birlikte sofraya gelir ve bu ikili şehrin en tanınan lezzetleri arasında sayılır.
+
+Haşlanmış yumurta ve siyah zeytin hem görünüşü zenginleştirir hem de tahinin yoğunluğunu dengeler. Soğanın acısı alınıp maydanozla birleşince piyaz tok tutan ama ferah bir mezeye dönüşür.
+
+Püf noktası: Fasulyeyi ezilmeden, tanesi bütün kalacak şekilde haşlayın; dağılan fasulye sosla karışıp lapa olur. Tahin sosunu çırparken kıvamı koyu gelirse birkaç kaşık su ekleyin, kremamsı ve akışkan olmalı. Piyazı buzdolabından çıkarıp oda sıcaklığında servis edin, tahinin aroması böyle daha iyi ortaya çıkar.`,
+  },
+  'erdek-midye-dolmasi': {
+    tr: `Midye dolması, Marmara ve Ege kıyılarının, özellikle de İstanbul sokaklarının simgesi haline gelmiş bir lezzet. Marmara'nın güney kıyısındaki Erdek ve Kapıdağ Yarımadası çevresinde de deniz ürünleri mutfağın önemli bir parçasıdır. Midyenin içi baharatlı, çam fıstıklı ve kuş üzümlü bir pirinç harcıyla doldurulup buharda pişirilir.
+
+İyi bir midye dolmasında pirinç tane tane, harç hafif tatlı ve baharatlıdır; tarçın ve yenibahar bu tadın imzasıdır. Limon sıkılarak, kabuğun kapağı kaşık gibi kullanılarak yenir.
+
+Püf noktası: Kabuğu sıkıca kapalı, ağır ve canlı midyeleri seçin; kabuğu açık kalanları kullanmayın. İç harcı yarı pişmiş bırakın, pirinç midyenin içinde pişmeye devam eder. Midyeleri tencereye sık dizin ki pişerken açılmasınlar. Soğuyunca daha lezzetli olur.`,
+  },
+  'adiyaman-lebeniye': {
+    tr: `Lebeniye, adını Arapçada yoğurt anlamına gelen "leben" kelimesinden alan, Gaziantep mutfağının yoğurtlu çorbalarından biri. Antep'te yoğurt pek çok sıcak yemeğin temelidir ve lebeniye de kuzu eti, nohut ve pirinçle zenginleştirilmiş doyurucu bir çorba olarak sofraya gelir.
+
+Çorbanın lezzeti, yoğurdun ekşiliği ile et suyunun derinliği arasındaki dengeden doğar. Üzerine gezdirilen naneli ve pul biberli tereyağı hem renk hem koku katar.
+
+Püf noktası: Yoğurdu yumurtayla iyice çırpın; yumurta, yoğurdun ısınırken kesilmesini önler. Karışımı tencereye eklerken ateşi kısın ve hep aynı yöne karıştırın. Yoğurt eklendikten sonra çorbayı fazla kaynatmayın. Eti önceden iyice yumuşatın, çünkü yoğurt eklendikten sonra pişme süresi kısadır.`,
+  },
+  'adiyaman-kaburga-dolmasi': {
+    tr: `Kaburga dolması, Güneydoğu Anadolu'nun bayram ve misafir sofralarının baş tacı. Adıyaman, Diyarbakır ve Mardin çevresinde kuzunun kaburgası kasaba cep şeklinde açtırılır, içine baharatlı pirinç ve kıyma harcı doldurulup ağzı dikilir. Önce haşlanan, ardından fırında kızartılan kaburga, uzun ve özenli bir hazırlığın ürünüdür.
+
+Pişerken pirinç, kaburganın yağını ve et suyunu emer; çam fıstığı, tarçın ve yenibahar harca hafif bir tatlılık ve koku verir. Dilimlenip sofraya getirildiğinde hem et hem pilav bir arada sunulmuş olur.
+
+Püf noktası: Harcı cebe sıkıştırmadan, gevşekçe doldurun; pirinç pişerken şişer ve sıkı doldurulan kaburga patlayabilir. Ağzını sağlam bir iple dikin. Haşlama suyunu kısık ateşte tutun. Fırında üzerini kızartırken kurumasın diye arada kendi suyuyla yağlayın.`,
+  },
+  'mardin-oruk': {
+    tr: `Oruk, Mardin ve çevresinde yapılan, içli köftenin uzun ve oval bir türü. Bulgur ve az miktarda kıymayla hazırlanan ince bir kabuğun içine cevizli, baharatlı kıyma harcı doldurulur. Mardin'de orukun hem kızartılan hem de fırında pişirilen çeşitleri vardır; bu tarif kızartma usulüdür.
+
+Orukun başarısı kabuğun inceliğine bağlıdır. İyi yoğrulmuş hamur, ince açıldığı halde kızarırken çatlamaz; dışı çıtır, içi sulu kalır. Süzme yoğurt ve taze domatesle birlikte sıcak servis edilir.
+
+Püf noktası: Bulgur hamurunu sabırla, en az on dakika yoğurun; ele yapışmayan, esnek bir kıvam gelmeli. Şekillendirirken ellerinizi sık sık ıslatın. İç harcın tamamen soğumuş olması gerekir; sıcak harç kabuğu yumuşatır. Yağın sıcaklığını koruyun, soğuk yağda kızartılan oruk yağ çeker.`,
+  },
+  'maras-zerde': {
+    tr: `Zerde, adını Farsçada sarı anlamına gelen "zerd" kelimesinden alan, safranla renklendirilmiş bir pirinç tatlısı. Osmanlı mutfağından bu yana düğün, mevlit ve özel günlerin tatlısı olarak Anadolu'nun birçok yerinde yapılır; Kahramanmaraş'ta da sofralarda yer bulur.
+
+Zerdeyi farklı kılan altın sarısı rengi ve gül suyunun hafif kokusudur. Üzerine serpilen çam fıstığı, nar taneleri ve tarçın hem görüntüyü zenginleştirir hem de tatlıya doku katar. Soğuk servis edilir, bu yüzden yaz aylarında da hafif bir seçenektir.
+
+Püf noktası: Safranı önceden sıcak suda bekletip rengini iyice çıkarın; bu tarifte renk hem safrandan hem de az miktarda zerdeçaldan gelir. Nişastalı suyu ince bir akışla ve sürekli karıştırarak ekleyin, yoksa topaklanır. Gül suyunu fazla kaçırmayın, kokusu çabuk baskın gelir.`,
+  },
+  'afyon-sucuklu-kavurma': {
+    tr: `Afyonkarahisar sucuğu, coğrafi işaretle tescilli, Türkiye'nin en bilinen sucuklarından biri. Afyon'da kahvaltı çoğu zaman tavada pişen sucuk ve yumurtayla başlar. Bu tarifte sucuğa biber ve domates eklenerek daha doyurucu, sofrayı paylaşmaya uygun bir kahvaltılık hazırlanır.
+
+Sucuğun bıraktığı baharatlı yağ, biber ve domatesin pişmesi için yeterlidir; yumurtalar da bu yağın tadını alır. Tavadan doğrudan, taze ekmekle yenmesi geleneğin bir parçasıdır.
+
+Püf noktası: Sucuğu yağsız, kuru tavada ve orta ateşte pişirin; yüksek ateşte dışı yanar, yağını bırakmaz. Sucuk dilimlerini kâğıt gibi ince kesmeyin, aksi halde kurur. Domatesi kısa süre pişirin ki suyunu tamamen kaybetmesin. Yumurtaları ekledikten sonra ocağı kısın, kenarları kurumadan servis edin.`,
+  },
+  'aydin-incir-dolmasi': {
+    tr: `Aydın, Büyük Menderes ovasında yetişen incirleriyle tanınır; bölgenin kurutulmuş incirleri "Sultani" adıyla bilinir ve Türkiye'nin kuru incir ihracatında önemli bir yer tutar. Cevizli incir dolması, bu incirleri şekerli ve baharatlı bir şerbette pişirerek yapılan sade ama etkileyici bir tatlı.
+
+İncirin doğal tatlılığı, cevizin hafif buruk tadıyla dengelenir; tarçın ve karanfil şerbete sıcak bir koku verir. Kaymak ya da dondurmayla servis edildiğinde hem hafif hem de şık bir son tatlı olur.
+
+Püf noktası: İncirleri tamamen ikiye bölmeyin, yarıya kadar kesin ki ceviz içeride kalsın. Pişirme sırasında kısık ateşi koruyun; incir kaynayan şerbette dağılabilir. Şerbeti fazla koyulaştırmayın, soğurken zaten kıvam alır. Tatlıyı bir gece dinlendirirseniz şerbet incirin içine daha iyi işler.`,
+  },
+  'artvin-karalahana-sarmasi': {
+    tr: `Karalahana, Doğu Karadeniz mutfağının temel sebzesidir; çorbası, kavurması ve sarması yapılır. Artvin usulü karalahana sarmasını diğerlerinden ayıran şey, harca eklenen mısır unudur. Mısır unu iç harca hafif bir tatlılık ve sıkı bir kıvam verir, Karadeniz mutfağındaki mısır sevgisini de yansıtır.
+
+Kıyma, pirinç ve mısır ununun birleştiği harç, karalahananın hafif acımsı tadıyla iyi bir denge kurar. Bölgede düğün ve misafir sofralarında sıkça yer alır, sarımsaklı yoğurtla servis edilir.
+
+Püf noktası: Yaprakları kısa süre haşlayıp hemen soğuk suya alın; fazla haşlanan yaprak sararken yırtılır. Kalın orta damarları kesip inceltin. Sarmaları tencereye sık dizin ve üzerine ters bir tabak kapatın ki pişerken açılmasınlar. Tencerenin dibine serilen lahana parçaları sarmaların yanmasını önler.`,
+  },
+  'adiyaman-shirden': {
+    tr: `Şirden dolması, Konya ve İç Anadolu'nun sakatat geleneğinin bilinen yemeklerinden biri. Şirden, koyunun dördüncü midesidir. İyice temizlendikten sonra içine pirinç ve kıymalı, baharatlı bir harç doldurulur, ağzı dikilir ve uzun süre haşlanır. Konya'da özellikle soğuk kış günlerinde ve kurban zamanında sevilerek yenir.
+
+Pişerken pirinç, şirdenin içinde et suyunu emerek yumuşak ve lezzetli bir dolguya dönüşür. Dilimlenerek yoğurt ve pul biberli tereyağıyla servis edilir.
+
+Püf noktası: Şirdenin temizliği yemeğin kalitesini belirler. Sirkeli ve tuzlu suyla defalarca yıkayın, iç yüzeyini iyice kazıyın. Harcı şirdenin yalnızca üçte ikisine doldurun; pirinç şişer ve fazla dolu şirden haşlanırken patlar. Kaynamaya başladığında köpüğünü alın ve sonra ateşi kısın.`,
+  },
+  'konya-bamya-corbasi': {
+    tr: `Konya bamya çorbası, şehrin düğün ve davet sofralarının geleneksel başlangıcıdır. Konya'da bu çorba için küçük taneli bamyalar ipe dizilip kurutulur, kışın et suyunda pişirilerek ekşili bir çorbaya dönüştürülür.
+
+Limonun ekşiliği, kuzu et suyunun yoğun lezzeti ve bamyanın kendine özgü dokusu bu çorbanın karakterini oluşturur. Konya'da düğün yemekleri sırayla gelir ve bamya çorbası çoğu zaman bu sıralamanın ilk tabağıdır.
+
+Püf noktası: Kurutulmuş bamyayı bir gece önceden ıslatın. Limon suyunu pişirmenin sonuna doğru ekleyin; limon hem tadı tamamlar hem de bamyanın salyasını azaltır. Ev yapımı kemik suyu kullanırsanız çorbanın lezzeti belirgin şekilde artar. Bamyaları pişirirken çok sık karıştırmayın, dağılabilirler.`,
+  },
+  'bitlis-tandir-eti': {
+    tr: `Bitlis, kuzu etinin tandır kuyusunda pişirildiği büryan geleneğiyle tanınır. Geleneksel yöntemde kuzu, toprağa gömülü tandırın içine asılır, ağzı kapatılır ve saatlerce kendi buharında pişer. Bitlis'te tandır eti düğünlerin ve bayramların vazgeçilmez yemeğidir.
+
+Bu tarif, aynı yavaş pişirme mantığını ev fırınına uyarlar. Kimyon ve kekikle ovulan kuzu, soğan ve defne yaprağı yatağında, sıkıca kapatılmış bir kapta saatlerce pişer ve kemikten kendiliğinden ayrılacak kadar yumuşar.
+
+Püf noktası: Baharatları ete pişirmeden birkaç saat önce sürerseniz lezzet daha derine işler. Kabı folyoyla sıkıca kapatın, buhar kaçmamalı. Düşük ısıda sabırla pişirin; yüksek ısı eti kurutur. Pişen eti kendi suyuyla birlikte, sıcak lavaş ya da pideyle servis edin.`,
+  },
+  'beypazari-havuclu-corba': {
+    tr: `Ankara'nın Beypazarı ilçesi, Türkiye'nin havuç üretiminde önemli bir paya sahiptir ve havuç ilçenin simgelerinden biri haline gelmiştir. Beypazarı'nda havuç; reçelden lokuma, çorbadan tatlıya kadar pek çok lezzette kullanılır. Havuçlu çorba da bu bereketin en sade ve sıcak örneğidir.
+
+Havucun doğal tatlılığı tereyağında kavrulan soğanla birleşir, süt ise çorbaya kadifemsi bir kıvam verir. Zerdeçal hem rengi canlandırır hem de hafif bir aroma katar.
+
+Püf noktası: Havuçları tamamen yumuşayana kadar pişirin; az pişen havuç blenderdan geçse de lifli kalır. Sütü çorba pürüzsüz hale geldikten sonra ekleyin ve kaynatmadan ısıtın, aksi halde kesilebilir. Kıvamı koyu gelirse birkaç kaşık sıcak et suyuyla açın. Üzerine taze maydanoz serperek servis edin.`,
+  },
+  'karamursel-keskegi': {
+    tr: `Keşkek, dövme buğday ve etin saatlerce birlikte pişirilip dövülmesiyle yapılan, Anadolu'nun en köklü düğün yemeklerinden biri. Keşkek geleneği 2011'de UNESCO İnsanlığın Somut Olmayan Kültürel Mirası Listesi'ne alınmıştır. Marmara'da, Karamürsel ve çevresinde de keşkek düğün ve hayır yemeklerinde kazanlarda pişirilir.
+
+Keşkeğin özelliği kıvamıdır: buğday ve et o kadar uzun pişirilir ve dövülür ki taneler kaybolur, ortaya kaşıktan uzayan, pürüzsüz bir lapa çıkar. Üzerine gezdirilen pul biberli tereyağı bu sade yemeğe renk ve koku verir.
+
+Püf noktası: Dövme buğdayı mutlaka bir gece önceden ıslatın. Eti tamamen dağılana kadar pişirin. Dövme aşamasında sabırlı olun; kaşığı kaldırdığınızda keşkek ip gibi uzuyorsa kıvamı tamamdır. Keşkek bekledikçe katılaşır, pişer pişmez sıcak servis edin.`,
+  },
+  'konya-dugun-pilavi': {
+    tr: `Konya'da düğün sofrası belirli bir sırayla kurulur ve etli, nohutlu pilav bu sofranın vazgeçilmez yemeklerindendir. Kuzu eti ve nohutla zenginleşen, safranla hafif sarıya boyanan bu pilav kazanlarda pişirilip kalabalık misafirlere ikram edilir.
+
+Tarçın ve yenibahar pilava hafif sıcak bir koku verir, en üste serpilen kavrulmuş bademler ise hem görünüşü güzelleştirir hem de çıtırlık katar. Et suyunda pişen pirinç tane tane ve parlak olmalıdır.
+
+Püf noktası: Pirinci suda bekletip nişastasını iyice yıkayın; tane tane pilavın sırrı budur. Et suyunu sıcak ekleyin, soğuk su pirinci yapıştırır. Pilav pişince kapağın altına temiz bir bez koyup dinlendirin; bez buharı emer ve pirinç tanelerini açar. Bademleri ayrı bir tavada kavurup servis anında ekleyin.`,
+  },
+  'malatya-eksili-kofte-corbasi': {
+    tr: `Malatya, köfte çeşitlerinin bolluğuyla bilinen bir şehir ve bu köftelerin önemli bir kısmı bulgurla yapılır. Ekşili köfte çorbası da bulgurlu küçük köftelerin domatesli et suyunda pişirildiği, limon ve nar ekşisiyle tatlandırılan bir kış çorbasıdır.
+
+Bulgur, kıyma ve soğandan yoğrulan minik köfteler çorbanın suyunu çekerek yumuşar. Limon ile nar ekşisi birlikte çorbaya Doğu ve Güneydoğu Anadolu mutfağının sevilen ekşi-tuzlu dengesini verir. Üzerine nane ve pul biberli tereyağı gezdirilir.
+
+Püf noktası: Köfte hamurunu iyice yoğurun ki pişerken dağılmasın. Köfteleri küçük yapın; büyük köftenin ortası geç pişer. Köfteleri suya kaynarken ekleyin ve sonra ateşi kısın. Ekşiyi pişirmenin sonunda ekleyip tadına bakarak ayarlayın, çünkü nar ekşilerinin ekşiliği birbirinden farklıdır.`,
+  },
 }
 
 export function getRecipeIntro(recipeId, lang = 'tr') {
